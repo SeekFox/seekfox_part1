@@ -13,6 +13,10 @@ BIN = bin/*
 LOG = log/*
 
 all :
+	@mkdir -p bin
+	@mkdir -p lib
+	@mkdir -p data
+	@mkdir -p log
 	$(MAKE) compile -s
 	$(MAKE) run -s
 compile :

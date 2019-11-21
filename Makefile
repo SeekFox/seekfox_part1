@@ -19,14 +19,21 @@ all :
 	@mkdir -p log
 	$(MAKE) compile -s
 	$(MAKE) run -s
+
 compile :
 	@$(GCC) $(CFLAGS) -I $(INCLUDE) -c $(SRC) $(LIBFLAGS)
 	@$(MOVE) *.o $(LIB)
 	@$(GCC) $(CFLAGS) -o $(EXC) $(LIB)*.o $(LIBFLAGS)
 
 run :
-	@$(ECHO) '\n\n'------------------RUN------------------;
+	@$(ECHO) '\n'------------------RUN------------------'\n';
 	@$(EXC)
+	@$(ECHO) '\n'------------------END------------------'\n';
+
+admin :
+	@$(ECHO) '\n'------------------RUN------------------'\n';
+	@$(EXC) admin
+	@$(ECHO) '\n'------------------END------------------'\n';
 
 clean :
 	rm $(BIN) $(LIB)*

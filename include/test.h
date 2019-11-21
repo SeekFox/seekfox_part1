@@ -1,11 +1,10 @@
 //
-// Created by ClÃ©ment on 18/11/2019.
+// Created by Clément on 18/11/2019.
 //
 
 
-#ifndef __TEST__
-    #define __TEST__
-#endif
+#define __TEST__
+
 
 
 void startTest(){

@@ -21,14 +21,23 @@
 #ifndef __INTERACT__
     #include <../include/interact.h>
 #endif
-//#include <../include/interact.h>
 
 int main(int argc, char * argv[]){
+    //Initialisation
+    enum FSM state = END; //Machine a état
+
+
+    //Execution
     startTest();
-    enum FSM state = TITLE;
 
     if((argc==2) && (strcmp(argv[1],"admin")==0)){
        printf("\tInterface ADMIN\n");
+    }
+
+    while(state != END){
+        //Menu
+
+        //Switch case FSM
     }
 
     

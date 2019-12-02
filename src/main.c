@@ -21,15 +21,18 @@
 #ifdef __INTERACT__
     #include <../include/interact.h>
 #endif
-
+#include <../include/interact.h>
 
 int main(int argc, char * argv[]){
     startTest();
+    enum FSM state = TITLE;
 
     if((argc==2) && (strcmp(argv[1],"admin")==0)){
        printf("\tInterface ADMIN\n");
     }
 
+    
     printf("Hello World!\n");
+
     return 0;
 }

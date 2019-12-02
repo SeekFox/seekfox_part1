@@ -1,6 +1,6 @@
 /**
  * @file interact.h
- * @author ClÃ©ment Truillet (clement.truillet@univ-tlse3.fr)
+ * @author Clement Truillet (clement.truillet@univ-tlse3.fr)
  * @brief 
  * @version 0.1
  * @date 21/11/2019
@@ -20,7 +20,19 @@
     "1" active la haute intensité des caractères.
 */
 
-
+/**
+ * @brief Machine à etat
+ * 
+ */
+enum FSM{
+    TITLE,              //Welcome
+    CONNECT,            //Connect Page
+    ADMIN,              //Admin interface
+    CUSTOMER,           //Customer interface
+    INFO,               //Informations
+    END,                //Goodbye !
+}FSM;
+extern enum FSM state;
 
 /**
  * @brief Affichage du menu

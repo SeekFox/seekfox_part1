@@ -1,6 +1,6 @@
 /**
  * @file test.h
- * @author Clément Truillet (clement.truillet@univ-tlse3.fr)
+ * @author Clement Truillet (clement.truillet@univ-tlse3.fr)
  * @brief 
  * @version 0.1
  * @date 18/11/2019

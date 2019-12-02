@@ -14,14 +14,14 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef __TEST__
+#ifndef __TEST__
     #include "../include/test.h"
 #endif
 
-#ifdef __INTERACT__
+#ifndef __INTERACT__
     #include <../include/interact.h>
 #endif
-#include <../include/interact.h>
+//#include <../include/interact.h>
 
 int main(int argc, char * argv[]){
     startTest();

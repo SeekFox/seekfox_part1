@@ -12,10 +12,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#ifdef __INTERACT__
+#ifndef __INTERACT__
     #include <../include/interact.h>
 #endif
-
 
 void displayMenu(int isAdmin){
     //Affichage du menu

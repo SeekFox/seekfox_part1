@@ -24,8 +24,8 @@
 
 int main(int argc, char * argv[]){
     //Initialisation
-    enum FSM state = END; //Machine a état
-
+    enum FSM state = TITLE; //Machine a état
+    int isAdmin = 0;
 
     //Execution
     startTest();
@@ -36,9 +36,10 @@ int main(int argc, char * argv[]){
 
     while(state != END){
         //Menu
-
+	displayMenu(isAdmin);
         //Switch case FSM
-    }
+	state = END; 
+   }
 
     
     printf("Hello World!\n");

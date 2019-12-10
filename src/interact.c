@@ -16,7 +16,7 @@
     #include <../include/interact.h>
 #endif
 
-void displayMenu(int isAdmin){
+void displayMenu(int *isAdmin){
     //Affichage du menu
 }
 

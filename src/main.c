@@ -31,18 +31,19 @@ int main(int argc, char * argv[]){
     startTest();
 
     if((argc==2) && (strcmp(argv[1],"admin")==0)){
+        //Connexion Admin
        printf("\tInterface ADMIN\n");
     }
 
     while(state != END){
         //Menu
-	displayMenu(isAdmin);
+        displayMenu(&isAdmin);
         //Switch case FSM
-	state = END; 
-   }
+        state = END;
+    }
 
     
-    printf("Hello World!\n");
+    printf("Hello World!");
 
     return 0;
 }

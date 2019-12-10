@@ -55,4 +55,4 @@ dkms.conf
 /requete
 /data
 /log
-/bin/index.dat
+/data/index.dat

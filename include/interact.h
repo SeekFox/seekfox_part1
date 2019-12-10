@@ -39,7 +39,7 @@ extern enum FSM state;
  * 
  * @param isAdmin 
  */
-void displayMenu(int isAdmin);
+void displayMenu(int *isAdmin);
 
 /**
  * @brief Affichage des informations du projet

@@ -24,24 +24,26 @@
 
 int main(int argc, char * argv[]){
     //Initialisation
-    enum FSM state = END; //Machine a état
-
+    enum FSM state = TITLE; //Machine a état
+    int isAdmin = 0;
 
     //Execution
     startTest();
 
     if((argc==2) && (strcmp(argv[1],"admin")==0)){
+        //Connexion Admin
        printf("\tInterface ADMIN\n");
     }
 
     while(state != END){
         //Menu
-
+        displayMenu(&isAdmin);
         //Switch case FSM
+        state = END;
     }
 
     
-    printf("Hello World!\n");
+    printf("Hello World!");
 
     return 0;
 }

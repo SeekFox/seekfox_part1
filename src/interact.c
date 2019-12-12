@@ -38,11 +38,25 @@ void displayError(char * msg){
 }
 
 void connectAdmin(int * isAdmin){
-    char ch;
-    char password[32] = ""; //Chaine du mot de passe
+  char ch;
+  char password[32] = ""; //Chaine du mot de passe
+  char passwordGood[32]; //Bon mot de passe
+  FILE * fichier = NULL;
 
-    printf("Veuillez entrer le mot de passe administrateur : \n");
-    for (;;) {
+  //RECUPERATION MOT DE PASSE ATTENDU
+  fichier = fopen("data/admin.dat","r");
+  if(fichier!=NULL){
+    fscanf(fichier,"%s",passwordGood);
+    //printf("MOT DE PASSE ATTENDU : <%s>\n",passwordGood);
+    fclose(fichier);
+  }else{
+    displayError("Fichier de connexion admin indisponible");
+  }
+
+
+  printf("Veuillez entrer le mot de passe administrateur : \n");
+  for(int i=0; (i<3 && strcmp(password,passwordGood));i++){
+    for (;;){ //Recuperation du mot de passe 
       ch = getch();
       if(ch == '\n' || strlen(password)>31){ //Verifier que le mot de passe ne soit pas trop long OU que l'user ne presse pas le bouton entrer
         break;
@@ -51,10 +65,25 @@ void connectAdmin(int * isAdmin){
         sprintf(password,"%s%c",password,ch); //Ajout du nouveau caractere dans password
       }
     }
-    printf("\npassword : <%s>\n",password);
-    sprintf(password,"%s",(char*)crypt(password,"456b7016a916a4b178dd72b947c152b7"));
-    printf("password : <%s>\n",password);
-    //TEST VALIDITE MOT DE PASSE
+    printf("\n");
+
+    //Chiffrement
+
+    //printf("\npassword : <%s>\n",password);
+    sprintf(password,"%s",(char*)crypt(password,"456b7016a916a4b178dd72b947c152b7")); //Chiffrement
+    //printf("password : <%s>\n",password);
+
+    //Si le mot de passe n'est pas valide
+    if(strcmp(password,passwordGood)!=0){
+      memset(password,0,sizeof(password)); //Vider la zone 
+      displayError("mot de passe invalide");
+    }
+  }
+
+  if(strcmp(password,passwordGood)!=0){
+    *isAdmin=0;
+  }
+  printf("\n");
 }
 
 

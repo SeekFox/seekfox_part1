@@ -31,9 +31,10 @@ int main(int argc, char * argv[]){
     startTest();
 
     if((argc==2) && (strcmp(argv[1],"admin")==0)){
+        isAdmin=1;
         connectAdmin(&isAdmin);
         //Connexion Admin
-       printf("\tInterface ADMIN\n");
+       if(isAdmin==1) printf("\tInterface ADMIN\n");
     }
 
     while(state != END){
@@ -44,7 +45,7 @@ int main(int argc, char * argv[]){
     }
 
     
-    printf("Hello World!");
+    printf("Hello World!\n");
 
     return 0;
 }

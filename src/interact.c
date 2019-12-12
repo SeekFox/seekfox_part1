@@ -14,6 +14,7 @@
 #include <termios.h>
 #include <unistd.h>
 #include <string.h>
+#include <crypt.h>
 
 #ifndef __INTERACT__
     #include <../include/interact.h>
@@ -51,23 +52,29 @@ void connectAdmin(int * isAdmin){
       }
     }
     printf("\npassword : <%s>\n",password);
-
-    
-
+    sprintf(password,"%s",(char*)crypt(password,"456b7016a916a4b178dd72b947c152b7"));
+    printf("password : <%s>\n",password);
     //TEST VALIDITE MOT DE PASSE
 }
 
 
 
-/* *** *** *** *** *** */
+
+
+
+
+
+/**-------------------------------------------------------------------------------**/
 int getch(){
     struct termios oldtc, newtc;
     int ch;
+
     tcgetattr(STDIN_FILENO, &oldtc);
     newtc = oldtc;
     newtc.c_lflag &= ~(ICANON | ECHO);
     tcsetattr(STDIN_FILENO, TCSANOW, &newtc);
     ch=getchar();
     tcsetattr(STDIN_FILENO, TCSANOW, &oldtc);
+
     return ch;
 }

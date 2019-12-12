@@ -11,14 +11,24 @@
 
 #define __INTERACT__
 
+/**
+ * @brief Vide le buffer 
+ * 
+ */
+#ifndef CLEAR_STDIN
+	#define CLEAR_STDIN { int c; while((c = getchar()) != '\n' && c != EOF); }
+#endif
+
+/**
+ * @brief Paramètre  Couleur
+ * @brief 30 Noir |31 Rouge | 32 Vert | 33 Jaune | 34 Bleu | 35 Magenta | 36 Cyan | 37 Blanc
+ * @brief "1" active la haute intensité des caractères.
+ *  
+*/
 #ifndef COLOR
     #define color(param) printf("\033[%sm",param)
 #endif
-/* Paramètre  Couleur
-    30 Noir |31 Rouge | 32 Vert | 33 Jaune | 34 Bleu | 35 Magenta | 36 Cyan | 37 Blanc
-    
-    "1" active la haute intensité des caractères.
-*/
+
 
 /**
  * @brief Machine à etat
@@ -53,3 +63,17 @@ void displayInformations();
  * @param msg 
  */
 void displayError(char * msg);
+
+/**
+ * @brief Interface de connexion au compte admin
+ * 
+ * @param isAdmin 
+ */
+void connectAdmin(int * isAdmin);
+
+/**
+ * @brief 
+ * 
+ * @return int 
+ */
+int getch();

@@ -19,7 +19,7 @@
 #endif
 
 #ifndef __INTERACT__
-    #include <../include/interact.h>
+    #include "../include/interact.h"
 #endif
 
 int main(int argc, char * argv[]){
@@ -31,6 +31,7 @@ int main(int argc, char * argv[]){
     startTest();
 
     if((argc==2) && (strcmp(argv[1],"admin")==0)){
+        connectAdmin(&isAdmin);
         //Connexion Admin
        printf("\tInterface ADMIN\n");
     }

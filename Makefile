@@ -1,7 +1,7 @@
 MAKE = make
 GCC = gcc
 ECHO = echo
-LIBFLAGS =
+LIBFLAGS =-lcrypt
 CFLAGS = -Wall
 INCLUDE = include/
 SRC = $(wildcard src/*.c)
@@ -11,6 +11,9 @@ LIB = lib/
 READ = @read -p
 BIN = bin/*
 LOG = log/*
+
+.SILENT:clean
+.SILENT:cleanlog
 
 all :
 	@mkdir -p bin
@@ -36,8 +39,9 @@ admin :
 	@$(ECHO) '\n'------------------END------------------'\n';
 
 clean :
-	rm $(BIN) $(LIB)*
-	$(MAKE) cleanlog
+	@rm -f $(shell find ./bin -name *.out)
+	@rm -f $(shell find ./lib -name *.o)
+	@rm -f $(shell find ./log -name *.log)
 
 cleanlog :
-	rm $(LOG)
+	@rm -f $(shell find ./log -name *.)

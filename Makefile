@@ -20,6 +20,7 @@ all :
 	@mkdir -p lib
 	@mkdir -p data
 	@mkdir -p log
+	@mkdir -p requete
 	$(MAKE) compile -s
 	$(MAKE) run -s
 

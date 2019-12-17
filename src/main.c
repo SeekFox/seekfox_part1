@@ -30,10 +30,11 @@ int main(int argc, char * argv[]){
     //Execution
     startTest();
 
+    //Connexion Admin
     if((argc==2) && (strcmp(argv[1],"admin")==0)){
         connectAdmin(&isAdmin);
-        //Connexion Admin
-       if(isAdmin==1) printf("\tInterface ADMIN\n");
+        state = (isAdmin==1 ? ADMIN : TITLE);
+        if(isAdmin==1) printf("\tInterface ADMIN\n");
     }
 
     while(state != END){

@@ -34,7 +34,8 @@ void displayMenu(int *isAdmin, enum FSM * state){
     printf("\n4\\- Quitter Seekfox\n");
 
     scanf("%d",&nextState);
-    (*state) = (nextState==1 ? RESEARCH : (nextState==2 ? ADMIN : (nextState==3 ? INFO : (nextState==4 ? END : TITLE))));
+    CLEAR_STDIN
+    (*state) = (nextState==1 ? RESEARCH : (nextState==2 ? CONNECT : (nextState==3 ? INFO : (nextState==4 ? END : TITLE))));
     break;
 
   case CONNECT:
@@ -43,11 +44,13 @@ void displayMenu(int *isAdmin, enum FSM * state){
     break;
   
   case ADMIN:
-    /* code */
+    printf("\nMode Admin\n");
+    (*state)=TITLE;
     break;
 
   case RESEARCH:
-    /* code */
+    printf("\nMode Recherche\n");
+    (*state)=TITLE;
     break;
 
   case INFO:
@@ -60,9 +63,11 @@ void displayMenu(int *isAdmin, enum FSM * state){
     break;
   }
     //Affichage du menu
+  
 }
 
 void displayInformations(){
+  printf("\nwww.seekfox.team\n");
     //Affichage des infos du projets (Par qui ? )
 }
 

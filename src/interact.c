@@ -23,7 +23,42 @@
 
 
 
-void displayMenu(int *isAdmin){
+void displayMenu(int *isAdmin, enum FSM * state){
+  int nextState = (*state);
+
+  switch (*state){
+  case TITLE:
+    printf("\n1\\- Recherche");
+    printf("\n2\\- Administration");
+    printf("\n3\\- Informations");
+    printf("\n4\\- Quitter Seekfox\n");
+
+    scanf("%d",&nextState);
+    (*state) = (nextState==1 ? RESEARCH : (nextState==2 ? ADMIN : (nextState==3 ? INFO : (nextState==4 ? END : TITLE))));
+    break;
+
+  case CONNECT:
+    connectAdmin(isAdmin);
+    (*state)=ADMIN;
+    break;
+  
+  case ADMIN:
+    /* code */
+    break;
+
+  case RESEARCH:
+    /* code */
+    break;
+
+  case INFO:
+    displayInformations();
+    (*state) = TITLE;
+    break;
+
+  default:
+
+    break;
+  }
     //Affichage du menu
 }
 
@@ -38,6 +73,7 @@ void displayError(char * msg){
 }
 
 void connectAdmin(int * isAdmin){
+  (*isAdmin) = 1;
   char ch;
   char password[32] = ""; //Chaine du mot de passe
   char passwordGood[32]; //Bon mot de passe

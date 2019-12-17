@@ -31,7 +31,6 @@ int main(int argc, char * argv[]){
     startTest();
 
     if((argc==2) && (strcmp(argv[1],"admin")==0)){
-        isAdmin=1;
         connectAdmin(&isAdmin);
         //Connexion Admin
        if(isAdmin==1) printf("\tInterface ADMIN\n");
@@ -39,9 +38,9 @@ int main(int argc, char * argv[]){
 
     while(state != END){
         //Menu
-        displayMenu(&isAdmin);
+        displayMenu(&isAdmin,&state);
         //Switch case FSM
-        state = END;
+       // state = END;
     }
 
     

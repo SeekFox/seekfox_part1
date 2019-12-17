@@ -38,7 +38,7 @@ enum FSM{
     TITLE,              //Welcome
     CONNECT,            //Connect Page
     ADMIN,              //Admin interface
-    CUSTOMER,           //Customer interface
+    RESEARCH,           //Recherche
     INFO,               //Informations
     END,                //Goodbye !
 }FSM;
@@ -49,7 +49,7 @@ extern enum FSM state;
  * 
  * @param isAdmin 
  */
-void displayMenu(int *isAdmin);
+void displayMenu(int *isAdmin, enum FSM * state);
 
 /**
  * @brief Affichage des informations du projet

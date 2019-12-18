@@ -8,7 +8,7 @@
  * @copyright Copyright (c) 2019
  * 
  */
-
+#ifndef __ELEMENT__
 #define __ELEMENT__
 
 /**
@@ -83,3 +83,4 @@ int compare_ELEMENT(ELEMENT elt1, ELEMENT elt2);
  * @return int 
  */
 int getI(ELEMENT e);
+#endif

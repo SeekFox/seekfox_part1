@@ -8,12 +8,11 @@
  * @copyright Copyright (c) 2019
  * 
  */
-
+#ifndef __FILE_DYNAMIQUE__
 #define __FILE_DYNAMIQUE__
 
-#ifndef __ELEMENT__
-    #include "../include/element.h"
-#endif
+#include "../include/element.h"
+
 
 /**
  * @brief Pointeur sur la structure file
@@ -73,3 +72,4 @@ File saisirFile(void);
  * @return int 
  */
 int sommeFile(File f);
+#endif

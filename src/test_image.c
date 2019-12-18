@@ -1,9 +1,11 @@
 #include<stdio.h>
 #include<stdlib.h>
 typedef int *bits;
-bits quantifier(int composante_rouge,int composante_vert,int composante_bleue,int n);
+typedef int **matrice;
 
-bits quantifier(int composante_rouge,int composante_vert,int composante_bleue,int n){
+int quantifier(int composante_rouge,int composante_vert,int composante_bleue,int n);
+
+int quantifier(int composante_rouge,int composante_vert,int composante_bleue,int n){
 	int dim = n*3;
 	bits b = malloc(dim*sizeof(int));
 	if(b == NULL)exit(1);
@@ -42,7 +44,8 @@ bits quantifier(int composante_rouge,int composante_vert,int composante_bleue,in
 		b[7] = bleue[6];
 		b[8] = bleue[5];
 		}
-	return b;
+		
+	return ;
 }
 
 int main(void){
@@ -60,7 +63,7 @@ int main(void){
 	for(int i=0;i<n*3;i++)printf("%d ",b[i]);
 	printf("\n");
 	*/
-	int Longueur,Hauteur,NombreComposantes,Dimension,i=3;
+	int NbLignes,NbColonnes,NombreComposantes;
 	char nomfichier[10];
 	
 	printf("saisir le nom du fichier\n");
@@ -69,22 +72,50 @@ int main(void){
 	FILE *entree;
 	entree = fopen(nomfichier,"r");	
 	
-	fscanf(entree,"%d%d%d",&Longueur,&Hauteur,&NombreComposantes);
+	fscanf(entree,"%d%d%d",&NbLignes,&NbColonnes,&NombreComposantes);
 	
-	int *ComposantesRouges,*ComposantesVertes,*ComposantesBleues;
-	ComposantesRouges = malloc(Longueur*sizeof(int));
-	ComposantesVertes = malloc(Longueur*sizeof(int));
-	ComposantesBleues = malloc(Longueur*sizeof(int));
-	if(ComposantesRouges == NULL || ComposantesVertes == NULL || ComposantesBleues == NULL)exit(EXIT_FAILURE));
-	Dimension = Longueur * Hauteur;
-	while(feof(entree) == 0){
-		if(i<=Dimension)fscanf(entree,"%d",&ComposantesRouges[i]);
-		else if(i<=2*Dimension)fscanf(entree,"%d",&ComposantesVertes[i]);
-		else fscanf(entree,"%d",&ComposantesBleues[i]);
-		i++;
+	matrice Rouge,Vert,Bleue;
+	
+	Rouge = malloc(NbLignes*sizeof(int));
+	Verte = malloc(NbLignes*sizeof(int));
+	Bleue = malloc(NbLignes*sizeof(int));
+	if(Rouge == NULL || Verte == NULL || Bleue == NULL)exit(EXIT_FAILURE));
+	
+	for(int i=0;i<NbLignes;i++){
+		Rouge[i] = malloc(NbColonnes*sizeof(int));
+		Verte[i] = malloc(NbColonnes*sizeof(int));
+		Blueue[i] = malloc(NbColonnes*sizeof(int));
+		if(Rouge[i] == NULL || Verte[i] == NULL || Bleue[i] == NULL)exit(EXIT_FAILURE));
+		}
+		
+	for(int i=0;i<NbLignes;i++){
+		for(int j=0;j<NbColonnes;j++){
+			fscanf(entree,"%d",&Rouges[i][j]); 		
+		}
 	}
+		
+	for(int i=0;i<NbLignes;i++){
+		for(int j=0;j<NbColonnes;j++){
+			fscanf(entree,"%d",&Verte[i][j]); 		
+		}
+	}
+		
+	for(int i=0;i<NbLignes;i++){
+		for(int j=0;j<NbColonnes;j++){
+			fscanf(entree,"%d",&Bleue[i][j]); 		
+		}
+	}
+	
+	for(int i=0;i<Nblignes;i++){
+		for(int j=0;j<NbColonnes;j++){
+			
+		}
+	}
+	int Histogramme[64]={0};
+	
 	fclose(entree);
-	printf("%d %d %d\n",Longueur,Hauteur,NombreComposantes);
+	
+	printf("%d %d %d\n",NbLignes,NbColonnes,NombreComposantes);
 	
 	printf("%d %d %d \n",ComposantesRouges[0],ComposantesVertes[0],ComposantesBleues[0]);
 	return 0;

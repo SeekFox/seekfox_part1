@@ -52,6 +52,12 @@ extern enum FSM state;
 void displayMenu(int *isAdmin, enum FSM * state);
 
 /**
+ * @brief Affichage de menu de recherche
+ * 
+ */
+void displayMenuResearch();
+
+/**
  * @brief Affichage des informations du projet
  * 
  */
@@ -77,3 +83,12 @@ void connectAdmin(int * isAdmin);
  * @return int 
  */
 int getch();
+
+/**
+ * @brief Convertis une chaine de caractere de choix en int 
+ * 
+ * @param str 
+ * @param max
+ * @return int 
+ */
+int convertStringChoiceToInt(char * str, int max);

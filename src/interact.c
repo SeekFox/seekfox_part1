@@ -49,12 +49,14 @@ void displayMenu(int *isAdmin, enum FSM * state){
     break;
 
   case RESEARCH:
-    printf("\nMode Recherche\n");
+    printf("\n=== RECHERCHE ===\n");
+    displayMenuResearch();
     (*state)=TITLE;
     break;
 
   case INFO:
     displayInformations();
+    CLEAR_STDIN
     (*state) = TITLE;
     break;
 
@@ -64,6 +66,49 @@ void displayMenu(int *isAdmin, enum FSM * state){
   }
     //Affichage du menu
   
+}
+
+void displayMenuResearch(){
+  char choix[64];
+  int i = 0;
+  char line[128];
+  FILE * listFile = NULL;
+  listFile = fopen("data/index.dat","r");
+  rewind(listFile);
+
+  if(listFile!=NULL){
+    printf("  #/- Recherche par Couleur Dominante\n");
+    printf("  0/- Recherche par mot-clé\n");
+    while (fgets(line, 128, listFile) != NULL){
+      i++;
+      printf("  %d/- %s",i,line);
+    }
+    fclose(listFile);
+    scanf("%32s",choix);
+
+    printf("\n>%s<  \t >%d<\n",choix,convertStringChoiceToInt(choix,i));
+    CLEAR_STDIN
+  }else{
+    displayError("Ouverture du ficher index.dat impossible.");
+  }
+
+
+}
+
+int convertStringChoiceToInt(char * str, int max){
+  int val;
+
+  if(strcmp(str,"#")==0){
+    val = -1;
+  }else if(strcmp(str,"0")==0){
+    val = 0;
+  }else{
+    val = atoi(str);
+    printf("\t%d\n",val);
+    val = (val==0 || val > max ? -2 : val);
+  }
+
+  return val;
 }
 
 void displayInformations(){

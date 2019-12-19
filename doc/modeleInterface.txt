@@ -1,17 +1,17 @@
 INTERFACE SEEKFOX
-	 1/- RECHERCHE
+	1/- RECHERCHE
 		#/- Recherche par Couleur Dominante
 		0/- Recherche par keyword
 		1/- textecourt.xml
 		2/- imagecool.jpg
 		3/- wololo.wav
-	 2/- ADMIN
-		1/-INDEXATION MANUEL
-		2/-VISUALISER UN DESCRIPTEUR
-		3/-CONFIG
-			1/-CHANGER DE MOT DE PASSE
-			2/-
-			3/-
+	2/- ADMIN
+		1/- INDEXATION MANUELLE
+		2/- VISUALISER UN DESCRIPTEUR
+		3/- CONFIG
+			1/- CHANGER DE MOT DE PASSE
+			2/- 
+			3/- 
 		4/-SE DECONNECTER
 	3/- INFORMATIONS
 	4/- QUITTER SEEKFOX

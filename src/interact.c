@@ -25,57 +25,61 @@
 
 void displayMenu(int *isAdmin, enum FSM * state){
   int nextState = (*state);
+  char file[16] = "";
 
   switch (*state){
-  case TITLE:
-    printf("\n1\\- Recherche");
-    printf("\n2\\- Administration");
-    printf("\n3\\- Informations");
-    printf("\n4\\- Quitter Seekfox\n");
+    case TITLE:
+      printf("\n1\\- Recherche");
+      printf("\n2\\- Administration");
+      printf("\n3\\- Informations");
+      printf("\n4\\- Quitter Seekfox\n");
 
-    scanf("%d",&nextState);
-    CLEAR_STDIN
-    (*state) = (nextState==1 ? RESEARCH : (nextState==2 ? CONNECT : (nextState==3 ? INFO : (nextState==4 ? END : TITLE))));
-    break;
+      scanf("%d",&nextState);
+      CLEAR_STDIN
+      (*state) = (nextState==1 ? RESEARCH : (nextState==2 ? CONNECT : (nextState==3 ? INFO : (nextState==4 ? END : TITLE))));
+      break;
 
-  case CONNECT:
-    connectAdmin(isAdmin);
-    (*state)=ADMIN;
-    break;
-  
-  case ADMIN:
-    printf("\nMode Admin\n");
-    (*state)=TITLE;
-    break;
+    case CONNECT:
+      connectAdmin(isAdmin);
+      (*state)=ADMIN;
+      break;
+    
+    case ADMIN:
+      printf("\nMode Admin\n");
+      (*state)=TITLE;
+      break;
 
-  case RESEARCH:
-    printf("\n=== RECHERCHE ===\n");
-    displayMenuResearch();
-    (*state)=TITLE;
-    break;
+    case RESEARCH:
+      printf("\n=== RECHERCHE ===\n");
+      displayMenuResearch(file,state);
+      printf(">>>%s<<<",file);
+      (*state)=TITLE;
+      break;
 
-  case INFO:
-    displayInformations();
-    CLEAR_STDIN
-    (*state) = TITLE;
-    break;
+    case INFO:
+      displayInformations();
+      CLEAR_STDIN
+      (*state) = TITLE;
+      break;
 
-  default:
-
-    break;
+    default:
+      displayError("Twinkie not found.");
+      break;
   }
-    //Affichage du menu
-  
 }
 
-void displayMenuResearch(){
-  char choix[4];
+void displayMenuResearch(char * file, enum FSM * state){
+  char choix[4] = "";
+  char ext[8] = "";
+  char line[128] = "";
   int i = 0;
-  char line[128];
+  int choixNb = -1;
+
   FILE * listFile = NULL;
   listFile = fopen("data/index.dat","r");
   rewind(listFile);
 
+  //Si le fichier index.dat existe
   if(listFile!=NULL){
     printf("  #/- Recherche par Couleur Dominante\n");
     printf("  0/- Recherche par mot-clé\n");
@@ -88,22 +92,31 @@ void displayMenuResearch(){
 
     //Lecture du choix
     scanf("%4s",choix);
-  
-    //printf("\n>%s<  \t >%d<\n",choix,convertStringChoiceToInt(choix,i));
 
     //Recuperation du fichier choisi
-    if(convertStringChoiceToInt(choix,i) > 0){
+    choixNb = convertStringChoiceToInt(choix,i);
+    if(choixNb > 0){
       rewind(listFile);
       strcpy(line,"");
-      for(int k=0; k<convertStringChoiceToInt(choix,i); k++){
+      for(int k=0; k<choixNb; k++){
         fscanf(listFile,"%s\n",line);
       }
+
+      printf("\n\t >>%s<<\n",line);
+      strcpy(ext, strrchr(line,'.'));
+      printf("\n\t >>%s<<\n",ext);
+      (*state) = ( ( strcmp(ext,".bmp")==0 || strcmp(ext,".jpg")==0 ) ? R_IMAGE : (strcmp(ext,".xml")==0 ? R_TEXTE : (strcmp(ext,".wav")==0 || strcmp(ext,".bin")==0 ) ? R_SON : (*state)));
+      strcpy(file,line);
+    }else if(choixNb == -1){
+        (*state) = R_KEYWORD;
+    }else if(choixNb == -2){
+      (*state) = R_COLOR;
+    }else{
+      (*state) = RESEARCH;
     }
 
     //Fermeture du fichier
     fclose(listFile);
-
-    printf("\n\t >>%s<<\n",line);
     
     CLEAR_STDIN
   }else{

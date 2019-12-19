@@ -39,6 +39,11 @@ enum FSM{
     CONNECT,            //Connect Page
     ADMIN,              //Admin interface
     RESEARCH,           //Recherche
+    R_IMAGE,            //Recherche Image
+    R_TEXTE,            //Recherche Texte
+    R_SON,              //Recherche Son
+    R_KEYWORD,          //Recherche Mot-Clef
+    R_COLOR,            //Recherche Couleur Dominante
     INFO,               //Informations
     END,                //Goodbye !
 }FSM;
@@ -54,8 +59,11 @@ void displayMenu(int *isAdmin, enum FSM * state);
 /**
  * @brief Affichage de menu de recherche
  * 
+ * @param file
+ * @param state
+ * 
  */
-void displayMenuResearch();
+void displayMenuResearch(char * file, enum FSM * state);
 
 /**
  * @brief Affichage des informations du projet

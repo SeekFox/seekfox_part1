@@ -16,10 +16,11 @@ LOG = log/*
 .SILENT:cleanlog
 
 all :
-	$(MAKE) compile -s
-	$(MAKE) run -s
+	@$(MAKE) compile -s
+	@$(MAKE) run -s
 
 compile :
+	@$(ECHO) 'Loading ...';
 	@mkdir -p bin
 	@mkdir -p lib
 	@mkdir -p data

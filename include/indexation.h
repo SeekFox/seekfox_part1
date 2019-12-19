@@ -19,6 +19,7 @@ PILEDESC * creerPileDescVide ();                // Crée une pile de descripteur
 void ajouterDescPile (PILEDESC *, DESC *);      // Ajoute un descripteur à la pile
 char * extensionFichier (char *);               // Renvoie l'extension du fichier dont le nom a été donné en paramètre
 
-void indexation (PILEDESC * p);                 // Fait l'indexation de tous les fichiers de la base de document et met les descripteurs dans p
+void empilementDesDescripteurs (PILEDESC *, PILEDESC *);                 // Fait l'indexation de tous les fichiers de la base de document et met les descripteurs dans p1, puis les adresses des fichiers dans p2
+void indexationTotale ();           // Refait l'indexation de 0, utilisé au premier lancement ou par lancement manuel
 
 #endif

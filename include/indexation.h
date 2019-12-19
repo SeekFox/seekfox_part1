@@ -14,8 +14,11 @@ typedef struct piledesc {   // Structure contenant la pile de descripteurs
 
 
 DESC * initDesc ();                             // Crée une cellule descripteur vide
-void creerDesc (char *);                        // Ajoute une cellule descripteur à partir de la chaîne de caractères le représentant
+DESC * creerDesc (char *);                        // Ajoute une cellule descripteur à partir de la chaîne de caractères le représentant
 PILEDESC * creerPileDescVide ();                // Crée une pile de descripteurs vide
 void ajouterDescPile (PILEDESC *, DESC *);      // Ajoute un descripteur à la pile
+char * extensionFichier (char *);               // Renvoie l'extension du fichier dont le nom a été donné en paramètre
+
+void indexation (PILEDESC * p);                 // Fait l'indexation de tous les fichiers de la base de document et met les descripteurs dans p
 
 #endif

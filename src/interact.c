@@ -69,7 +69,7 @@ void displayMenu(int *isAdmin, enum FSM * state){
 }
 
 void displayMenuResearch(){
-  char choix[64];
+  char choix[4];
   int i = 0;
   char line[128];
   FILE * listFile = NULL;
@@ -79,14 +79,32 @@ void displayMenuResearch(){
   if(listFile!=NULL){
     printf("  #/- Recherche par Couleur Dominante\n");
     printf("  0/- Recherche par mot-clé\n");
+    //Lecture du fichier
     while (fgets(line, 128, listFile) != NULL){
       i++;
       printf("  %d/- %s",i,line);
     }
-    fclose(listFile);
-    scanf("%32s",choix);
+    
 
-    printf("\n>%s<  \t >%d<\n",choix,convertStringChoiceToInt(choix,i));
+    //Lecture du choix
+    scanf("%4s",choix);
+  
+    //printf("\n>%s<  \t >%d<\n",choix,convertStringChoiceToInt(choix,i));
+
+    //Recuperation du fichier choisi
+    if(convertStringChoiceToInt(choix,i) > 0){
+      rewind(listFile);
+      strcpy(line,"");
+      for(int k=0; k<convertStringChoiceToInt(choix,i); k++){
+        fscanf(listFile,"%s\n",line);
+      }
+    }
+
+    //Fermeture du fichier
+    fclose(listFile);
+
+    printf("\n\t >>%s<<\n",line);
+    
     CLEAR_STDIN
   }else{
     displayError("Ouverture du ficher index.dat impossible.");
@@ -104,7 +122,6 @@ int convertStringChoiceToInt(char * str, int max){
     val = 0;
   }else{
     val = atoi(str);
-    printf("\t%d\n",val);
     val = (val==0 || val > max ? -2 : val);
   }
 

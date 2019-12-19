@@ -5,7 +5,7 @@ typedef int **matrice;
 
 int quantifier(int composante_rouge,int composante_vert,int composante_bleue,int n);
 
-int quantifier(int composante_rouge,int composante_vert,int composante_bleue,int n){
+/*int quantifier(int composante_rouge,int composante_vert,int composante_bleue,int n){
 	int dim = n*3;
 	bits b = malloc(dim*sizeof(int));
 	if(b == NULL)exit(1);
@@ -33,7 +33,7 @@ int quantifier(int composante_rouge,int composante_vert,int composante_bleue,int
 				if(i<3)b[i] = rouge[7-i];
 				else if(i<5)for(int j=7;j>4;j--)b[i] = vert[j];
 				else for(int j=7;j>4;j--)b[3] = vert[7];
-			*/	
+				
 		b[0] = rouge[7];
 		b[1] = rouge[6];
 		b[2] = rouge[5];
@@ -46,9 +46,14 @@ int quantifier(int composante_rouge,int composante_vert,int composante_bleue,int
 		}
 		
 	return ;
-}
+}*/
 
+void AllouerMemoire(int **tab,int taille){
+	*tab = (int*)calloc(taille,sizeof(int)*taille);
+	if(tab == NULL) exit(EXIT_FAILURE);
+}
 int main(void){
+/*-----------------------------------test de la fonction quantifier-------------------*/
 	/*int n,cr,cv,cb;
 	
 	printf("sasir le nombre de bits sur quoi quantifier\n");
@@ -63,7 +68,15 @@ int main(void){
 	for(int i=0;i<n*3;i++)printf("%d ",b[i]);
 	printf("\n");
 	*/
-	int NbLignes,NbColonnes,NombreComposantes;
+/*------------------------------------------------------------------------------------*/
+int *tab = NULL;
+AllouerMemoire(&tab,5);
+for(int i=0;i<5;i++){
+	tab[i] = i;
+	printf("%d",tab[i]);
+	}
+/*------------------------------------------------------------------------------------*/
+/*	int NbLignes,NbColonnes,NombreComposantes;
 	char nomfichier[10];
 	
 	printf("saisir le nom du fichier\n");
@@ -83,9 +96,11 @@ int main(void){
 	
 	for(int i=0;i<NbLignes;i++){
 		Rouge[i] = malloc(NbColonnes*sizeof(int));
+		if(Rouge[i] == NULL)exit(EXIT_FAILURE);
 		Verte[i] = malloc(NbColonnes*sizeof(int));
+		if(Verte[i] == NULL)exit(EXIT_FAILURE);
 		Blueue[i] = malloc(NbColonnes*sizeof(int));
-		if(Rouge[i] == NULL || Verte[i] == NULL || Bleue[i] == NULL)exit(EXIT_FAILURE));
+		if(Bleue[i] == NULL)exit(EXIT_FAILURE));
 		}
 		
 	for(int i=0;i<NbLignes;i++){
@@ -106,18 +121,13 @@ int main(void){
 		}
 	}
 	
-	for(int i=0;i<Nblignes;i++){
-		for(int j=0;j<NbColonnes;j++){
-			
-		}
-	}
 	int Histogramme[64]={0};
 	
 	fclose(entree);
 	
 	printf("%d %d %d\n",NbLignes,NbColonnes,NombreComposantes);
 	
-	printf("%d %d %d \n",ComposantesRouges[0],ComposantesVertes[0],ComposantesBleues[0]);
+	printf("%d %d %d \n",ComposantesRouges[0],ComposantesVertes[0],ComposantesBleues[0]);*/
 	return 0;
 }
 

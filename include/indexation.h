@@ -25,7 +25,9 @@ void displayError (char *);                     // Ecrit le message d'erreur pas
 
 /* FONCTIONS D'INDEXATION EFFECTIVE */
 void empilementDesDescripteurs (PILEDESC *, PILEDESC *);                 // Fait l'indexation de tous les fichiers de la base de document et met les descripteurs dans p1, puis les adresses des fichiers dans p2
+void suppressionOrphelins ();                   // Retire de la liste des fichiers indexés les fichiers qui ne sont plus dans la base de documents
 void indexationTotale ();                       // Refait l'indexation de 0, utilisé au premier lancement ou par lancement manuel - PREMIER MODE MANUEL
 void indexationUnique (char *);                 // Fait l'indexation d'un fichier dont l'adresse est donnée en paramètre - DEUXIEME MODE MANUEL
+void indexationAutomatique ();                  // MODE AUTOMATIQUE : si rien d'indexé, fait une indexation totale, sinon supprime les descripteurs orphelins
 
 #endif

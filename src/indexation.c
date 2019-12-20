@@ -104,6 +104,14 @@ void displayError(char * msg){          // Affiche un message d'erreur en rouge 
     color("0");
 }
 
+/*void supprLigneFichiersIndexes (FILE * fichier, int n) {        // Supprime la ligne n du fichier fichiersIndexes
+    FILE * temp = NULL;
+    fopen ("data/descripteurs/temp.txt", "w+");
+
+    char * ligne = malloc(200*sizeof(char));
+
+}*/
+
 /*==================================================================================================================================*/
 
 
@@ -250,9 +258,61 @@ void indexationUnique (char * adrDoc) {         // Indexe un unique document à 
     fclose(fichiersIndex);
 }
 
+void suppressionOrphelins () {      // Supprime les fichiers indexés qui n'existent plus
+    
+    /* Ouverture et vérification de l'ouverture du fichier fichiersIndexes.txt */
+    FILE * fichiersIndex = NULL;
+    fichiersIndex = fopen("data/descripteurs/fichiersIndexes.txt", "r+");
+    if (fichiersIndex==NULL) {
+        displayError("Indexation : impossible d'accéder à la liste des fichiers indexés.");
+        return;
+    }
+    
+    /* Pour chaque ligne du fichier, on tente d'ouvrir le fichier associé, si ce n'est pas possible c'est qu'il n'existe pas */
+    FILE * courant = NULL;
+    char * fichCourant = malloc(200*sizeof(char));
+    while (fgets(fichCourant, 200, fichiersIndex)!=NULL) {
+        int i=0;
+        while(fichCourant[i]!='\n') i++;
+        fichCourant[i]='\0';                // Suppression du saut de ligne à la fin de l'adresse
+        courant = fopen(fichCourant, "r");
+        if (courant==NULL) {
+            fprintf(fichiersIndex, "NULL");
+        } else {
+            fclose(courant);
+            courant = NULL;
+        }
+    }
+    
+    fclose(fichiersIndex);
+} 
+
+void indexationAutomatique () {
+
+    FILE * indexDesc = NULL;
+    FILE * fichiersIndex = NULL;
+    indexDesc = fopen("data/descripteurs/descripteurs.txt", "r+");
+    fichiersIndex = fopen("data/descripteurs/fichiersIndexes.txt", "r+");
+
+    if (indexDesc==NULL || fichiersIndex==NULL) {
+        /* Cas où les fichiers n'existent pas : on fait une indexation totale */
+        indexationTotale();
+    } else if(fgetc(fichiersIndex)==EOF || fgetc(indexDesc)==EOF) {
+        /* Cas où les fichiers sont vides : on fait une indexation totale */
+        fclose(indexDesc);
+        fclose(fichiersIndex);
+        indexationTotale();
+    } else {
+        /* Cas où il y a des fichiers indexés : on supprime les descripteurs orphelins */
+        fclose(indexDesc);
+        fclose(fichiersIndex);
+        suppressionOrphelins();
+    }
+}
+
 /*==================================================================================================================================*/
 
 
 int main (int argc, char * argv[]) {
-    indexationUnique("base_de_documents/lasagne.xml");
+    indexationAutomatique();
 }

@@ -45,6 +45,11 @@ void displayMenu(int *isAdmin, enum FSM * state, char * file){
     
     case ADMIN:
       printf("\nMode Admin\n");
+      //TODO: Affichage du Menu admin
+      //Lancer une indexation manuelle
+      //Visualiser un descripteur
+      //Changer de Mot de Passe
+      //Config
       (*state)=TITLE;
       break;
 

@@ -79,7 +79,7 @@ void displayMenu(int *isAdmin, enum FSM * state, char * file){
       break;
 
     case INFO:
-      displayInformations();
+      displayInformations();  
       CLEAR_STDIN
       (*state) = TITLE;
       break;
@@ -172,8 +172,18 @@ char * getExtensionOfFile(char * file){
 }
 
 void displayInformations(){
-  printf("\nwww.seekfox.team\n");
-    //Affichage des infos du projets (Par qui ? )
+  color("37");
+  color("1");
+  printf("\n=== SEEKFOX TEAM ===\n");
+  color("30");
+  color("0");
+  printf("Gael Camba : CTO\n");
+  printf("Oualid El Abdaoui : \n");
+  printf("Etienne Combelles : \n");
+  printf("Raphael Bizet : Stagiaire\n");
+  printf("Clement Truillet : Community Manager\n");
+  printf("\n");
+  printf("www.seekfox.team - @seekfox\n");
 }
 
 void displayError(char * msg){

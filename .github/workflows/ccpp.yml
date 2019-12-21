@@ -13,5 +13,3 @@ jobs:
       run: make compile
     - name: make clean
       run: make clean
-    - name: todo-actions
-      uses: dtinth/todo-actions@v0.2.0

@@ -23,9 +23,8 @@
 
 
 
-void displayMenu(int *isAdmin, enum FSM * state){
+void displayMenu(int *isAdmin, enum FSM * state, char * file){
   int nextState = (*state);
-  char file[16] = "";
 
   switch (*state){
     case TITLE:
@@ -52,8 +51,31 @@ void displayMenu(int *isAdmin, enum FSM * state){
     case RESEARCH:
       printf("\n=== RECHERCHE ===\n");
       displayMenuResearch(file,state);
-      printf(">>>%s<<<",file);
-      (*state)=TITLE;
+      break;
+
+    case R_IMAGE:
+      printf("Recherche par IMAGE\n");
+      (*state) = TITLE;
+      break;
+
+    case R_TEXTE:
+      printf("Recherche par TEXTE\n");
+      (*state) = TITLE;
+      break;
+
+    case R_SON:
+      printf("Recherche par SON\n");
+      (*state) = TITLE;
+      break;
+
+    case R_KEYWORD:
+      printf("Recherche par MOT CLES\n");
+      (*state) = TITLE;
+      break;
+
+    case R_COLOR:
+      printf("Recherche par COULEUR DOMINANTE\n");
+      (*state) = TITLE;
       break;
 
     case INFO:
@@ -64,6 +86,7 @@ void displayMenu(int *isAdmin, enum FSM * state){
 
     default:
       displayError("Twinkie not found.");
+      (*state) = TITLE;
       break;
   }
 }
@@ -108,9 +131,9 @@ void displayMenuResearch(char * file, enum FSM * state){
       (*state) = ( ( strcmp(ext,".bmp")==0 || strcmp(ext,".jpg")==0 ) ? R_IMAGE : (strcmp(ext,".xml")==0 ? R_TEXTE : (strcmp(ext,".wav")==0 || strcmp(ext,".bin")==0 ) ? R_SON : (*state)));
       strcpy(file,line);
     }else if(choixNb == -1){
-        (*state) = R_KEYWORD;
-    }else if(choixNb == -2){
-      (*state) = R_COLOR;
+        (*state) = R_COLOR;
+    }else if(choixNb == 0){
+      (*state) = R_KEYWORD;
     }else{
       (*state) = RESEARCH;
     }
@@ -141,6 +164,13 @@ int convertStringChoiceToInt(char * str, int max){
   return val;
 }
 
+char * getExtensionOfFile(char * file){
+  char * ext = (char *)malloc(sizeof(char)*4);
+  strcpy(ext,"");
+  strcpy(ext, strrchr(file,'.'));
+  return ext;
+}
+
 void displayInformations(){
   printf("\nwww.seekfox.team\n");
     //Affichage des infos du projets (Par qui ? )
@@ -148,7 +178,7 @@ void displayInformations(){
 
 void displayError(char * msg){
     color("31");
-    printf("[ERREUR] %s\n",msg);
+    printf("\n[ERREUR] %s\n",msg);
     color("0");
 }
 

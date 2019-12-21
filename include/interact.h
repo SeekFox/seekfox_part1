@@ -54,7 +54,7 @@ extern enum FSM state;
  * 
  * @param isAdmin 
  */
-void displayMenu(int *isAdmin, enum FSM * state);
+void displayMenu(int *isAdmin, enum FSM * state, char * file);
 
 /**
  * @brief Affichage de menu de recherche
@@ -100,3 +100,11 @@ int getch();
  * @return int 
  */
 int convertStringChoiceToInt(char * str, int max);
+
+/**
+ * @brief Get the Extension Of File object
+ * 
+ * @param file 
+ * @return char* 
+ */
+char * getExtensionOfFile(char * file);

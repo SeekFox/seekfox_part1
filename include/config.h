@@ -12,6 +12,7 @@
 #define __CONFIG__
 
 typedef struct config_s * Config;
+extern Config config;
 
 //Getter
 /**
@@ -73,6 +74,5 @@ Config loadConfig();
 /**
  * @brief Affiche les parametres de configuration
  * 
- * @param c 
  */
-void displayConfig(Config c);
+void displayConfig();

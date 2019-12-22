@@ -34,13 +34,13 @@
  *  audio_m                 : Nombre d'intervalles de la fenetre d'analyse
  * 
  */
-typedef struct config_s{
+struct config_s{
     char passwordAdmin[32];
     int audio_n;
     int audio_m;
-} config;
+};
 
-
+//Config config;
 
 //Getter
 char * getPasswordAdmin(Config c){
@@ -69,7 +69,7 @@ void setAudioM(Config *c, int m){
 }
 
 Config loadConfig(){
-    Config c = (Config)malloc(sizeof(config));
+    Config c = (Config)malloc(sizeof(struct config_s));
     FILE * fichier = NULL;
     char line[64] = "";
     int i = 0;
@@ -101,17 +101,17 @@ Config loadConfig(){
         }
         fclose(fichier);
     }else{
-        displayError("Fichier de config indisponible");
+        displayError("Fichier de config inexistant");
         exit(-1);
     }
 
     return c;
 }
 
-void displayConfig(Config c){
+void displayConfig(){
     printf("\n===CONFIG===\n");
-    printf("%s\n",getPasswordAdmin(c));
-    printf("%d\n",getAudioN(c));
-    printf("%d\n",getAudioM(c));
+    printf("%s\n",getPasswordAdmin(config));
+    printf("%d\n",getAudioN(config));
+    printf("%d\n",getAudioM(config));
     printf("\n");
 }   

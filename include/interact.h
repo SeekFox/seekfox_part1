@@ -47,7 +47,6 @@ enum FSM{
     INFO,               //Informations
     END,                //Goodbye !
 }FSM;
-extern enum FSM state;
 
 /**
  * @brief Affichage du menu

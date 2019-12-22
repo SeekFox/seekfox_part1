@@ -18,26 +18,23 @@ extern Config config;
 /**
  * @brief Get the Password Admin object
  * 
- * @param c 
  * @return char* 
  */
-char * getPasswordAdmin(Config c);
+char * getPasswordAdmin();
 
 /**
  * @brief Get the Audio N object
  * 
- * @param c 
  * @return int 
  */
-int getAudioN(Config c);
+int getAudioN();
 
 /**
  * @brief Get the Audio M object
  * 
- * @param c 
  * @return int 
  */
-int getAudioM(Config c);
+int getAudioM();
 
 //Setter
 /**

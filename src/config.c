@@ -43,16 +43,16 @@ struct config_s{
 //Config config;
 
 //Getter
-char * getPasswordAdmin(Config c){
-    return (c->passwordAdmin);
+char * getPasswordAdmin(){
+    return (config->passwordAdmin);
 }
 
-int getAudioN(Config c){
-    return (c->audio_n);
+int getAudioN(){
+    return (config->audio_n);
 }
 
-int getAudioM(Config c){
-    return (c->audio_m);
+int getAudioM(){
+    return (config->audio_m);
 }
 
 //Setter

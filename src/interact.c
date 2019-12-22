@@ -20,7 +20,9 @@
     #include <../include/interact.h>
 #endif
 
-
+#ifndef __CONFIG__
+    #include <../include/config.h>
+#endif
 
 
 void displayMenu(int *isAdmin, enum FSM * state, char * file){
@@ -110,7 +112,7 @@ void displayMenuResearch(char * file, enum FSM * state){
   //Si le fichier index.dat existe
   if(listFile!=NULL){
     printf("  #/- Recherche par Couleur Dominante\n");
-    printf("  0/- Recherche par mot-clé\n");
+    printf("  0/- Recherche par mot-clef\n");
     //Lecture du fichier
     while (fgets(line, 128, listFile) != NULL){
       i++;
@@ -202,18 +204,9 @@ void connectAdmin(int * isAdmin){
   char ch;
   char password[32] = ""; //Chaine du mot de passe
   char passwordGood[32]; //Bon mot de passe
-  FILE * fichier = NULL;
 
   //RECUPERATION MOT DE PASSE ATTENDU
-  fichier = fopen("data/admin.dat","r");
-  if(fichier!=NULL){
-    fscanf(fichier,"%s",passwordGood);
-    //printf("MOT DE PASSE ATTENDU : <%s>\n",passwordGood);
-    fclose(fichier);
-  }else{
-    displayError("Fichier de connexion admin indisponible");
-  }
-
+  strcpy(passwordGood,getPasswordAdmin());
 
   printf("Veuillez entrer le mot de passe administrateur : \n");
   for(int i=0; (i<3 && strcmp(password,passwordGood));i++){

@@ -48,7 +48,6 @@ int main(int argc, char * argv[]){
     if((argc==2) && (strcmp(argv[1],"admin")==0)){
         connectAdmin(&isAdmin);
         state = (isAdmin==1 ? ADMIN : TITLE);
-        //if(isAdmin==1) printf("\tInterface ADMIN\n");
     }
 
     //Menu

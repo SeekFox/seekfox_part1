@@ -158,9 +158,42 @@ void displayMenuResearch(char * file, enum FSM * state){
 }
 
 void displayMenuAdmin(int *isAdmin){
+  int choix = -1;
+  while ((*isAdmin==1)){
+    printf("1\\- Lancer une indexation\n");
+    printf("2\\- Visualiser un descripteur\n");
+    printf("3\\- Options\n");
+    printf("4\\- Retour\n");
+
+    scanf("%d",&choix);
+    CLEAR_STDIN
 
 
-  
+    switch (choix){
+      case 1: //Lancer une indexation
+        /* code */
+        break;
+
+      case 2: //Visualiser un descripteur
+        /* code */
+        break;
+
+      case 3: //Options
+        displayConfig();
+        break;
+
+      case 4:
+        (*isAdmin)=0;
+        break;
+      
+      default:
+        break;
+    }
+  }
+}
+
+void displayConfig(){
+
 }
 
 int convertStringChoiceToInt(char * str, int max){

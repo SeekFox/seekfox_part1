@@ -179,7 +179,7 @@ void displayMenuAdmin(int *isAdmin){
         break;
 
       case 3: //Options
-        displayConfig();
+        displayMenuAdminConfig();
         break;
 
       case 4:
@@ -192,7 +192,7 @@ void displayMenuAdmin(int *isAdmin){
   }
 }
 
-void displayConfig(){
+void displayMenuAdminConfig(){
 
 }
 

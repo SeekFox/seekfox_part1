@@ -75,7 +75,7 @@ void displayMenuAdmin(int *isAdmin);
  * @brief Affiche le menu de configuration
  * 
  */
-void displayConfig();
+void displayMenuAdminConfig();
 
 /**
  * @brief Affichage des informations du projet

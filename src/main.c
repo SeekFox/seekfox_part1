@@ -14,9 +14,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifndef __TEST__
-    #include "../include/test.h"
-#endif
 
 #ifndef __INTERACT__
     #include "../include/interact.h"

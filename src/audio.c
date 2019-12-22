@@ -83,21 +83,31 @@ DescripteurAudio creerDescripteurAudio(FILE* p_file, int tailleFenetre, int nbSu
 	int sizeSubdivision = tailleFenetre/nbSubdivisions;	//Taille d'une subdivision
 	double newHistogramLine[nbSubdivisions];			//Nouvelle ligne de l'histogramme final
 	int subPosition = 0;
+	ELEMENT temp;
 
 	fileSize = getAudioFileSize(p_file, fileType);
 	resetFileCursor(p_file, fileType);
 
+	Histogramme newHistogram = initHistogramme();
+
 	do{
 		for(int x = 0; x < nbSubdivisions; x++)newHistogramLine[x] = 0;	//RAZ de l'histogramme
 
-		fread(&newFenetre, sizeof(double),tailleFenetre, p_file);
-		for(int i = 0; i < tailleFenetre; i++){
+		fread(&newFenetre, sizeof(double),tailleFenetre, p_file);	//Lire une nouvelle fenetre
+		newHistogram = addFenetre(newHistogram);					//La rajouter à l'histogramme
+
+		for(int i = 0; i < tailleFenetre; i++){									//Remplir les sousdivisions de cette fenetre
 			subPosition = getSubdivisionValue(newFenetre[i], nbSubdivisions);
 			newHistogramLine[subPosition]++;
-			//TODO Stocker ça dans la putain de structure de ces morts
+		}
+
+		for(int i = 0; i < nbSubdivisions; i++){										//Stocker les sousdivisions dans une pile
+			temp = affect_ELEMENT(newHistogramLine[i]);
+			newHistogram->subdivision = emPILE(newHistogram->subdivision, temp);
 		}
 
 	}while(!feof(p_file));
+
 	return newDescripteur;
 }
 

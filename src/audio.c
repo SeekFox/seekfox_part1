@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "../include/file.h"
+#include "../include/pile_dynamiqueAudio.h"
 
 #define WAV_OFFSET 56
 
@@ -9,13 +9,39 @@
 #define BIN_FILE 0
 
 
+typedef struct Fenetre{
+	unsigned int name; // de 0 a plein, correspond a sa position dans le fichier / taille fenetre
+	struct Fenetre* nextFenetre;
+	PILE subdivision;
+}Fenetre;
+
+typedef Fenetre* Histogramme;
+
 typedef struct audioDesc{
 	unsigned int nbFenetres;
 	char* fileID;
-	File Histogramme;
+	Histogramme data;
 }DescripteurAudio;
 
 
+	///////////////////////////////////
+	//    Librarie du descripteur    //
+	///////////////////////////////////
+
+Histogramme initHistogramme(){return NULL;}
+
+Histogramme addFenetre(Histogramme oldHistogram){
+
+	Histogramme newHistogram = (Histogramme)malloc(sizeof(Fenetre));
+
+	newHistogram->nextFenetre = oldHistogram;
+	newHistogram->subdivision = init_PILE();
+	if(oldHistogram == NULL)
+		newHistogram->name = 0;
+	else
+		newHistogram->name = oldHistogram->name+1;
+	return newHistogram;
+}
 
 
 	//////////////////////////////
@@ -31,12 +57,12 @@ void resetFileCursor(FILE* p_file, int fileType){
 
 unsigned int getAudioFileSize(FILE* p_file, int fileType){ //Calculer la taille d'un fichier audio, /!\ change le curseur de position, possible TODO a faire
 	unsigned int size;
-	double placeholder[1024]; //On est pas intéressé par les valeurs, faut juste une variable pour pouvoir lire
+	double placeholder; //On est pas intéressé par les valeurs, faut juste une variable pour pouvoir lire
 
 	resetFileCursor(p_file, fileType);
 
 	do{
-		fread(&placeholder, sizeof(double), 1024, p_file);
+		fread(&placeholder, sizeof(double), 1, p_file);
 		size++;
 	}while(!feof(p_file));
 

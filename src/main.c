@@ -22,14 +22,20 @@
     #include "../include/interact.h"
 #endif
 
+#ifndef __CONFIG__
+    #include "../include/config.h"
+#endif
+
 int main(int argc, char * argv[]){
     //Initialisation
     enum FSM state = TITLE; //Machine a état
     int isAdmin = 0;
     char file[32] = "";
     system("./bin/readRequete.sh");
+    Config config = loadConfig();
     //Execution
     startTest();
+    displayConfig(config);
 
     //Connexion Admin
     if((argc==2) && (strcmp(argv[1],"admin")==0)){

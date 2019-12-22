@@ -2,8 +2,8 @@
  * @file interact.h
  * @author Clement Truillet (clement.truillet@univ-tlse3.fr)
  * @brief 
- * @version 0.1
- * @date 21/11/2019
+ * @version 0.5
+ * @date 22/12/2019
  * 
  * @copyright Copyright (c) 2019
  * 
@@ -65,6 +65,13 @@ void displayMenu(int *isAdmin, enum FSM * state, char * file);
 void displayMenuResearch(char * file, enum FSM * state);
 
 /**
+ * @brief Affichage du menu Admin
+ * 
+ * @param isAdmin 
+ */
+void displayMenuAdmin(int *isAdmin);
+
+/**
  * @brief Affichage des informations du projet
  * 
  */
@@ -76,6 +83,19 @@ void displayInformations();
  * @param msg 
  */
 void displayError(char * msg);
+
+/**
+ * @brief Ecrit un titre
+ * 
+ * @param msg 
+ */
+void printTitle(char * msg);
+
+/**
+ * @brief Printf Big SeekFox
+ * 
+ */
+void printSeekFox();
 
 /**
  * @brief Interface de connexion au compte admin

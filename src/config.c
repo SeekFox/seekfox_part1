@@ -25,7 +25,7 @@
  * @brief Structure de Configuration
  * 
  * GENERAL
- *  passwordAdmin           : Mot de passe administrateur chiffrÃ©
+ *  passwordAdmin           : Mot de passe administrateur chiffré
  * TEXTE
  *  Valeur limite           : Les x mots les plus presents
  *  Seuil                   : Les mots qui apparaissent plus de x fois
@@ -39,8 +39,6 @@ struct config_s{
     int audio_n;
     int audio_m;
 };
-
-//Config config;
 
 //Getter
 char * getPasswordAdmin(){
@@ -78,7 +76,6 @@ Config loadConfig(){
     if(fichier!=NULL){
         while (fgets(line, 64, fichier) != NULL){
             line[strlen(line)-2] = '\0'; //Remove '\n' char
-            printf(">%s<\n",line);
 
             switch (i){
                 case 0:

@@ -42,8 +42,7 @@ int main(int argc, char * argv[]){
 
     config = loadConfig();
     //Execution
-    startTest();
-    displayConfig();
+    printSeekFox();
 
     //Connexion Admin
     if((argc==2) && (strcmp(argv[1],"admin")==0)){

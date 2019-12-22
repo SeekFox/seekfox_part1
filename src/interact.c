@@ -46,7 +46,8 @@ void displayMenu(int *isAdmin, enum FSM * state, char * file){
       break;
     
     case ADMIN:
-      printf("\nMode Admin\n");
+      printTitle("ADMINISTRATION");
+      displayMenuAdmin(isAdmin);
       //TODO: Affichage du Menu admin
       //Lancer une indexation manuelle
       //Visualiser un descripteur
@@ -56,7 +57,7 @@ void displayMenu(int *isAdmin, enum FSM * state, char * file){
       break;
 
     case RESEARCH:
-      printf("\n=== RECHERCHE ===\n");
+      printTitle("RECHERCHE");
       displayMenuResearch(file,state);
       break;
 
@@ -156,6 +157,12 @@ void displayMenuResearch(char * file, enum FSM * state){
 
 }
 
+void displayMenuAdmin(int *isAdmin){
+
+
+  
+}
+
 int convertStringChoiceToInt(char * str, int max){
   int val;
 
@@ -179,11 +186,7 @@ char * getExtensionOfFile(char * file){
 }
 
 void displayInformations(){
-  color("37");
-  color("1");
-  printf("\n=== SEEKFOX TEAM ===\n");
-  color("30");
-  color("0");
+  printTitle("SEEKFOX TEAM");
   printf("Gael Camba : CTO\n");
   printf("Oualid El Abdaoui : \n");
   printf("Etienne Combelles : \n");
@@ -198,6 +201,28 @@ void displayError(char * msg){
     printf("\n[ERREUR] %s\n",msg);
     color("0");
 }
+
+void printTitle(char * msg){
+  color("37");
+  color("1");
+  printf("\n=== %s ===\n",msg);
+  color("30");
+  color("0");
+}
+
+
+void printSeekFox(){
+  color("32");
+  color("1");
+  printf("  ____            _     __                    \n");
+  printf(" / ___|  ___  ___| | __/ _| _____  __         \n");
+  printf(" \\___ \\ / _ \\/ _ \\ |/ / |_ / _ \\ \\/ /   \n");
+  printf("  ___) |  __/  __/   <|  _| (_) >  <          \n");
+  printf(" |____/ \\___|\\___|_|\\_\\_|  \\___/_/\\_\\\n\n");
+  color("30");
+  color("0");
+}
+
 
 void connectAdmin(int * isAdmin){
   (*isAdmin) = 1;

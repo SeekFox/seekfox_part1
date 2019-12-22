@@ -22,30 +22,40 @@
     #include "../include/interact.h"
 #endif
 
+#ifndef __CONFIG__
+    #include "../include/config.h"
+#endif
+
+/**
+ * @brief Variable globale config
+ * 
+ */
+Config config;
+
+
 int main(int argc, char * argv[]){
     //Initialisation
     enum FSM state = TITLE; //Machine a état
     int isAdmin = 0;
+    char file[32] = "";
     system("./bin/readRequete.sh");
+
+    config = loadConfig();
     //Execution
     startTest();
+    displayConfig();
 
+    //Connexion Admin
     if((argc==2) && (strcmp(argv[1],"admin")==0)){
-        isAdmin=1;
         connectAdmin(&isAdmin);
-        //Connexion Admin
-       if(isAdmin==1) printf("\tInterface ADMIN\n");
+        state = (isAdmin==1 ? ADMIN : TITLE);
+        //if(isAdmin==1) printf("\tInterface ADMIN\n");
     }
 
+    //Menu
     while(state != END){
-        //Menu
-        displayMenu(&isAdmin);
-        //Switch case FSM
-        state = END;
+        displayMenu(&isAdmin,&state,file);
     }
-
-    
-    printf("Hello World!\n");
 
     return 0;
 }

@@ -38,18 +38,31 @@ enum FSM{
     TITLE,              //Welcome
     CONNECT,            //Connect Page
     ADMIN,              //Admin interface
-    CUSTOMER,           //Customer interface
+    RESEARCH,           //Recherche
+    R_IMAGE,            //Recherche Image
+    R_TEXTE,            //Recherche Texte
+    R_SON,              //Recherche Son
+    R_KEYWORD,          //Recherche Mot-Clef
+    R_COLOR,            //Recherche Couleur Dominante
     INFO,               //Informations
     END,                //Goodbye !
 }FSM;
-extern enum FSM state;
 
 /**
  * @brief Affichage du menu
  * 
  * @param isAdmin 
  */
-void displayMenu(int *isAdmin);
+void displayMenu(int *isAdmin, enum FSM * state, char * file);
+
+/**
+ * @brief Affichage de menu de recherche
+ * 
+ * @param file
+ * @param state
+ * 
+ */
+void displayMenuResearch(char * file, enum FSM * state);
 
 /**
  * @brief Affichage des informations du projet
@@ -77,3 +90,20 @@ void connectAdmin(int * isAdmin);
  * @return int 
  */
 int getch();
+
+/**
+ * @brief Convertis une chaine de caractere de choix en int 
+ * 
+ * @param str 
+ * @param max
+ * @return int 
+ */
+int convertStringChoiceToInt(char * str, int max);
+
+/**
+ * @brief Get the Extension Of File object
+ * 
+ * @param file 
+ * @return char* 
+ */
+char * getExtensionOfFile(char * file);

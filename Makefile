@@ -16,15 +16,16 @@ LOG = log/*
 .SILENT:cleanlog
 
 all :
+	@$(MAKE) compile -s
+	@$(MAKE) run -s
+
+compile :
+	@$(ECHO) 'Loading ...';
 	@mkdir -p bin
 	@mkdir -p lib
 	@mkdir -p data
 	@mkdir -p log
-	@mkdir -p requete
-	$(MAKE) compile -s
-	$(MAKE) run -s
-
-compile :
+	@mkdir -p requete 
 	@$(GCC) $(CFLAGS) -I $(INCLUDE) -c $(SRC) $(LIBFLAGS)
 	@$(MOVE) *.o $(LIB)
 	@$(GCC) $(CFLAGS) -o $(EXC) $(LIB)*.o $(LIBFLAGS)

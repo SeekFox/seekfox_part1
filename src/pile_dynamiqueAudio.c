@@ -45,7 +45,7 @@ int PILE_estVide(PILE pileVide){
 		
 }
 
-PILE dePILE(PILE newPile, double* oldTete){
+PILE dePILE(PILE newPile, int* oldTete){
 	PILE oldAddress;
 	*oldTete = -1;
 	

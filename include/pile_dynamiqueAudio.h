@@ -13,6 +13,6 @@ PILE init_PILE();
 void affiche_PILE(PILE display);
 int PILE_estVide(PILE pileVide);
 PILE emPILE(PILE newPile, ELEMENT e);
-PILE dePILE(PILE newPile, double* oldTete);
+PILE dePILE(PILE newPile, int* oldTete);
 
 #endif

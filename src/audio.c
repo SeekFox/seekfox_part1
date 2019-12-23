@@ -75,7 +75,7 @@ DescripteurAudio creerDescripteurAudio(FILE* p_file, int tailleFenetre, int nbSu
 
 	Histogramme newHistogram = initHistogramme();
 
-	do{
+	do{																
 		for(int x = 0; x < nbSubdivisions; x++)
 			newHistogramLine[x] = 0;	//RAZ de l'histogramme
 
@@ -85,15 +85,16 @@ DescripteurAudio creerDescripteurAudio(FILE* p_file, int tailleFenetre, int nbSu
 
 		for(int i = 0; i < tailleFenetre; i++){									//Remplir les sousdivisions de cette fenetre
 			subPosition = getSubdivisionValue(newFenetre[i], nbSubdivisions);
-			newHistogramLine[subPosition]++;
+			newHistogramLine[subPosition]++;			//TODO(ish) : Possibilité d'améliorer la performance stockant directement
 		}
-		/*for(int i = 0; i < nbSubdivisions; i++)
-			printf("%d\n\r", newHistogramLine[i]);*/		//Uncomment pour afficher une fenêtre 
+		for(int i = 0; i < nbSubdivisions; i++)
+			printf("%d\n\r", newHistogramLine[i]);		//Uncomment pour afficher une fenêtre 
 
-		for(int i = 0; i < nbSubdivisions; i++){	
-			temp = affect_ELEMENT(newHistogramLine[i]);
-			newHistogram->subdivision = emPILE(newHistogram->subdivision, temp);
+		for(int i = 0; i < nbSubdivisions; i++){										//Pile possiblement stockée a l'envers, on vois plus tard si ça pose soucis
+			temp = affect_ELEMENT(newHistogramLine[i]);									//Deso Gaël du futur pour ce que je m'apprête a ne pas faire
+			newHistogram->subdivision = emPILE(newHistogram->subdivision, temp);		//De toute façon si tout est formé de la même manière ça devrait pas changer les comparaisons
 		}
+
 
 	}while(!feof(p_file));
 

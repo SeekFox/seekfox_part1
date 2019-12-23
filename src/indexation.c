@@ -98,12 +98,6 @@ int dejaIndexe (char * adrDoc) {        // Dit si le fichier dont l'adresse est 
     return pres;
 }
 
-void displayError(char * msg){          // Affiche un message d'erreur en rouge (récupéré de Clément)
-    color("31");
-    printf("[ERREUR] %s\n",msg);
-    color("0");
-}
-
 /*void supprLigneFichiersIndexes (FILE * fichier, int n) {        // Supprime la ligne n du fichier fichiersIndexes
     FILE * temp = NULL;
     fopen ("data/descripteurs/temp.txt", "w+");
@@ -308,11 +302,4 @@ void indexationAutomatique () {
         fclose(fichiersIndex);
         suppressionOrphelins();
     }
-}
-
-/*==================================================================================================================================*/
-
-
-int main (int argc, char * argv[]) {
-    indexationAutomatique();
 }

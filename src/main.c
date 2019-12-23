@@ -1,6 +1,6 @@
 /**
  * @file main.c
- * @author Clément Truillet (clement.truillet@univ-tlse3.fr)
+ * @author ClÃ©ment Truillet (clement.truillet@univ-tlse3.fr)
  * @brief 
  * @version 0.11
  * @date 10/12/2019
@@ -14,9 +14,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifndef __TEST__
-    #include "../include/test.h"
-#endif
 
 #ifndef __INTERACT__
     #include "../include/interact.h"
@@ -35,21 +32,19 @@ Config config;
 
 int main(int argc, char * argv[]){
     //Initialisation
-    enum FSM state = TITLE; //Machine a état
+    enum FSM state = TITLE; //Machine a Ã©tat
     int isAdmin = 0;
     char file[32] = "";
     system("./bin/readRequete.sh");
 
     config = loadConfig();
     //Execution
-    startTest();
-    displayConfig();
+    printSeekFox();
 
     //Connexion Admin
     if((argc==2) && (strcmp(argv[1],"admin")==0)){
         connectAdmin(&isAdmin);
         state = (isAdmin==1 ? ADMIN : TITLE);
-        //if(isAdmin==1) printf("\tInterface ADMIN\n");
     }
 
     //Menu

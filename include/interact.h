@@ -2,8 +2,8 @@
  * @file interact.h
  * @author Clement Truillet (clement.truillet@univ-tlse3.fr)
  * @brief 
- * @version 0.1
- * @date 21/11/2019
+ * @version 0.5
+ * @date 22/12/2019
  * 
  * @copyright Copyright (c) 2019
  * 
@@ -20,9 +20,9 @@
 #endif
 
 /**
- * @brief Paramètre  Couleur
+ * @brief ParamÃ¨tre  Couleur
  * @brief 30 Noir |31 Rouge | 32 Vert | 33 Jaune | 34 Bleu | 35 Magenta | 36 Cyan | 37 Blanc
- * @brief "1" active la haute intensité des caractères.
+ * @brief "1" active la haute intensitÃ© des caractÃ¨res.
  *  
 */
 #ifndef COLOR
@@ -31,7 +31,7 @@
 
 
 /**
- * @brief Machine à etat
+ * @brief Machine Ã  etat
  * 
  */
 enum FSM{
@@ -65,6 +65,19 @@ void displayMenu(int *isAdmin, enum FSM * state, char * file);
 void displayMenuResearch(char * file, enum FSM * state);
 
 /**
+ * @brief Affichage du menu Admin
+ * 
+ * @param isAdmin 
+ */
+void displayMenuAdmin(int *isAdmin);
+
+/**
+ * @brief Affiche le menu de configuration
+ * 
+ */
+void displayMenuAdminConfig();
+
+/**
  * @brief Affichage des informations du projet
  * 
  */
@@ -76,6 +89,19 @@ void displayInformations();
  * @param msg 
  */
 void displayError(char * msg);
+
+/**
+ * @brief Ecrit un titre
+ * 
+ * @param msg 
+ */
+void printTitle(char * msg);
+
+/**
+ * @brief Printf Big SeekFox
+ * 
+ */
+void printSeekFox();
 
 /**
  * @brief Interface de connexion au compte admin

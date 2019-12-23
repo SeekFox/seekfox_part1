@@ -73,3 +73,27 @@ Config loadConfig();
  * 
  */
 void displayConfig();
+
+/**
+ * @brief Changer le mot de passe
+ * 
+ */
+void changePassword();
+
+/**
+ * @brief Changer le parametre Audio N
+ * 
+ */
+void changeAudioN();
+
+/**
+ * @brief Changer le parametre Audio M
+ * 
+ */
+void changeAudioM();
+
+/**
+ * @brief Met � jour le fichier user.config
+ * 
+ */
+void majConfigFile();

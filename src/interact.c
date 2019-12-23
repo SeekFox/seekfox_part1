@@ -46,17 +46,13 @@ void displayMenu(int *isAdmin, enum FSM * state, char * file){
       break;
     
     case ADMIN:
-      printf("\nMode Admin\n");
-      //TODO: Affichage du Menu admin
-      //Lancer une indexation manuelle
-      //Visualiser un descripteur
-      //Changer de Mot de Passe
-      //Config
+      if(*isAdmin==1) displayMenuAdmin(isAdmin);
       (*state)=TITLE;
+      (*isAdmin)=0;
       break;
 
     case RESEARCH:
-      printf("\n=== RECHERCHE ===\n");
+      printTitle("RECHERCHE");
       displayMenuResearch(file,state);
       break;
 
@@ -156,6 +152,77 @@ void displayMenuResearch(char * file, enum FSM * state){
 
 }
 
+void displayMenuAdmin(int *isAdmin){
+  printTitle("ADMINISTRATION");
+  int choix = -1;
+
+  while ((*isAdmin==1)){
+    printf("1\\- Lancer une indexation\n");
+    printf("2\\- Visualiser un descripteur\n");
+    printf("3\\- Options\n");
+    printf("4\\- Retour\n");
+
+    scanf("%d",&choix);
+    CLEAR_STDIN
+
+
+    switch (choix){
+      case 1:
+        //TODO: Lancer une indexation
+        break;
+
+      case 2:
+        //TODO: Visualiser un descripteur
+        break;
+
+      case 3: //Options
+        displayMenuAdminConfig();
+        break;
+
+      case 4:
+        (*isAdmin)=0;
+        break;
+      
+      default:
+        break;
+    }
+  }
+}
+
+void displayMenuAdminConfig(){
+  int choix = -1;
+
+  while(choix!=4){
+    displayConfig();
+    printf("1\\- Changer le mot de passe\n");
+    printf("2\\- Modifier le nombre de fenetres d'analyse\n");
+    printf("3\\- Modifier le nombre d'intervalles\n");
+    printf("4\\- Retour\n");
+
+    scanf("%d",&choix);
+    CLEAR_STDIN
+
+    switch (choix){
+      case 1:
+        changePassword();
+        break;
+      
+      case 2:
+        changeAudioN();
+        break;
+      
+      case 3:
+        changeAudioM();
+        break;
+
+      
+      default:
+        printf("\n");
+        break;
+    }
+  }
+}
+
 int convertStringChoiceToInt(char * str, int max){
   int val;
 
@@ -179,11 +246,7 @@ char * getExtensionOfFile(char * file){
 }
 
 void displayInformations(){
-  color("37");
-  color("1");
-  printf("\n=== SEEKFOX TEAM ===\n");
-  color("30");
-  color("0");
+  printTitle("SEEKFOX TEAM");
   printf("Gael Camba : CTO\n");
   printf("Oualid El Abdaoui : \n");
   printf("Etienne Combelles : \n");
@@ -197,6 +260,27 @@ void displayError(char * msg){
     color("31");
     printf("\n[ERREUR] %s\n",msg);
     color("0");
+}
+
+void printTitle(char * msg){
+  color("37");
+  color("1");
+  printf("\n=== %s ===\n",msg);
+  color("30");
+  color("0");
+}
+
+
+void printSeekFox(){
+  color("32");
+  color("1");
+  printf("  ____            _     __                    \n");
+  printf(" / ___|  ___  ___| | __/ _| _____  __         \n");
+  printf(" \\___ \\ / _ \\/ _ \\ |/ / |_ / _ \\ \\/ /   \n");
+  printf("  ___) |  __/  __/   <|  _| (_) >  <          \n");
+  printf(" |____/ \\___|\\___|_|\\_\\_|  \\___/_/\\_\\\n\n");
+  color("37");
+  color("0");
 }
 
 void connectAdmin(int * isAdmin){
@@ -222,10 +306,8 @@ void connectAdmin(int * isAdmin){
     printf("\n");
 
     //Chiffrement
-
-    //printf("\npassword : <%s>\n",password);
     sprintf(password,"%s",(char*)crypt(password,"456b7016a916a4b178dd72b947c152b7")); //Chiffrement
-    //printf("password : <%s>\n",password);
+    //printf("\t\t <%s>\n",password);
 
     //Si le mot de passe n'est pas valide
     if(strcmp(password,passwordGood)!=0){

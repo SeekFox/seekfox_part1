@@ -78,8 +78,9 @@ Config loadConfig(){
     fichier = fopen("data/user.config","r");
     if(fichier!=NULL){
         while (fgets(line, 64, fichier) != NULL){
-            line[strlen(line)-1] = '\0'; //Remove '\n' char
-
+            line[strcspn(line,"\r\n")] = 0; //Suppression du \n
+            //printf("\t<<%s>>\n",line);
+            
             switch (i){
                 case 0:
                     setPasswordAdmin(&c,line);

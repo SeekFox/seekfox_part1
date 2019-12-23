@@ -2,11 +2,7 @@
 #include <stdlib.h>
 #include "../include/audio.h"
 
-#define WAV_OFFSET 56
 
-#define TXT_FILE 2
-#define WAV_FILE 1
-#define BIN_FILE 0
 
 
 
@@ -57,8 +53,9 @@ unsigned int getAudioFileSize(FILE* p_file, int fileType){ //Calculer la taille 
 }
  
 int getSubdivisionValue(double val, int nbSubdivisions){	//Les sous-divisions sont comprises entre -1 et 1
-	double subdivisionUnit = 2/nbSubdivisions;
-	return ((int)(val+1)/subdivisionUnit);
+	double temp;
+	temp = (nbSubdivisions/2)*val + (nbSubdivisions/2); 
+	return (int)temp;
 }
 
 DescripteurAudio creerDescripteurAudio(FILE* p_file, int tailleFenetre, int nbSubdivisions, int fileType){	

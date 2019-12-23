@@ -221,7 +221,6 @@ void displayMenuAdminConfig(){
         break;
     }
   }
-
 }
 
 int convertStringChoiceToInt(char * str, int max){

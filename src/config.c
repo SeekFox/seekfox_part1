@@ -28,7 +28,7 @@
  * @brief Structure de Configuration
  * 
  * GENERAL
- *  passwordAdmin           : Mot de passe administrateur chiffré
+ *  passwordAdmin           : Mot de passe administrateur chiffre
  * TEXTE
  *  Valeur limite           : Les x mots les plus presents
  *  Seuil                   : Les mots qui apparaissent plus de x fois
@@ -80,7 +80,6 @@ Config loadConfig(){
         while (fgets(line, 64, fichier) != NULL){
             line[strcspn(line,"\r\n")] = 0; //Suppression du \n
             //printf("\t<<%s>>\n",line);
-            
             switch (i){
                 case 0:
                     setPasswordAdmin(&c,line);
@@ -148,9 +147,9 @@ void changePassword(){
     if(strcmp(pwd,confirm_pwd)==0){
         strcpy(config->passwordAdmin,(char*)crypt(pwd,"456b7016a916a4b178dd72b947c152b7"));
         color("32");
-        printf("\nVotre mot de passe à bien ete modifie !\n\n");
+        printf("\nVotre mot de passe ï¿½ bien ete modifie !\n\n");
         color("37");
-        //on met à jour le fichier user.config
+        //on met ï¿½ jour le fichier user.config
         majConfigFile();
     }else{
         displayError("Les mots de passe ne sont pas identiques.\n");
@@ -168,7 +167,7 @@ void changeAudioN(){
         color("32");
         printf("\nLa taille de la fenetre d'analyse a bien ete modifie !\n\n");
         color("37");
-        //on met à jour le fichier user.config
+        //on met ï¿½ jour le fichier user.config
         majConfigFile();
     }else{
         displayError("La taille de la fenetre d'analyse doit etre une puissance de 2 positive.\n");
@@ -188,7 +187,7 @@ void changeAudioM(){
         color("32");
         printf("\nLe nombre d'echantillons a bien ete modifie !\n\n");
         color("37");
-        //on met à jour le fichier user.config
+        //on met ï¿½ jour le fichier user.config
         majConfigFile();
     }else{
         displayError("Le nombre d'echantillons doit etre un multiple de 2 positif.\n");

@@ -20,9 +20,9 @@
 #endif
 
 /**
- * @brief Paramètre  Couleur
+ * @brief ParamÃ¨tre  Couleur
  * @brief 30 Noir |31 Rouge | 32 Vert | 33 Jaune | 34 Bleu | 35 Magenta | 36 Cyan | 37 Blanc
- * @brief "1" active la haute intensité des caractères.
+ * @brief "1" active la haute intensitÃ© des caractÃ¨res.
  *  
 */
 #ifndef COLOR
@@ -31,7 +31,7 @@
 
 
 /**
- * @brief Machine à etat
+ * @brief Machine Ã  etat
  * 
  */
 enum FSM{

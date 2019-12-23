@@ -1,6 +1,6 @@
 /**
  * @file config.h
- * @author Clément Truillet (clement.truillet@univ-tlse3.fr)
+ * @author ClÃ©ment Truillet (clement.truillet@univ-tlse3.fr)
  * @brief 
  * @version 0.1
  * @date 22/12/2019
@@ -93,8 +93,7 @@ void changeAudioN();
 void changeAudioM();
 
 /**
- * @brief Met à jour le fichier user.config
+ * @brief Met ï¿½ jour le fichier user.config
  * 
  */
 void majConfigFile();
-

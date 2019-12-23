@@ -46,14 +46,9 @@ void displayMenu(int *isAdmin, enum FSM * state, char * file){
       break;
     
     case ADMIN:
-      printTitle("ADMINISTRATION");
-      displayMenuAdmin(isAdmin);
-      //TODO: Affichage du Menu admin
-      //Lancer une indexation manuelle
-      //Visualiser un descripteur
-      //Changer de Mot de Passe
-      //Config
+      if(*isAdmin==1) displayMenuAdmin(isAdmin);
       (*state)=TITLE;
+      (*isAdmin)=0;
       break;
 
     case RESEARCH:
@@ -158,7 +153,9 @@ void displayMenuResearch(char * file, enum FSM * state){
 }
 
 void displayMenuAdmin(int *isAdmin){
+  printTitle("ADMINISTRATION");
   int choix = -1;
+
   while ((*isAdmin==1)){
     printf("1\\- Lancer une indexation\n");
     printf("2\\- Visualiser un descripteur\n");
@@ -170,12 +167,12 @@ void displayMenuAdmin(int *isAdmin){
 
 
     switch (choix){
-      case 1: //Lancer une indexation
-        /* code */
+      case 1:
+        //TODO: Lancer une indexation
         break;
 
-      case 2: //Visualiser un descripteur
-        /* code */
+      case 2:
+        //TODO: Visualiser un descripteur
         break;
 
       case 3: //Options
@@ -193,6 +190,35 @@ void displayMenuAdmin(int *isAdmin){
 }
 
 void displayMenuAdminConfig(){
+  int choix = -1;
+  displayConfig();
+
+  
+  printf("1\\- Changer le mot de passe\n");
+  printf("2\\- Modifier le nombre de fenetres d'analyse\n");
+  printf("3\\- Modifier le nombre d'intervalles\n");
+  printf("4\\- Retour\n");
+
+  scanf("%d",&choix);
+  CLEAR_STDIN
+
+  switch (choix){
+  case 1:
+    changePassword();
+    break;
+  
+  case 2:
+    //TODO: Modifier le nombre de fenetres d'analyse
+    break;
+  
+  case 3:
+    //TODO: Modifier le nombre d'intervalles
+    break;
+
+  
+  default:
+    break;
+  }
 
 }
 
@@ -252,10 +278,9 @@ void printSeekFox(){
   printf(" \\___ \\ / _ \\/ _ \\ |/ / |_ / _ \\ \\/ /   \n");
   printf("  ___) |  __/  __/   <|  _| (_) >  <          \n");
   printf(" |____/ \\___|\\___|_|\\_\\_|  \\___/_/\\_\\\n\n");
-  color("30");
+  color("37");
   color("0");
 }
-
 
 void connectAdmin(int * isAdmin){
   (*isAdmin) = 1;
@@ -280,10 +305,8 @@ void connectAdmin(int * isAdmin){
     printf("\n");
 
     //Chiffrement
-
-    //printf("\npassword : <%s>\n",password);
     sprintf(password,"%s",(char*)crypt(password,"456b7016a916a4b178dd72b947c152b7")); //Chiffrement
-    //printf("password : <%s>\n",password);
+    //printf("\t\t <%s>\n",password);
 
     //Si le mot de passe n'est pas valide
     if(strcmp(password,passwordGood)!=0){

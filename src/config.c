@@ -1,9 +1,9 @@
 /**
  * @file config.c
- * @author Cl√©ment Truillet (clement.truillet@univ-tlse3.fr)
+ * @author Clement Truillet (clement.truillet@univ-tlse3.fr)
  * @brief 
- * @version 0.1
- * @date 22/12/2019
+ * @version 0.2
+ * @date 23/12/2019
  * 
  * @copyright Copyright (c) 2019
  * 
@@ -12,6 +12,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include <crypt.h>
 
 #ifndef __CONFIG__
     #include <../include/config.h>
@@ -75,7 +77,7 @@ Config loadConfig(){
     fichier = fopen("data/user.config","r");
     if(fichier!=NULL){
         while (fgets(line, 64, fichier) != NULL){
-            line[strlen(line)-2] = '\0'; //Remove '\n' char
+            line[strlen(line)-1] = '\0'; //Remove '\n' char
 
             switch (i){
                 case 0:
@@ -106,9 +108,65 @@ Config loadConfig(){
 }
 
 void displayConfig(){
-    printf("\n===CONFIG===\n");
-    printf("%s\n",getPasswordAdmin(config));
-    printf("%d\n",getAudioN(config));
-    printf("%d\n",getAudioM(config));
+    printTitle("CONFIGURATIONS");
+    printf("AUDIO \n");
+    printf("\tNombre de fenetres d'analyse         %d\n",getAudioN(config));
+    printf("\tNombre d'intervalles                 %d\n",getAudioM(config));
     printf("\n");
 }   
+
+void changePassword(){
+    char pwd[32] = "";
+    char confirm_pwd[32] = "";
+    char ch;
+
+    printf("Entrez le nouveau mot de passe\n");
+
+    for (;;){ //Recuperation du mot de passe 
+      ch = getch();
+      if(ch == '\n' || strlen(pwd)>31){ //Verifier que le mot de passe ne soit pas trop long OU que l'user ne presse pas le bouton entrer
+        break;
+      }else{
+        printf("*"); //Masquage du mot de passe
+        sprintf(pwd,"%s%c",pwd,ch); //Ajout du nouveau caractere dans password
+      }
+    }
+    printf("\nConfirmez le mot de passe\n");
+
+    for (;;){ //Recuperation du mot de passe 
+      ch = getch();
+      if(ch == '\n' || strlen(confirm_pwd)>31){ //Verifier que le mot de passe ne soit pas trop long OU que l'user ne presse pas le bouton entrer
+        break;
+      }else{
+        printf("*"); //Masquage du mot de passe
+        sprintf(confirm_pwd,"%s%c",confirm_pwd,ch); //Ajout du nouveau caractere dans password
+      }
+    }
+    //les mots de passes sont identiques ?
+    if(strcmp(pwd,confirm_pwd)==0){
+        strcpy(config->passwordAdmin,(char*)crypt(pwd,"456b7016a916a4b178dd72b947c152b7"));
+        color("32");
+        printf("\nVotre mot de passe ‡ bien ete modifie !\n\n");
+        color("37");
+        //on met ‡ jour le fichier user.config
+        majConfigFile();
+    }else{
+        displayError("Les mots de passe ne sont pas identiques.\n");
+    }
+}
+
+void majConfigFile(){
+    FILE * fichier = NULL;
+
+    fichier = fopen("data/user.config","w+");
+
+    if(fichier!=NULL){
+        fprintf(fichier,"%s\n",getPasswordAdmin());
+        fprintf(fichier,"%d\n",getAudioN());
+        fprintf(fichier,"%d\n",getAudioM());
+    }else{
+        displayError("Fichier de config inexistant");
+        exit(-1);
+    }
+    fclose(fichier);
+}

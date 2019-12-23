@@ -73,3 +73,16 @@ Config loadConfig();
  * 
  */
 void displayConfig();
+
+/**
+ * @brief Changer le mot de passe
+ * 
+ */
+void changePassword();
+
+/**
+ * @brief Met à jour le fichier user.config
+ * 
+ */
+void majConfigFile();
+

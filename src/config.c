@@ -111,8 +111,14 @@ Config loadConfig(){
 void displayConfig(){
     printTitle("CONFIGURATIONS");
     printf("AUDIO \n");
-    printf("\tTaille de la fenetre d'analyse       %d\n",getAudioN(config));
-    printf("\tNombre d'intervalles                 %d\n",getAudioM(config));
+    printf("\tTaille de la fenetre d'analyse       ");
+    color("1");
+    printf("%d\n",getAudioN(config));
+    color("0");
+    printf("\tNombre d'intervalles                 ");
+    color("1");
+    printf("%d\n",getAudioM(config));
+    color("0");
     printf("\n");
 }   
 

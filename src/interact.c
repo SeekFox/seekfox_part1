@@ -191,33 +191,35 @@ void displayMenuAdmin(int *isAdmin){
 
 void displayMenuAdminConfig(){
   int choix = -1;
-  displayConfig();
 
-  
-  printf("1\\- Changer le mot de passe\n");
-  printf("2\\- Modifier le nombre de fenetres d'analyse\n");
-  printf("3\\- Modifier le nombre d'intervalles\n");
-  printf("4\\- Retour\n");
+  while(choix!=4){
+    displayConfig();
+    printf("1\\- Changer le mot de passe\n");
+    printf("2\\- Modifier le nombre de fenetres d'analyse\n");
+    printf("3\\- Modifier le nombre d'intervalles\n");
+    printf("4\\- Retour\n");
 
-  scanf("%d",&choix);
-  CLEAR_STDIN
+    scanf("%d",&choix);
+    CLEAR_STDIN
 
-  switch (choix){
-  case 1:
-    changePassword();
-    break;
-  
-  case 2:
-    //TODO: Modifier le nombre de fenetres d'analyse
-    break;
-  
-  case 3:
-    //TODO: Modifier le nombre d'intervalles
-    break;
+    switch (choix){
+      case 1:
+        changePassword();
+        break;
+      
+      case 2:
+        changeAudioN();
+        break;
+      
+      case 3:
+        changeAudioM();
+        break;
 
-  
-  default:
-    break;
+      
+      default:
+        printf("\n");
+        break;
+    }
   }
 
 }

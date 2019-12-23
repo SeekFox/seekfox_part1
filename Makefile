@@ -1,7 +1,7 @@
 MAKE = make
 GCC = gcc
 ECHO = echo
-LIBFLAGS =-lcrypt
+LIBFLAGS =-lcrypt -lm
 CFLAGS = -Wall
 INCLUDE = include/
 SRC = $(wildcard src/*.c)

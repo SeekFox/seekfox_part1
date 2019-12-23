@@ -81,6 +81,18 @@ void displayConfig();
 void changePassword();
 
 /**
+ * @brief Changer le parametre Audio N
+ * 
+ */
+void changeAudioN();
+
+/**
+ * @brief Changer le parametre Audio M
+ * 
+ */
+void changeAudioM();
+
+/**
  * @brief Met à jour le fichier user.config
  * 
  */

@@ -14,6 +14,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <crypt.h>
+#include <math.h>
 
 #ifndef __CONFIG__
     #include <../include/config.h>
@@ -110,7 +111,7 @@ Config loadConfig(){
 void displayConfig(){
     printTitle("CONFIGURATIONS");
     printf("AUDIO \n");
-    printf("\tNombre de fenetres d'analyse         %d\n",getAudioN(config));
+    printf("\tTaille de la fenetre d'analyse       %d\n",getAudioN(config));
     printf("\tNombre d'intervalles                 %d\n",getAudioM(config));
     printf("\n");
 }   
@@ -154,6 +155,45 @@ void changePassword(){
         displayError("Les mots de passe ne sont pas identiques.\n");
     }
 }
+
+void changeAudioN(){
+    int n;
+    printf("Entrez la nouvelle taille de fenetre d'analyse.\n");
+    scanf("%d",&n);
+    CLEAR_STDIN
+
+    if(ceil(log2((double)n))==floor(log2((double)n)) && n>0){    //n est une puissance de 2
+        config->audio_n=n;
+        color("32");
+        printf("\nLa taille de la fenetre d'analyse a bien ete modifie !\n\n");
+        color("37");
+        //on met à jour le fichier user.config
+        majConfigFile();
+    }else{
+        displayError("La taille de la fenetre d'analyse doit etre une puissance de 2 positive.\n");
+    }
+
+
+}
+
+void changeAudioM(){
+    int m;
+    printf("Entrez la nouveau nombre d'intervalles.\n");
+    scanf("%d",&m);
+    CLEAR_STDIN
+
+    if(m%2==0 && m>0){    //m multiple de 2
+        config->audio_m=m;
+        color("32");
+        printf("\nLe nombre d'echantillons a bien ete modifie !\n\n");
+        color("37");
+        //on met à jour le fichier user.config
+        majConfigFile();
+    }else{
+        displayError("Le nombre d'echantillons doit etre un multiple de 2 positif.\n");
+    }
+}
+
 
 void majConfigFile(){
     FILE * fichier = NULL;

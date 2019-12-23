@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "../include/pile_dynamiqueAudio.h"
+#include "../include/audio.h"
 
 #define WAV_OFFSET 56
 
@@ -9,19 +9,6 @@
 #define BIN_FILE 0
 
 
-typedef struct Fenetre{
-	unsigned int name; // de 0 a plein, correspond a sa position dans le fichier / taille fenetre
-	struct Fenetre* nextFenetre;
-	PILE subdivision;
-}Fenetre;
-
-typedef Fenetre* Histogramme;
-
-typedef struct audioDesc{
-	unsigned int nbFenetres;
-	char* fileID;
-	Histogramme data;
-}DescripteurAudio;
 
 
 	///////////////////////////////////
@@ -70,30 +57,33 @@ unsigned int getAudioFileSize(FILE* p_file, int fileType){ //Calculer la taille 
 }
  
 int getSubdivisionValue(double val, int nbSubdivisions){	//Les sous-divisions sont comprises entre -1 et 1
-	int subdivisionUnit = 2/nbSubdivisions;
-	return (int)(val+1)/subdivisionUnit;
+	double subdivisionUnit = 2/nbSubdivisions;
+	return ((int)(val+1)/subdivisionUnit);
 }
 
 DescripteurAudio creerDescripteurAudio(FILE* p_file, int tailleFenetre, int nbSubdivisions, int fileType){	
 	
 	DescripteurAudio newDescripteur;
 	
-	unsigned int fileSize;
+	//unsigned int fileSize;
 	double newFenetre[tailleFenetre];					//Nouvelle fenêtre de travail
 	int sizeSubdivision = tailleFenetre/nbSubdivisions;	//Taille d'une subdivision
 	double newHistogramLine[nbSubdivisions];			//Nouvelle ligne de l'histogramme final
-	int subPosition = 0;
+	int subPosition;
 	ELEMENT temp;
+	int FenetresCount = 0;
 
-	fileSize = getAudioFileSize(p_file, fileType);
+	//fileSize = getAudioFileSize(p_file, fileType);
 	resetFileCursor(p_file, fileType);
 
 	Histogramme newHistogram = initHistogramme();
 
 	do{
-		for(int x = 0; x < nbSubdivisions; x++)newHistogramLine[x] = 0;	//RAZ de l'histogramme
+		for(int x = 0; x < nbSubdivisions; x++)
+			newHistogramLine[x] = 0;	//RAZ de l'histogramme
 
 		fread(&newFenetre, sizeof(double),tailleFenetre, p_file);	//Lire une nouvelle fenetre
+		FenetresCount++;
 		newHistogram = addFenetre(newHistogram);					//La rajouter à l'histogramme
 
 		for(int i = 0; i < tailleFenetre; i++){									//Remplir les sousdivisions de cette fenetre
@@ -101,35 +91,22 @@ DescripteurAudio creerDescripteurAudio(FILE* p_file, int tailleFenetre, int nbSu
 			newHistogramLine[subPosition]++;
 		}
 
-		for(int i = 0; i < nbSubdivisions; i++){										//Stocker les sousdivisions dans une pile
+		for(int i = 0; i < nbSubdivisions; i++)
+			printf("%d\n\r", newHistogram[i]);
+
+		for(int i = 0; i < nbSubdivisions; i++){	
 			temp = affect_ELEMENT(newHistogramLine[i]);
 			newHistogram->subdivision = emPILE(newHistogram->subdivision, temp);
 		}
 
 	}while(!feof(p_file));
 
+	newDescripteur.data = newHistogram;
+	newDescripteur.nbFenetres = FenetresCount;
 	return newDescripteur;
 }
 
-int main(){
-	FILE *p_file;
-	char temp[sizeof(double)];
-	double whatsinthere = 0;
-	
-	p_file = fopen("../data/TEST_SON/jingle_fi.bin","rb");
-	/*while(!feof(p_file)){
-		fread(&whatsinthere, sizeof(double), 1, p_file);
-		printf("%lf\n", whatsinthere);
-	}*/
-	do{
-		fread(&whatsinthere, sizeof(double),1, p_file);
-		printf("%lf\n", whatsinthere);
-	}while(!feof(p_file));
-	//printf("Taille du fichier : %i",getAudioFileSize(p_file, 2));
-	fclose(p_file);
-	while(1);
-	return 0;
-}
+
 //TODO : Transformer un descripteur en string
 
 //TODO : Transformer un string en descripteur

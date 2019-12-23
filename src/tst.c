@@ -1,17 +1,17 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include<stdio.h>
+#include<stdlib.h>
+#include<math.h>
 
-void allouerMemoire(int **tab,int taille){
-	*tab = (int*)calloc(taille,sizeof(int)*taille);
-	if(tab == NULL) exit(EXIT_FAILURE);
+int* allouerMemoire(int *tab,int taille){
+	tab = malloc(taille*sizeof(int));
+	if(tab == NULL)exit(EXIT_FAILURE);
+	return tab;
 }
 
 int main(void){
-	int *tab = NULL;
-	allouerMemoire(&tab,5);
-	for(int i=0;i<5;i++){
-		tab[i] = i;
-		printf("%d",tab[i]);
-		}	
+	int *tab;
+	tab = allouerMemoire(tab,2);
+	tab[1] = 2;
+	printf("%d\n",tab[1]);
 	return 0;
-}
+	}

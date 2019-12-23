@@ -65,7 +65,7 @@ DescripteurAudio creerDescripteurAudio(FILE* p_file, int tailleFenetre, int nbSu
 	//unsigned int fileSize;
 	double newFenetre[tailleFenetre];					//Nouvelle fenêtre de travail
 	int sizeSubdivision = tailleFenetre/nbSubdivisions;	//Taille d'une subdivision
-	double newHistogramLine[nbSubdivisions];			//Nouvelle ligne de l'histogramme final
+	int newHistogramLine[nbSubdivisions+1];			//Nouvelle ligne de l'histogramme final
 	int subPosition;
 	ELEMENT temp;
 	int FenetresCount = 0;
@@ -87,9 +87,8 @@ DescripteurAudio creerDescripteurAudio(FILE* p_file, int tailleFenetre, int nbSu
 			subPosition = getSubdivisionValue(newFenetre[i], nbSubdivisions);
 			newHistogramLine[subPosition]++;
 		}
-
-		for(int i = 0; i < nbSubdivisions; i++)
-			printf("%d\n\r", newHistogram[i]);
+		/*for(int i = 0; i < nbSubdivisions; i++)
+			printf("%d\n\r", newHistogramLine[i]);*/		//Uncomment pour afficher une fenêtre 
 
 		for(int i = 0; i < nbSubdivisions; i++){	
 			temp = affect_ELEMENT(newHistogramLine[i]);

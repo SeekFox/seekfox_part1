@@ -103,7 +103,15 @@ DescripteurAudio creerDescripteurAudio(FILE* p_file, int tailleFenetre, int nbSu
 	return newDescripteur;
 }
 
-
+void displayFenetre(Histogramme display){
+	if(display == NULL)
+		printf("Fenetre est vide\n");
+	else{
+		printf("nom : %d comprenant : ", display->name);
+		affiche_PILE(display->subdivision);
+		printf("\n");
+	}
+}
 //TODO : Transformer un descripteur en string
 
 //TODO : Transformer un string en descripteur

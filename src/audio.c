@@ -87,8 +87,6 @@ DescripteurAudio creerDescripteurAudio(FILE* p_file, int tailleFenetre, int nbSu
 			subPosition = getSubdivisionValue(newFenetre[i], nbSubdivisions);
 			newHistogramLine[subPosition]++;			//TODO(ish) : Possibilité d'améliorer la performance stockant directement
 		}
-		for(int i = 0; i < nbSubdivisions; i++)
-			printf("%d\n\r", newHistogramLine[i]);		//Uncomment pour afficher une fenêtre 
 
 		for(int i = 0; i < nbSubdivisions; i++){										//Pile possiblement stockée a l'envers, on vois plus tard si ça pose soucis
 			temp = affect_ELEMENT(newHistogramLine[i]);									//Deso Gaël du futur pour ce que je m'apprête a ne pas faire
@@ -107,13 +105,22 @@ void displayFenetre(Histogramme display){
 	if(display == NULL)
 		printf("Fenetre est vide\n");
 	else{
-		printf("nom : %d comprenant : ", display->name);
+		printf("nom : %3d comprenant : ", display->name);
 		affiche_PILE(display->subdivision);
 		printf("\n");
+	}
+}
+
+void displayDescripteur(DescripteurAudio display){
+	Histogramme index;
+
+	index = display.data;
+	for(int i = 0; i < display.nbFenetres; i++){
+		displayFenetre(index);
+		index = index->nextFenetre;
 	}
 }
 //TODO : Transformer un descripteur en string
 
 //TODO : Transformer un string en descripteur
-
 //TODO : Comparer 2 descripteurs

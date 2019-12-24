@@ -16,7 +16,7 @@ void affiche_PILE(PILE display){
 		printf("La pile est vide");
 	while(p_temp != NULL){
 		affiche_ELEMENT(p_temp->valeur);
-		p_temp = p_temp->nextCell;printf(" | ");
+		p_temp = p_temp->nextCell;printf(" ");
 	}
 }
 

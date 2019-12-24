@@ -3,12 +3,12 @@
 #include "../include/elementAudio.h"
 
 void affiche_ELEMENT(ELEMENT display){
-	printf("%d", display.val);
+	printf("%3d", display.val);
 }
 
 ELEMENT saisir_ELEMENT(){
 	ELEMENT newElement;
-	scanf("%d", &newElement.val);
+	scanf("%3d", &newElement.val);
 	return newElement;
 }
 

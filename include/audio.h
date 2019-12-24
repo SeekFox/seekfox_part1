@@ -28,7 +28,7 @@ typedef struct audioDesc{
 Histogramme initHistogramme();
 Histogramme addFenetre(Histogramme oldHistogram);
 void displayFenetre(Histogramme display); //For debug reasons
-
+void displayDescripteur(DescripteurAudio display);
 void resetFileCursor(FILE* p_file, int fileType);
 unsigned int getAudioFileSize(FILE* p_file, int fileType);
 int getSubdivisionValue(double val, int nbSubdivisions);

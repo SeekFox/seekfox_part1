@@ -98,19 +98,75 @@ int dejaIndexe (char * adrDoc) {        // Dit si le fichier dont l'adresse est 
     return pres;
 }
 
-void displayError(char * msg){          // Affiche un message d'erreur en rouge (récupéré de Clément)
+void displayError(char * msg) {          // Affiche un message d'erreur en rouge (récupéré de Clément)
     color("31");
     printf("[ERREUR] %s\n",msg);
     color("0");
 }
 
-/*void supprLigneFichiersIndexes (FILE * fichier, int n) {        // Supprime la ligne n du fichier fichiersIndexes
+int nbLignesFichier (char * adr_fic) {      // Renvoie le nombre de lignes du fichier passé en paramètre
+    char * commande = malloc((20+strlen(adr_fic))*sizeof(char));
+    sprintf(commande, "wc -l %s > data/descripteurs/temp", adr_fic);     // On fait la commande
+    system(commande);       // Exécution de la commande
     FILE * temp = NULL;
-    fopen ("data/descripteurs/temp.txt", "w+");
+    temp = fopen ("data/descripteurs/temp", "r+");       // Ouverture du fichier créé par la commande
+    if(temp==NULL) {
+        displayError("Problème dans l'exécution du script. \n");
+        return 0;
+    }
+    char * nbLc = malloc(5*sizeof(char));   // char * qui contiendra le nombre de lignes mais au format char
+    char courant;
+    int i=0;
+    do      // On récupère les chiffres jusqu'au premier espace
+    {
+        courant = fgetc(temp);
+        nbLc[i] = courant;
+        i++;
+    } while (courant!=' ');
+    
+    int nbLi = atoi(nbLc);      // On convertit au format int
+    fclose(temp);
+    remove("data/descripteurs/temp");
+    return nbLi;
+}
 
+void supprLignesIndex (int * lignasuppr) {        // Supprime la ligne n du fichier fichiersIndexes
+    /* NOTE : les descripteurs ne sont pas réellement supprimés, pour éviter d'endommager les autres */
+
+    /* Création des fichiers avec les lignes supprimées */
+    FILE * tempIndex = NULL;
+    tempIndex = fopen("data/descripteurs/tempIndex.txt", "w+");
+
+    /* Ouverture des fichiers contenant les lignes à supprimer */
+    FILE * index = NULL;
+    index = fopen("data/descripteurs/fichiersIndexes.txt", "r+");
+
+    if (tempIndex==NULL || index==NULL) {
+        displayError("Suppression des lignes de l'index impossible.");
+        return;
+    }
+
+    int lCourante = 0;
+    int i = 0;
     char * ligne = malloc(200*sizeof(char));
 
-}*/
+    while(fgets(ligne, 200, index)!=NULL) {
+        if(lignasuppr[i]!=lCourante) {
+            fprintf(tempIndex, "%s", ligne);
+        } else {
+            fprintf(tempIndex, "NA\n");
+            i++;
+        }
+        lCourante++;
+    }
+
+    fclose(index);
+    fclose(tempIndex);
+
+    remove("data/descripteurs/fichiersIndexes.txt");
+    rename("data/descripteurs/tempIndex.txt", "data/descripteurs/fichiersIndexes.txt");
+
+}
 
 /*==================================================================================================================================*/
 
@@ -140,7 +196,7 @@ void empilementDesDescripteurs (PILEDESC * pileDesc, PILEDESC * adrFichiers) {  
         //printf("Son type : %s \n", ext);
         
         if (strcmp(ext, "xml")==0) {        // Cas d'un fichier texte
-            printf("C'est du texte.\n");
+            //printf("C'est du texte.\n");
             //DescripteurTexte dt = creerDescripteurTexte(adrDoc);
             char * desc = "pates tomates";
             DESC * strDesc = creerDesc(desc);
@@ -149,7 +205,7 @@ void empilementDesDescripteurs (PILEDESC * pileDesc, PILEDESC * adrFichiers) {  
             ajouterDescPile(adrFichiers, adr);
         }
         if (strcmp(ext, "wav")==0 || strcmp(ext, "bin")==0) {       // Cas d'un fichier audio
-            printf("C'est du son.\n");
+            //printf("C'est du son.\n");
             //DescripteurSon ds = creerDescripteurSon(adrDoc);
             char * desc = "flatulences malpoli";
             DESC * strDesc = creerDesc(desc);
@@ -158,7 +214,7 @@ void empilementDesDescripteurs (PILEDESC * pileDesc, PILEDESC * adrFichiers) {  
             ajouterDescPile(adrFichiers, adr);
         }
         if (strcmp(ext, "jpg")==0 || strcmp(ext, "bmp")==0) {       // Cas d'une image
-            printf("C'est une image.\n");
+            //printf("C'est une image.\n");
             /*DescripteurImage di = creerDescripteurImage(adrDoc);
             char * desc = convertionDescripteurImageString(di);
             DESC * strDesc = creerDesc(desc);
@@ -211,6 +267,8 @@ void indexationTotale () {          // Fait l'indexation totale de la base de do
 
 void indexationUnique (char * adrDoc) {         // Indexe un unique document à partir de son adresse donnée en paramètre
     
+    printf("Indexation du fichier en cours...\n");
+
     /* On vérifie que le fichier n'est pas déjà indexé */
     if(dejaIndexe(adrDoc)==0) {
         displayError("Fichier déjà indexé.");
@@ -256,6 +314,8 @@ void indexationUnique (char * adrDoc) {         // Indexe un unique document à 
 
     fclose(indexDesc);
     fclose(fichiersIndex);
+
+    printf("Indexation réussie !\n");
 }
 
 void suppressionOrphelins () {      // Supprime les fichiers indexés qui n'existent plus
@@ -267,24 +327,32 @@ void suppressionOrphelins () {      // Supprime les fichiers indexés qui n'exis
         displayError("Indexation : impossible d'accéder à la liste des fichiers indexés.");
         return;
     }
+
+    /* Tableau qui contiendra les numéros des lignes des descripteurs orphelins */
+    int * lignasuppr = malloc(nbLignesFichier("data/descripteurs/fichiersIndexes.txt")*sizeof(int));
+    int nbL = 0;
     
     /* Pour chaque ligne du fichier, on tente d'ouvrir le fichier associé, si ce n'est pas possible c'est qu'il n'existe pas */
     FILE * courant = NULL;
     char * fichCourant = malloc(200*sizeof(char));
+    int lCourante = 0;
     while (fgets(fichCourant, 200, fichiersIndex)!=NULL) {
         int i=0;
         while(fichCourant[i]!='\n') i++;
         fichCourant[i]='\0';                // Suppression du saut de ligne à la fin de l'adresse
         courant = fopen(fichCourant, "r");
         if (courant==NULL) {
-            fprintf(fichiersIndex, "NULL");
+            lignasuppr[nbL] = lCourante;
+            nbL++;
         } else {
             fclose(courant);
             courant = NULL;
         }
+        lCourante++;
     }
     
     fclose(fichiersIndex);
+    supprLignesIndex(lignasuppr);
 } 
 
 void indexationAutomatique () {
@@ -294,6 +362,7 @@ void indexationAutomatique () {
     indexDesc = fopen("data/descripteurs/descripteurs.txt", "r+");
     fichiersIndex = fopen("data/descripteurs/fichiersIndexes.txt", "r+");
 
+    printf("Mise à jour de la base de descripteurs...\n");
     if (indexDesc==NULL || fichiersIndex==NULL) {
         /* Cas où les fichiers n'existent pas : on fait une indexation totale */
         indexationTotale();
@@ -308,6 +377,7 @@ void indexationAutomatique () {
         fclose(fichiersIndex);
         suppressionOrphelins();
     }
+    printf("Mise à jour réussie !\n");
 }
 
 /*==================================================================================================================================*/

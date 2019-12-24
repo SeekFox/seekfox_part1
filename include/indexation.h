@@ -22,6 +22,8 @@ void ajouterDescPile (PILEDESC *, DESC *);      // Ajoute un descripteur à la p
 char * extensionFichier (char *);               // Renvoie l'extension du fichier dont le nom a été donné en paramètre
 int dejaIndexe (char *);                        // Renvoie 0 si le fichier dont l'adresse est passée en paramètre est déjà indexé, 1 sinon
 void displayError (char *);                     // Ecrit le message d'erreur passé en paramètre en rouge - /!\ A virer pour l'intégration (récupéré de Clément)
+int nbLignesFichier (char *);                   // Renvoie le nombre de lignes du fichier dont l'adresse est passée en paramètre
+void supprLignesIndex (int *);                  // Supprime les lignes dont les numéros sont passés en paramètre de la liste des fichiers indexés
 
 /* FONCTIONS D'INDEXATION EFFECTIVE */
 void empilementDesDescripteurs (PILEDESC *, PILEDESC *);                 // Fait l'indexation de tous les fichiers de la base de document et met les descripteurs dans p1, puis les adresses des fichiers dans p2

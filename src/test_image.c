@@ -129,9 +129,10 @@ void libererMemoire(matrice m,int colonnes){
 /*-------------------------------------------------------------------------------------*/
 int main(void){
 	
-	int NbLignes,NbColonnes,NombreComposantes,Histogramme[64]={0},n=2,element,choix;
+	int NbLignes,NbColonnes,NombreComposantes,Histogramme[64]={0},n=2,element,choix,nombre_fichiers;
 	char CHEMIN[100] = "../data/";
 	char commande[1000];
+	char titre_fichier[6];
 
 	strcpy(commande,"ls ");
 	strcat(commande, CHEMIN);
@@ -150,8 +151,29 @@ int main(void){
 	scanf("%d",&n);*/
 
 	FILE *entree;
-	entree = fopen("../data/TEST_RGB/01.txt","r");	
+	FILE *lecteur_fichier;
+	FILE *compteur_fichiers;
 
+	if(choix == 1){
+		lecteur_fichier = fopen("../data/liste_des_images_RGB","r");
+		system("wc -l ../data/liste_des_images_RGB > ../data/nombre_fichiers_RGB");
+		compteur_fichiers = fopen("../data/nombre_fichiers_RGB","r");
+		fscanf(compteur_fichiers,"%d",&nombre_fichiers);
+	}
+	else if(choix == 2){
+		lecteur_fichier = fopen("../data/liste_des_images_NB","r");
+		system("wc -l ../data/liste_des_images_NB > ../data/nombre_fichiers_NB");
+		compteur_fichiers = fopen("../data/nombre_fichiers_NB","r");
+		fscanf(compteur_fichiers,"%d",&nombre_fichiers);
+	}
+	fclose(compteur_fichiers);
+
+	for(int i=0;i<nombre_fichiers;i++){
+
+	fscanf(lecteur_fichier,"%s",titre_fichier);
+	if(titre_fichier[6] != 't')continue;
+	else entree = fopen(titre_fichier,"r");
+	
 	fscanf(entree,"%d%d%d",&NbLignes,&NbColonnes,&NombreComposantes);
 	printf("%d %d %d\n",NbLignes,NbColonnes,NombreComposantes);
 
@@ -166,27 +188,23 @@ int main(void){
 	remplirMatrice(&entree,Verte,NbLignes,NbColonnes);
 	remplirMatrice(&entree,Bleue,NbLignes,NbColonnes);
 
-	printf("\n remplissage réussi\n");
-
+	fclose(lecteur_fichier);
 	fclose(entree);
 
 	realiserHistogramme(ImageTransformee,Rouge,Verte,Bleue,NbLignes,NbColonnes,n,Histogramme);
 
-	printf("\n histogramme reussi \n");
+	printf("#N%d ",i);
 
-	int somme = 0;
-	for(int i=0;i<64;i++){
-		printf("il y a %d de %d\n",Histogramme[i],i);
-		somme = somme + Histogramme[i];
+	for(int j=0;j<64;j++){
+		printf("%d ",Histogramme[i]);
 	}
-	printf("%d\n",somme);
-	printf("%d %d %d\n",NbLignes,NbColonnes,NombreComposantes);
+	printf("\n");
 
 	libererMemoire(Rouge,NbColonnes);
 	libererMemoire(Verte,NbColonnes);
 	libererMemoire(Bleue,NbColonnes);
 	libererMemoire(ImageTransformee,NbColonnes);
-
+	}
 	return 0;
 }
 

@@ -5,29 +5,15 @@
 typedef int **matrice;
 typedef int *bits;
 
-int quantifierNB(int ComposanteNoire,int n){
-	int resultat = 0,i=0,noire[8] = {0},a=0;
-
-	bits b = malloc(n*sizeof(float));
-	if(b == NULL)exit(1);
-
-	while(ComposanteNoire > 0){
-		noire[i] = ComposanteNoire%2;
-		ComposanteNoire = ComposanteNoire/2;
-		i++;
-	}
-
-	for(i = 0;i<n;i++){
-		b[i] = noire[i];
-		a = (int)(pow(2,n-1-i));
-		resultat = resultat + (b[i]*a);
-	}
-	free(b);
-	return resultat;
-}
 
 int main(void){
-	int resultat = quantifierNB(0,2);
-	printf("%d\n",resultat);
+	char s[5];
+	FILE *f,*f2;
+	int i,x=0;
+	f = fopen("fichiertexte.txt","a+");
+	//if(i == EOF)printf("le fichier est vide\n");
+	fscanf(f,"%s",s);
+	printf("%s\n",s);
+	fclose(f);
 return 0;
 }

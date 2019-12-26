@@ -7,7 +7,7 @@
 typedef int *bits;
 typedef int **matrice;
 typedef struct Descripteur{
-	char identifiant[10];
+	char identifiant[5];
 	int *Histogramme
 }Descripteur;
 
@@ -106,7 +106,9 @@ void remplirMatrice(FILE **f,matrice M,int lignes,int colonnes){
 
 /*-------------------------------------------------------------------------------------*/
 
-void realiserHistogrammeRGB(matrice Image,matrice Rouge,matrice Verte,matrice Bleue,int lignes,int colonnes,int n,int *Histogramme){
+void realiserHistogrammeRGB(matrice Image,matrice Rouge,matrice Verte,matrice Bleue,int lignes,int colonnes,int n,int *Histogramme,int nbcomposantes){
+	
+	dimension =(int)pow(2,n);
 
 	for(int i=0;i<lignes;i++){
 		for(int j=0;j<colonnes;j++){
@@ -116,7 +118,7 @@ void realiserHistogrammeRGB(matrice Image,matrice Rouge,matrice Verte,matrice Bl
 
 	for(int i=0;i<lignes;i++){
 		for(int j=0;j<colonnes;j++){
-			for(int k=0;k<64;k++){
+			for(int k=0;k<dimension;k++){
 				if(Image[i][j] == k)Histogramme[k]++;
 			}
 		}
@@ -150,8 +152,10 @@ void realiserHistogrammeNB(matrice Image,matrice noire,int lignes,int colonnes,i
 
 /*-------------------------------------------------------------------------------------*/
 int main(void){
-	
-	int NbLignes,NbColonnes,NombreComposantes,n,element,choix,nombre_fichiers;
+
+/*----------------------------partie commande unix pour le demarrage du programme------------------------------*/
+{
+	int NbLignes,NbColonnes,NombreComposantes,n,choix,nombre_fichiers;
 	char CHEMIN[100] = "../data/";
 	char commande[1000];
 	char titre_fichier[6];
@@ -170,11 +174,13 @@ int main(void){
 	system(commande);
 
 	printf("commande reussie\n");
+}
+	/*------------------------------ouverture des fichiers cibles--------------------------------------------------*/
 
 	FILE *entree;
 	FILE *lecteur_fichier;
 	FILE *compteur_fichiers;
-	FILE *fichier_descripteur;
+
 
 	if(choix == 1){
 
@@ -201,16 +207,24 @@ int main(void){
 
 	do
 	{
-	printf("choisir le nombre de bits sur quoi quantifier\n");
+		printf("choisir le nombre de bits sur quoi quantifier\n");
 		scanf("%d",&n);
 	} while (n != 1 && n != 2);
-
+/*-------------------------------------------------------------------------------------*/
+	FILE *fichier_descripteur;
 	Descripteur D1;
-	
-	fichier_descripteur = fopen("../data/base_descripteur_image","wr");
-	fscanf(fichier_descripteur,"%s%d",nom_descripteur,numero_descripteur);
-	fscanf(fichier_descripteur,"%d",);
+	int variable_de_test;
 
+	fichier_descripteur = fopen("../data/base_descripteur_image.txt","a+");// ouverture de la base des descripteurs en mode lecture ecriture à la fin
+	variable_de_test = fgetc(fichier_descripteur);//tester avec une variable si la base des descripteurs est vide
+	if(variable_de_test != EOF){ // elle n'est pas vide
+		fscanf(fichier_descripteur,"%s",D1.identifiant);
+		fscanf(fichier_descripteur,"%d",);
+	}
+	else{
+
+	}
+/*-------------------------------------------------------------------------------------*/
 	for(int i=0;i<=nombre_fichiers;i++){
 
 		if(choix ==1)strcpy(CHEMIN2,"../data/TEST_RGB/");

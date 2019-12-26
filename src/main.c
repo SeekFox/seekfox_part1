@@ -23,6 +23,10 @@
     #include "../include/config.h"
 #endif
 
+#ifndef __INDEXATION__
+  #include <../include/indexation.h>
+#endif
+
 /**
  * @brief Variable globale config
  * 
@@ -38,6 +42,7 @@ int main(int argc, char * argv[]){
     system("./bin/readRequete.sh");
 
     config = loadConfig();
+    indexationAutomatique();
     //Execution
     printSeekFox();
 

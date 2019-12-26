@@ -111,8 +111,14 @@ Config loadConfig(){
 void displayConfig(){
     printTitle("CONFIGURATIONS");
     printf("AUDIO \n");
-    printf("\tTaille de la fenetre d'analyse       %d\n",getAudioN(config));
-    printf("\tNombre d'intervalles                 %d\n",getAudioM(config));
+    printf("\tTaille de la fenetre d'analyse       ");
+    color("1");
+    printf("%d\n",getAudioN(config));
+    color("0");
+    printf("\tNombre d'intervalles                 ");
+    color("1");
+    printf("%d\n",getAudioM(config));
+    color("0");
     printf("\n");
 }   
 
@@ -147,9 +153,9 @@ void changePassword(){
     if(strcmp(pwd,confirm_pwd)==0){
         strcpy(config->passwordAdmin,(char*)crypt(pwd,"456b7016a916a4b178dd72b947c152b7"));
         color("32");
-        printf("\nVotre mot de passe � bien ete modifie !\n\n");
+        printf("\nVotre mot de passe a bien ete modifie !\n\n");
         color("37");
-        //on met � jour le fichier user.config
+        //on met a jour le fichier user.config
         majConfigFile();
     }else{
         displayError("Les mots de passe ne sont pas identiques.\n");

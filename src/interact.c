@@ -16,12 +16,17 @@
 #include <string.h>
 #include <crypt.h>
 
+
 #ifndef __INTERACT__
     #include <../include/interact.h>
 #endif
 
 #ifndef __CONFIG__
     #include <../include/config.h>
+#endif
+
+#ifndef __INDEXATION__
+  #include <../include/indexation.h>
 #endif
 
 
@@ -157,29 +162,43 @@ void displayMenuAdmin(int *isAdmin){
   int choix = -1;
 
   while ((*isAdmin==1)){
-    printf("1\\- Lancer une indexation\n");
-    printf("2\\- Visualiser un descripteur\n");
-    printf("3\\- Options\n");
-    printf("4\\- Retour\n");
+    printf("1\\- Lancer une indexation d'un fichier\n");
+    printf("2\\- Lancer l'indexation totale\n");
+    printf("3\\- Visualiser un descripteur\n");
+    printf("4\\- Options\n");
+    printf("5\\- Retour\n");
 
     scanf("%d",&choix);
     CLEAR_STDIN
-
+    printf("\n");
 
     switch (choix){
       case 1:
-        //TODO: Lancer une indexation
+        //TODO: Lancer une indexation d'un fichier
+        printf("Chargement...\n");
+        system("pwd");
+        color("32");
+        printf("\nL'indexation totale a ete effectuee !\n\n");
+        color("37");
         break;
 
       case 2:
+        printf("Chargement...\n");
+        indexationTotale();
+        color("32");
+        printf("\nL'indexation totale a ete effectuee !\n\n");
+        color("37");
+        break;
+
+      case 3:
         //TODO: Visualiser un descripteur
         break;
 
-      case 3: //Options
+      case 4: //Options
         displayMenuAdminConfig();
         break;
 
-      case 4:
+      case 5:
         (*isAdmin)=0;
         break;
       

@@ -76,7 +76,6 @@ int isFileExist(char * adrDoc){
     }
     fclose(fichier);
     return 1;
-
 }
 
 int dejaIndexe (char * adrDoc) {        // Dit si le fichier dont l'adresse est passée en paramètre est déjà indexé (0=oui, 1=non)
@@ -305,7 +304,6 @@ void indexationUnique (char * adrDoc) {         // Indexe un unique document à 
     }
 
     strcpy(adrDoc,moveFileInBDB(adrDoc));
-
     /* On vérifie que le fichier n'est pas déjà indexé */
     if(dejaIndexe(adrDoc)==0) {
         displayError("Fichier déjà indexé.");

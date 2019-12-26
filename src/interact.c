@@ -39,7 +39,7 @@ void displayMenu(int *isAdmin, enum FSM * state, char * file){
       printf("\n2\\- Administration");
       printf("\n3\\- Informations");
       printf("\n4\\- Quitter Seekfox\n");
-
+    
       scanf("%d",&nextState);
       CLEAR_STDIN
       (*state) = (nextState==1 ? RESEARCH : (nextState==2 ? CONNECT : (nextState==3 ? INFO : (nextState==4 ? END : TITLE))));
@@ -162,11 +162,10 @@ void displayMenuAdmin(int *isAdmin){
   int choix = -1;
 
   while ((*isAdmin==1)){
-    printf("1\\- Lancer une indexation d'un fichier\n");
-    printf("2\\- Lancer l'indexation totale\n");
-    printf("3\\- Visualiser un descripteur\n");
-    printf("4\\- Options\n");
-    printf("5\\- Retour\n");
+    printf("1\\- Lancer l'indexation\n");
+    printf("2\\- Visualiser un descripteur\n");
+    printf("3\\- Options\n");
+    printf("4\\- Retour\n");
 
     scanf("%d",&choix);
     CLEAR_STDIN
@@ -174,31 +173,18 @@ void displayMenuAdmin(int *isAdmin){
 
     switch (choix){
       case 1:
-        //TODO: Lancer une indexation d'un fichier
-        printf("Chargement...\n");
-        system("pwd");
-        color("32");
-        printf("\nL'indexation totale a ete effectuee !\n\n");
-        color("37");
+        displayMenuAdminIndexation();
         break;
 
       case 2:
-        printf("Chargement...\n");
-        indexationTotale();
-        color("32");
-        printf("\nL'indexation totale a ete effectuee !\n\n");
-        color("37");
-        break;
-
-      case 3:
         //TODO: Visualiser un descripteur
         break;
 
-      case 4: //Options
+      case 3: //Options
         displayMenuAdminConfig();
         break;
 
-      case 5:
+      case 4:
         (*isAdmin)=0;
         break;
       
@@ -239,6 +225,57 @@ void displayMenuAdminConfig(){
         printf("\n");
         break;
     }
+  }
+}
+
+void displayMenuAdminIndexation(){
+  int choix = -1;
+  char fichier[64];
+
+  printf("1\\- Indexation d'un fichier\n");
+  printf("2\\- Indexation totale\n");
+  printf("3\\- Afficher les fichiers indexes\n");
+  printf("4\\- Retour\n");
+
+  scanf("%d",&choix);
+  CLEAR_STDIN
+  printf("\n");
+
+  switch (choix){
+    case 1:
+      printf("Chargement...\n");
+      system("echo Vous etes dans le repertoire ${PWD##*/}");
+      printf("\nEntrez le chemin vers le fichier a indexer\n\t>");
+      color("36");
+      scanf("%64s",fichier);
+      color("37");
+      CLEAR_STDIN
+
+      //On lance l'indexation
+      indexationUnique(fichier);
+
+      printf("\n");
+      break;
+
+    case 2:
+      printf("Indexation des fichiers en cours...");
+      indexationTotale();
+      break;
+
+    case 3:
+      displayFichierIndexes();
+      /*color("36");
+      system("cat data/descripteurs/fichiersIndexes.txt");
+      color("37");*/
+      printf("\n");
+      return;
+      break;
+
+    case 4:
+      break;
+
+    default:
+      break;
   }
 }
 

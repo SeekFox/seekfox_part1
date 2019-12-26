@@ -78,6 +78,12 @@ void displayMenuAdmin(int *isAdmin);
 void displayMenuAdminConfig();
 
 /**
+ * @brief Affiche le menu pour lancer l'indexation
+ * 
+ */
+void displayMenuAdminIndexation();
+
+/**
  * @brief Affichage des informations du projet
  * 
  */

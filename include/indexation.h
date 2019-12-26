@@ -1,3 +1,13 @@
+/**
+ * @file indexation.h
+ * @author Etienne Combelles
+ * @brief 
+ * @version 0.1
+ * 
+ * @copyright Copyright (c) 2019
+ * 
+ */
+
 #ifndef __INDEXATION__
 #define __INDEXATION__
 
@@ -52,6 +62,14 @@ void ajouterDescPile (PILEDESC *, DESC *);
 /* FONCTIONS UTILITAIRES DIVERSES */
 
 /**
+ * @brief Renvoie 1 si le fichier dont l'adresse est passée en paramètre existe et est lisible, 0 sinon
+ * 
+ * @param adrDoc 
+ * @return int 
+ */
+int isFileExist(char * adrDoc);
+
+/**
  * @brief Renvoie 0 si le fichier dont l'adresse est passée en paramètre est déjà indexé, 1 sinon
  * 
  * @return int 
@@ -70,6 +88,20 @@ int nbLignesFichier (char *);
  * 
  */
 void supprLignesIndex (int *);
+
+/**
+ * @brief Place le fichier adrDoc dans le repertoire base_de_documents
+ * 
+ * @param adrDoc 
+ * @return char* 
+ */
+char * moveFileInBDB(char * adrDoc);
+
+/**
+ * @brief Affiche les fichiers déjà indexes
+ * 
+ */
+void displayFichierIndexes();
 
 /* FONCTIONS D'INDEXATION EFFECTIVE */
 
@@ -101,6 +133,6 @@ void indexationUnique (char *);
  * @brief MODE AUTOMATIQUE : si rien d'indexé, fait une indexation totale, sinon supprime les descripteurs orphelins
  * 
  */
-void indexationAutomatique ();
+void indexationAutomatique();
 
 #endif

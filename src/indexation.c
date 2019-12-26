@@ -1,3 +1,13 @@
+/**
+ * @file indexation.c
+ * @author Etienne Combelles
+ * @brief 
+ * @version 0.1
+ * 
+ * @copyright Copyright (c) 2019
+ * 
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -57,6 +67,17 @@ void ajouterDescPile (PILEDESC * p, DESC * d) {         // Ajoute un descripteur
 
 /*==================================================================================================================================*/
 /* FONCTIONS UTILITAIRES DIVERSES */
+
+int isFileExist(char * adrDoc){
+    FILE * fichier = NULL;
+    fichier = fopen(adrDoc,"r");
+    if(fichier==NULL){
+        return 0;
+    }
+    fclose(fichier);
+    return 1;
+
+}
 
 int dejaIndexe (char * adrDoc) {        // Dit si le fichier dont l'adresse est passée en paramètre est déjà indexé (0=oui, 1=non)
     FILE * fichiersIndex = NULL;
@@ -140,6 +161,36 @@ void supprLignesIndex (int * lignasuppr) {        // Supprime la ligne n du fich
     remove("data/descripteurs/fichiersIndexes.txt");
     rename("data/descripteurs/tempIndex.txt", "data/descripteurs/fichiersIndexes.txt");
 
+}
+
+char * moveFileInBDB(char * adrDoc){
+    char * adrDocOnBDB = (char*)malloc(24*sizeof(char) + strlen(adrDoc));
+    sprintf(adrDocOnBDB,"base_de_documents/%s", adrDoc);
+
+    rename(adrDoc,adrDocOnBDB);
+
+    return adrDocOnBDB;
+}
+
+void displayFichierIndexes(){
+    FILE * fichier = NULL;
+    char line[64];
+    char * file;
+
+    fichier = fopen("data/descripteurs/fichiersIndexes.txt","r");
+
+    if(fichier == NULL){
+        displayError("Le fichier fichiersIndexes.txt n'existe pas.");
+        return;
+    }else{
+        color("36");
+        while(fgets(line, 64,fichier)!=NULL){
+            file = strtok(line,"/");
+            file = strtok(NULL,"/");
+            printf("> %s",file);    
+        }
+        color("37");
+    }    
 }
 
 /*==================================================================================================================================*/
@@ -238,11 +289,22 @@ void indexationTotale () {          // Fait l'indexation totale de la base de do
     /* Fermeture des fichiers */
     fclose(indexDesc);
     fclose(fichiersIndex);
+
+    color("32");
+    printf("\nL'indexation totale a ete effectuee !\n\n");
+    color("37");
 }
 
 void indexationUnique (char * adrDoc) {         // Indexe un unique document à partir de son adresse donnée en paramètre
     
-    printf("Indexation du fichier en cours...\n");
+    printf("\nIndexation du fichier en cours...\n");
+
+    if(!isFileExist(adrDoc)){
+        displayError("Le fichier n'existe pas.");
+        return;
+    }
+
+    strcpy(adrDoc,moveFileInBDB(adrDoc));
 
     /* On vérifie que le fichier n'est pas déjà indexé */
     if(dejaIndexe(adrDoc)==0) {
@@ -290,7 +352,9 @@ void indexationUnique (char * adrDoc) {         // Indexe un unique document à 
     fclose(indexDesc);
     fclose(fichiersIndex);
 
-    printf("Indexation réussie !\n");
+    color("32");
+    printf("L'indexation a ete effectuee !\n\n");
+    color("37");
 }
 
 void suppressionOrphelins () {      // Supprime les fichiers indexés qui n'existent plus
@@ -337,7 +401,7 @@ void indexationAutomatique () {
     indexDesc = fopen("data/descripteurs/descripteurs.txt", "r+");
     fichiersIndex = fopen("data/descripteurs/fichiersIndexes.txt", "r+");
 
-    printf("Mise à jour de la base de descripteurs...\n");
+    //printf("Mise à jour de la base de descripteurs...\n");
     if (indexDesc==NULL || fichiersIndex==NULL) {
         /* Cas où les fichiers n'existent pas : on fait une indexation totale */
         indexationTotale();
@@ -352,5 +416,5 @@ void indexationAutomatique () {
         fclose(fichiersIndex);
         suppressionOrphelins();
     }
-    printf("Mise à jour réussie !\n");
+    //printf("Mise à jour réussie !\n");
 }

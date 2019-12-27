@@ -264,9 +264,6 @@ void displayMenuAdminIndexation(){
 
     case 3:
       displayFichierIndexes();
-      /*color("36");
-      system("cat data/descripteurs/fichiersIndexes.txt");
-      color("37");*/
       printf("\n");
       return;
       break;
@@ -303,11 +300,11 @@ char * getExtensionOfFile(char * file){
 
 void displayInformations(){
   printTitle("SEEKFOX TEAM");
-  printf("Gael Camba : CTO\n");
-  printf("Oualid El Abdaoui : \n");
-  printf("Etienne Combelles : \n");
-  printf("Raphael Bizet : Stagiaire\n");
-  printf("Clement Truillet : Community Manager\n");
+  printf(" %-22.22s  %s\n","Gael Camba","CTO");
+  printf(" %-22.22s  %s\n","Oualid El Abdaoui","");
+  printf(" %-22.22s  %s\n","Etienne Combelles","");
+  printf(" %-22.22s  %s\n","Raphael Bizet","Stagiaire");
+  printf(" %-22.22s  %s\n","Clement Truillet","Community Manager");
   printf("\n");
   printf("www.seekfox.team - @seekfox\n");
 }

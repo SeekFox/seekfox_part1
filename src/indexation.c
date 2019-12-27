@@ -186,7 +186,7 @@ void displayFichierIndexes(){
         while(fgets(line, 64,fichier)!=NULL){
             file = strtok(line,"/");
             file = strtok(NULL,"/");
-            printf("> %s",file);    
+            printf("  > %s",file);    
         }
         color("37");
     }    
@@ -375,7 +375,7 @@ void suppressionOrphelins () {      // Supprime les fichiers indexés qui n'exis
     int lCourante = 0;
     while (fgets(fichCourant, 200, fichiersIndex)!=NULL) {
         fichCourant[strcspn(fichCourant,"\r\n")] = 0; // Suppression du saut de ligne à la fin de l'adresse
-        
+
         courant = fopen(fichCourant, "r");
         if (courant==NULL) {
             lignasuppr[nbL] = lCourante;

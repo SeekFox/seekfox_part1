@@ -374,9 +374,8 @@ void suppressionOrphelins () {      // Supprime les fichiers indexés qui n'exis
     char * fichCourant = malloc(200*sizeof(char));
     int lCourante = 0;
     while (fgets(fichCourant, 200, fichiersIndex)!=NULL) {
-        int i=0;
-        while(fichCourant[i]!='\n') i++;
-        fichCourant[i]='\0';                // Suppression du saut de ligne à la fin de l'adresse
+        fichCourant[strcspn(fichCourant,"\r\n")] = 0; // Suppression du saut de ligne à la fin de l'adresse
+        
         courant = fopen(fichCourant, "r");
         if (courant==NULL) {
             lignasuppr[nbL] = lCourante;

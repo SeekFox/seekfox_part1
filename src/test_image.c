@@ -6,13 +6,13 @@
 
 typedef int *bits;
 typedef int **matrice;
-typedef struct Descripteur{
+/*typedef struct Descripteur{
 	char identifiant[5];
 	int *Histogramme
-}Descripteur;
+}Descripteur;*/
 
 int quantifierRGB(int composante_rouge,int composante_vert,int composante_bleue,int n);
-int taille_max =(int)pow(2,n*NombreComposantes);
+//int taille_max =(int)pow(2,n*NombreComposantes);
 
 
 /*-------------------------------------------------------------------------------------*/
@@ -106,9 +106,8 @@ void remplirMatrice(FILE **f,matrice M,int lignes,int colonnes){
 
 /*-------------------------------------------------------------------------------------*/
 
-void realiserHistogrammeRGB(matrice Image,matrice Rouge,matrice Verte,matrice Bleue,int lignes,int colonnes,int n,int *Histogramme,int nbcomposantes){
+void realiserHistogrammeRGB(matrice Image,matrice Rouge,matrice Verte,matrice Bleue,int lignes,int colonnes,int n,int *Histogramme,int taille_max){
 	
-	dimension =(int)pow(2,n);
 
 	for(int i=0;i<lignes;i++){
 		for(int j=0;j<colonnes;j++){
@@ -118,7 +117,7 @@ void realiserHistogrammeRGB(matrice Image,matrice Rouge,matrice Verte,matrice Bl
 
 	for(int i=0;i<lignes;i++){
 		for(int j=0;j<colonnes;j++){
-			for(int k=0;k<dimension;k++){
+			for(int k=0;k<taille_max;k++){
 				if(Image[i][j] == k)Histogramme[k]++;
 			}
 		}
@@ -134,7 +133,7 @@ matrice libererMemoire(matrice m,int colonnes){
 }
 /*-------------------------------------------------------------------------------------*/
 
-void realiserHistogrammeNB(matrice Image,matrice noire,int lignes,int colonnes,int n,int *Histogramme){
+void realiserHistogrammeNB(matrice Image,matrice noire,int lignes,int colonnes,int n,int *Histogramme, int taille_max){
 
 	for(int i=0;i<lignes;i++){
 		for(int j=0;j<colonnes;j++){
@@ -143,7 +142,7 @@ void realiserHistogrammeNB(matrice Image,matrice noire,int lignes,int colonnes,i
 	}
 	for(int i=0;i<lignes;i++){
 		for(int j=0;j<colonnes;j++){
-			for(int k=0;k<64;k++){
+			for(int k=0;k<taille_max;k++){
 				if(Image[i][j] == k)Histogramme[k]++;
 			}
 		}
@@ -154,8 +153,8 @@ void realiserHistogrammeNB(matrice Image,matrice noire,int lignes,int colonnes,i
 int main(void){
 
 /*----------------------------partie commande unix pour le demarrage du programme------------------------------*/
-{
-	int NbLignes,NbColonnes,NombreComposantes,n,choix,nombre_fichiers;
+
+	int NbLignes,NbColonnes,NombreComposantes,n,choix,nombre_fichiers,*Histogramme;
 	char CHEMIN[100] = "../data/";
 	char commande[1000];
 	char titre_fichier[6];
@@ -174,7 +173,7 @@ int main(void){
 	system(commande);
 
 	printf("commande reussie\n");
-}
+
 	/*------------------------------ouverture des fichiers cibles--------------------------------------------------*/
 
 	FILE *entree;
@@ -209,14 +208,16 @@ int main(void){
 	{
 		printf("choisir le nombre de bits sur quoi quantifier\n");
 		scanf("%d",&n);
-	} while (n != 1 && n != 2);
+	} while (n != 3 && n != 2);
+
+
 /*-------------------------------------------------------------------------------------*/
 	FILE *fichier_descripteur;
-	Descripteur D1;
-	int variable_de_test;
+	//Descripteur D1;
+	//int variable_de_test;
 
-	fichier_descripteur = fopen("../data/base_descripteur_image.txt","a+");// ouverture de la base des descripteurs en mode lecture ecriture à la fin
-	variable_de_test = fgetc(fichier_descripteur);//tester avec une variable si la base des descripteurs est vide
+	fichier_descripteur = fopen("../data/base_descripteur_image.txt","w");// ouverture de la base des descripteurs en mode lecture ecriture à la fin
+	/*variable_de_test = fgetc(fichier_descripteur);//tester avec une variable si la base des descripteurs est vide
 	if(variable_de_test != EOF){ // elle n'est pas vide
 		fscanf(fichier_descripteur,"%s",D1.identifiant);
 		fscanf(fichier_descripteur,"%d",);
@@ -252,6 +253,11 @@ int main(void){
 		fscanf(entree," %d%d%d",&NbLignes,&NbColonnes,&NombreComposantes);
 		//printf("%d %d %d\n",NbLignes,NbColonnes,NombreComposantes);
 
+		int taille_max =(int)pow(2,n*NombreComposantes);
+
+		Histogramme = malloc(taille_max*sizeof(int));
+		if(Histogramme == NULL)exit (EXIT_FAILURE);
+		//Histogramme[taille_max] =(int){0};
 		if(choix == 1){
 
 			matrice Rouge,Verte,Bleue,ImageTransformee;
@@ -269,7 +275,7 @@ int main(void){
 
 			//printf("matrices remplies reussi\n");
 
-			realiserHistogrammeRGB(ImageTransformee,Rouge,Verte,Bleue,NbLignes,NbColonnes,n,Histogramme);
+			realiserHistogrammeRGB(ImageTransformee,Rouge,Verte,Bleue,NbLignes,NbColonnes,n,Histogramme,taille_max);
 
 			//printf("histogramme reussi\n");
 
@@ -291,7 +297,7 @@ int main(void){
 			remplirMatrice(&entree,Noire,NbLignes,NbColonnes);
 			//printf("matrices remplies reussi\n");
 
-			realiserHistogrammeNB(ImageNB,Noire,NbLignes,NbColonnes,n,Histogramme);
+			realiserHistogrammeNB(ImageNB,Noire,NbLignes,NbColonnes,n,Histogramme,taille_max);
 			/*for(int i=0;i<NbLignes;i++){
 				for(int j=0;j<NbColonnes;j++){
 					printf("%d ",Noire[i][j]);
@@ -304,16 +310,23 @@ int main(void){
 			ImageNB = libererMemoire(ImageNB,NbColonnes);*/
 		}
 
-	
-	printf("%d ",i);
-
-	for(int j=0;j<64;j++){
+	fprintf(fichier_descripteur,"[ #id%d ]",i);
+	for(int j=0;j<taille_max;j++){
+		fprintf(fichier_descripteur,"%d ",Histogramme[j]);
+		Histogramme[j] = (int)0;
+	}
+	fprintf(fichier_descripteur,"\n");
+		
+	/*printf("[ #id%d ]",i);
+	for(int j=0;j<taille_max;j++){
 		printf("%d ",Histogramme[j]);
 		Histogramme[j] = 0;
 	}
-	printf("\n");
+	printf("\n");*/
+	free(Histogramme);
 }
 
+	fclose(fichier_descripteur);
 	fclose(lecteur_fichier);
 	fclose(entree);
 

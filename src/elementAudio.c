@@ -1,3 +1,13 @@
+/**
+ * @file elementAudio.c
+ * @author Gael Gamba
+ * @brief 
+ * @version 0.1
+ * 
+ * @copyright Copyright (c) 2019
+ * 
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "../include/elementAudio.h"

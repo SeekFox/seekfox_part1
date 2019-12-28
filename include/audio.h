@@ -1,3 +1,13 @@
+/**
+ * @file audio.h
+ * @author Gael Gamba
+ * @brief 
+ * @version 0.1
+ * 
+ * @copyright Copyright (c) 2019
+ * 
+ */
+
 #ifndef AUDIO_H
 #define AUDIO_H
 #include "../include/pile_dynamiqueAudio.h"

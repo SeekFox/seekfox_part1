@@ -1,3 +1,13 @@
+/**
+ * @file pyle_dynamiqueAudio.h
+ * @author Gael Gamba
+ * @brief 
+ * @version 0.1
+ * 
+ * @copyright Copyright (c) 2019
+ * 
+ */
+
 #ifndef DYNAMIQUE_H
 #define DYNAMIQUE_H
 #include "../include/elementAudio.h"

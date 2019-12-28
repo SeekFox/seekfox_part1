@@ -105,7 +105,7 @@ void displayFenetre(Histogramme display){
 	if(display == NULL)
 		printf("Fenetre est vide\n");
 	else{
-		printf("nom : %3d comprenant : ", display->name);
+		printf("nom : %5d comprenant : ", display->name);
 		affiche_PILE(display->subdivision);
 		printf("\n");
 	}
@@ -120,7 +120,41 @@ void displayDescripteur(DescripteurAudio display){
 		index = index->nextFenetre;
 	}
 }
+
 //TODO : Transformer un descripteur en string
 
 //TODO : Transformer un string en descripteur
+
 //TODO : Comparer 2 descripteurs
+
+
+
+/*PILE comparerDescripteursAudio(DescripteurAudio jingle, DescripteurAudio fichierAudio){
+	PILE 
+}
+*/
+
+
+float getSimilarityValue(PILE pile1, PILE pile2, int tailleFenetre){
+	float sommeDesDifferences = 0;
+	int nbSubdivisions = 0;
+	int val1 = 0; 
+	int val2 = 0;
+	PILE cpy1, cpy2;		
+
+	cpy1 = coPILE(pile1);
+	cpy2 = coPILE(pile2);
+	
+
+	while(!PILE_estVide(cpy1) && !PILE_estVide(cpy2)){
+		
+		cpy1 = dePILE(cpy1, &val1);
+		cpy2 = dePILE(cpy2, &val2);
+
+		sommeDesDifferences += (float)(abs(val1 - val2));
+		nbSubdivisions++;
+	}
+
+	return (sommeDesDifferences/(tailleFenetre*nbSubdivisions));		//Plus on est proche de 0 plus c'est la même chose
+
+}

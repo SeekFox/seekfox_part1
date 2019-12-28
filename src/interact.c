@@ -250,7 +250,7 @@ void displayMenuAdminIndexation(){
       scanf("%64s",fichier);
       color("37");
       CLEAR_STDIN
-
+      //printf("\t>> >%s<\n",fichier);
       //On lance l'indexation
       indexationUnique(fichier);
 
@@ -292,9 +292,10 @@ int convertStringChoiceToInt(char * str, int max){
 }
 
 char * getExtensionOfFile(char * file){
-  char * ext = (char *)malloc(sizeof(char)*4);
-  strcpy(ext,"");
+  char * ext = "";
+  ext = (char *)malloc(sizeof(char)*4);
   strcpy(ext, strrchr(file,'.'));
+  //printf("\t\t>%s< >> >%s<\n",file,ext);
   return ext;
 }
 

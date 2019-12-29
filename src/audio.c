@@ -74,7 +74,7 @@ DescripteurAudio creerDescripteurAudio(FILE* p_file, int tailleFenetre, int nbSu
 	
 	//unsigned int fileSize;
 	double newFenetre[tailleFenetre];					//Nouvelle fenêtre de travail
-	int sizeSubdivision = tailleFenetre/nbSubdivisions;	//Taille d'une subdivision
+	//int sizeSubdivision = tailleFenetre/nbSubdivisions;	//Taille d'une subdivision
 	int newHistogramLine[nbSubdivisions+1];			//Nouvelle ligne de l'histogramme final
 	int subPosition;
 	ELEMENT temp;

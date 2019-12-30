@@ -230,7 +230,7 @@ void changeTailleMin(){
     CLEAR_STDIN
 
     if(n>=3){    //n superieur ou egale a 3
-        config->audio_n=n;
+        config->tailleMin=n;
         color("32");
         printf("\nLa taille minimun d'un mot a bien ete modifie !\n\n");
         color("37");
@@ -248,7 +248,7 @@ void changeVal(){
     CLEAR_STDIN
 
     if(n>0){    //n positif
-        config->audio_n=n;
+        config->val=n;
         color("32");
         printf("\nLa tvaleur limite de mots a bien ete modifie !\n\n");
         color("37");
@@ -266,7 +266,7 @@ void changeSeuil(){
     CLEAR_STDIN
 
     if(n>0){    //n positif
-        config->audio_n=n;
+        config->seuil=n;
         color("32");
         printf("\nLe seuil de taille de mot. a bien ete modifie !\n\n");
         color("37");

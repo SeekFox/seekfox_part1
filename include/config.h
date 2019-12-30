@@ -23,6 +23,27 @@ extern Config config;
 char * getPasswordAdmin();
 
 /**
+ * @brief Get the Taille Min object
+ * 
+ * @return int 
+ */
+int getTailleMin();
+
+/**
+ * @brief Get the Val object
+ * 
+ * @return int 
+ */
+int getVal();
+
+/**
+ * @brief Get the Seuil object
+ * 
+ * @return int 
+ */
+int getSeuil();
+
+/**
  * @brief Get the Audio N object
  * 
  * @return int 
@@ -45,6 +66,29 @@ int getAudioM();
  */
 void setPasswordAdmin(Config *c, char * pwd);
 
+/**
+ * @brief Set the Taille Min object
+ * 
+ * @param c 
+ * @param tailleMin 
+ */
+void setTailleMin(Config *c, int tailleMin);
+
+/**
+ * @brief Set the Val object
+ * 
+ * @param c 
+ * @param val 
+ */
+void setVal(Config *c, int val);
+
+/**
+ * @brief Set the Seuil object
+ * 
+ * @param c 
+ * @param seuil 
+ */
+void setSeuil(Config *c, int seuil);
 /**
  * @brief Set the Audio N object
  * 
@@ -79,6 +123,24 @@ void displayConfig();
  * 
  */
 void changePassword();
+
+/**
+ * @brief Changer la Taille Min
+ * 
+ */
+void changeTailleMin();
+
+/**
+ * @brief Changer la valeur limite de mots
+ * 
+ */
+void changeVal();
+
+/**
+ * @brief Changer le seuil limite de taille de mot
+ * 
+ */
+void changeSeuil();
 
 /**
  * @brief Changer le parametre Audio N

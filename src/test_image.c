@@ -158,16 +158,19 @@ int main(void){
 	char CHEMIN[100] = "../data/";
 	char commande[1000];
 	char titre_fichier[6];
-	char CHEMIN2[100];
 
 	strcpy(commande,"ls ");
 	strcat(commande, CHEMIN);
-	do{	
+	strcat(commande, "TEST_IMAGES > ../data/liste_des_images");
+
+	/*do{	
 		printf("Choisir le type d'image \n1 - RGB \n2 - NB\n");
 		scanf("%d",&choix);
 		if(choix == 1)strcat(commande, "TEST_RGB > ../data/liste_des_images_RGB");
 		else if(choix == 2)strcat(commande, "TEST_NB > ../data/liste_des_images_NB");
-	}while(choix != 1 && choix != 2);
+	}while(choix != 1 && choix != 2);*/
+
+	//strcpy(CHEMIN2,"../data/TEST_IMAGES/");	
 
 	printf("execution de %s\n",commande);
 	system(commande);
@@ -181,26 +184,13 @@ int main(void){
 	FILE *compteur_fichiers;
 
 
-	if(choix == 1){
+	lecteur_fichier = fopen("../data/liste_des_images","r");
+	system("wc -l ../data/liste_des_images > ../data/nombre_fichiers");
+	compteur_fichiers = fopen("../data/nombre_fichiers","r");
+	fscanf(compteur_fichiers," %d",&nombre_fichiers);
 
-		lecteur_fichier = fopen("../data/liste_des_images_RGB","r");
-		system("wc -l ../data/liste_des_images_RGB > ../data/nombre_fichiers_RGB");
-		compteur_fichiers = fopen("../data/nombre_fichiers_RGB","r");
-		fscanf(compteur_fichiers," %d",&nombre_fichiers);
-		printf("choix 1 reussi\n");
 
-	}
-	else if(choix == 2){
-
-		lecteur_fichier = fopen("../data/liste_des_images_NB","r");
-		system("wc -l ../data/liste_des_images_NB > ../data/nombre_fichiers_NB");
-		compteur_fichiers = fopen("../data/nombre_fichiers_NB","r");
-		fscanf(compteur_fichiers," %d",&nombre_fichiers);
-		printf("choix 2 reussi\n");
-
-	}
-
-	//printf("%d\n",nombre_fichiers);
+	printf("%d\n",nombre_fichiers);
 
 	fclose(compteur_fichiers);
 
@@ -209,7 +199,6 @@ int main(void){
 		printf("choisir le nombre de bits sur quoi quantifier\n");
 		scanf("%d",&n);
 	} while (n != 3 && n != 2);
-
 
 /*-------------------------------------------------------------------------------------*/
 	FILE *fichier_descripteur;
@@ -227,29 +216,26 @@ int main(void){
 	}
 /*-------------------------------------------------------------------------------------*/
 	for(int i=0;i<=nombre_fichiers;i++){
-
-		if(choix ==1)strcpy(CHEMIN2,"../data/TEST_RGB/");
-		else if(choix == 2)strcpy(CHEMIN2,"../data/TEST_NB/");
-
-		do
+	fscanf(lecteur_fichier,"%s",titre_fichier);
+	
+	/*	do
 		{
 			fscanf(lecteur_fichier,"%s",titre_fichier);
 			if(titre_fichier[5] != 't')nombre_fichiers--;
-		} while(titre_fichier[5] != 't');
+		} while(titre_fichier[5] != 't');*/
 	
 		//printf("titre fichier lu\n");
 
 		//printf("\n%s\n",titre_fichier);
-
+		char CHEMIN2[100]="../data/TEST_IMAGES/";
 		strcat(CHEMIN2,titre_fichier);
 
 		//printf("\n%s\n",CHEMIN2);
 
 		//printf("changement de chemin reussi\n");
 
-
 		entree = fopen(CHEMIN2,"r");
-
+		
 		fscanf(entree," %d%d%d",&NbLignes,&NbColonnes,&NombreComposantes);
 		//printf("%d %d %d\n",NbLignes,NbColonnes,NombreComposantes);
 
@@ -257,14 +243,16 @@ int main(void){
 
 		Histogramme = malloc(taille_max*sizeof(int));
 		if(Histogramme == NULL)exit (EXIT_FAILURE);
-		//Histogramme[taille_max] =(int){0};
-		if(choix == 1){
 
-			matrice Rouge,Verte,Bleue,ImageTransformee;
+		Histogramme[taille_max] =(int){0};
+
+		if(NombreComposantes == 3){
+
+			matrice Rouge,Verte,Bleue,ImageRGB;
 			Rouge = allouerMemoire(Rouge,NbLignes,NbColonnes);
 			Verte = allouerMemoire(Verte,NbLignes,NbColonnes);
 			Bleue = allouerMemoire(Bleue,NbLignes,NbColonnes);
-			ImageTransformee = allouerMemoire(ImageTransformee,NbLignes,NbColonnes);
+			ImageRGB = allouerMemoire(ImageRGB,NbLignes,NbColonnes);
 
 			//printf("allouer memoire reussi\n");
 
@@ -275,18 +263,18 @@ int main(void){
 
 			//printf("matrices remplies reussi\n");
 
-			realiserHistogrammeRGB(ImageTransformee,Rouge,Verte,Bleue,NbLignes,NbColonnes,n,Histogramme,taille_max);
+			realiserHistogrammeRGB(ImageRGB,Rouge,Verte,Bleue,NbLignes,NbColonnes,n,Histogramme,taille_max);
 
 			//printf("histogramme reussi\n");
 
 			Rouge = libererMemoire(Rouge,NbColonnes);
 			Verte = libererMemoire(Verte,NbColonnes);
 			Bleue = libererMemoire(Bleue,NbColonnes);
-			ImageTransformee = libererMemoire(ImageTransformee,NbColonnes);
+			ImageRGB = libererMemoire(ImageRGB,NbColonnes);
 
-			//printf("memoire liberee\n");
+			printf("memoire liberee\n");
 		}
-		else if(choix == 2){
+		else if(NombreComposantes == 1){
 			//printf("choix effectue\n");
 			matrice Noire,ImageNB;
 
@@ -298,38 +286,37 @@ int main(void){
 			//printf("matrices remplies reussi\n");
 
 			realiserHistogrammeNB(ImageNB,Noire,NbLignes,NbColonnes,n,Histogramme,taille_max);
-			/*for(int i=0;i<NbLignes;i++){
-				for(int j=0;j<NbColonnes;j++){
-					printf("%d ",Noire[i][j]);
-				}
-				printf("\n");
-			}*/
-			//printf("histogramme reussi\n");
-			
-			/*Noire = libererMemoire(Noire,NbColonnes);
-			ImageNB = libererMemoire(ImageNB,NbColonnes);*/
-		}
 
-	fprintf(fichier_descripteur,"[ #id%d ]",i);
+			Noire = libererMemoire(Noire,NbColonnes);
+			ImageNB = libererMemoire(ImageNB,NbColonnes);
+		}
+		else printf("Image non prise en charge \n");
+
+	/*fprintf(fichier_descripteur,"[ #id%d ]",i);
+
 	for(int j=0;j<taille_max;j++){
 		fprintf(fichier_descripteur,"%d ",Histogramme[j]);
 		Histogramme[j] = (int)0;
 	}
-	fprintf(fichier_descripteur,"\n");
-		
-	/*printf("[ #id%d ]",i);
+	fprintf(fichier_descripteur,"\n");*/
+
+	int somme = 0;
+	printf("[ #id%d ]",i);
 	for(int j=0;j<taille_max;j++){
 		printf("%d ",Histogramme[j]);
-		Histogramme[j] = 0;
+		somme = somme + Histogramme[j];
+		//Histogramme[j] =(int)0;
 	}
-	printf("\n");*/
+	printf("\n somme : %d\n",somme);
+	somme = 0;
 	free(Histogramme);
 }
-
+	
 	fclose(fichier_descripteur);
 	fclose(lecteur_fichier);
 	fclose(entree);
 
+	printf("fin programme\n");
 	return 0;
 }
 

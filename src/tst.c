@@ -65,11 +65,49 @@ int quantifierNB(int ComposanteNoire,int n){
 	return resultat;
 }
 
+int** allouerMemoire(matrice tab,int lignes,int colonnes){
+
+	tab = malloc(lignes*sizeof(int*));
+	if(tab == NULL)exit(EXIT_FAILURE);
+
+	for(int i=0;i<lignes;i++){
+		tab[i] = malloc(colonnes*sizeof(int));
+		if(tab[i] == NULL)exit(EXIT_FAILURE);
+	}
+	return tab;
+}
+int** libererMemoire(matrice m,int colonnes){
+	for(int i=0;i<colonnes;i++)free(m[i]);
+	free(m);
+	m = NULL;
+	return m;
+}
+
 int main(void){
-	int rgb2bits = quantifierRGB(255,255,255,2);
-	int rgb3bits = quantifierRGB(128,64,255,3);
-	int nb2bits = quantifierNB(255,2);
-	int nb3bits = quantifierNB(255,3);
-	printf("%d	%d	%d	%d\n",rgb2bits ,rgb3bits,nb2bits,nb3bits);
+	/*int *x;
+	x = malloc(3*sizeof(int));
+	x[0] = 1;
+	x[1] = 2;
+
+	printf("%d %d %d\n",x[0],x[1],x[2]);
+	free(x);
+	printf("%d %d %d\n",x[0],x[1],x[2]);*/
+	matrice m = NULL;
+	if(m == NULL)printf("la matrice est nulle\n");
+	m = allouerMemoire(m,3,3);
+	for(int i=0;i<3;i++){
+		for(int j=0;j<3;j++){
+			m[i][j] = 1;
+			printf("%d \n",m[i][j]);
+		}
+	}
+	m = libererMemoire(m,3);
+	if(m == NULL)printf("la matrice est nulle\n");
+	else printf("la matrice n'est pas nulle\n");
+	//m[1][1] = 2;
+	/*for(int i=0;i<3;i++)free(m[i]);
+	free(m);*/
+	//if(m == NULL)printf("la matrice est nulle\n");
+	//printf("%d \n",m[1][1]);
 return 0;
 }

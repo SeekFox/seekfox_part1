@@ -129,6 +129,7 @@ void realiserHistogrammeRGB(matrice Image,matrice Rouge,matrice Verte,matrice Bl
 matrice libererMemoire(matrice m,int colonnes){
 	for(int i=0;i<colonnes;i++)free(m[i]);
 	free(m);
+	m = NULL;
 	return m;
 }
 /*-------------------------------------------------------------------------------------*/
@@ -154,7 +155,7 @@ int main(void){
 
 /*----------------------------partie commande unix pour le demarrage du programme------------------------------*/
 
-	int NbLignes,NbColonnes,NombreComposantes,n,choix,nombre_fichiers,*Histogramme;
+	int NbLignes = 0,NbColonnes = 0,NombreComposantes = 0,n = 0,nombre_fichiers = 0;
 	char CHEMIN[100] = "../data/";
 	char commande[1000];
 	char titre_fichier[6];
@@ -215,6 +216,7 @@ int main(void){
 
 	}
 /*-------------------------------------------------------------------------------------*/
+	int *Histogramme = NULL;
 	for(int i=0;i<=nombre_fichiers;i++){
 	fscanf(lecteur_fichier,"%s",titre_fichier);
 	
@@ -226,11 +228,11 @@ int main(void){
 	
 		//printf("titre fichier lu\n");
 
-		//printf("\n%s\n",titre_fichier);
+		printf("\n%s\n",titre_fichier);
 		char CHEMIN2[100]="../data/TEST_IMAGES/";
 		strcat(CHEMIN2,titre_fichier);
 
-		//printf("\n%s\n",CHEMIN2);
+		printf("\n%s\n",CHEMIN2);
 
 		//printf("changement de chemin reussi\n");
 
@@ -240,7 +242,8 @@ int main(void){
 		//printf("%d %d %d\n",NbLignes,NbColonnes,NombreComposantes);
 
 		int taille_max =(int)pow(2,n*NombreComposantes);
-
+		
+		
 		Histogramme = malloc(taille_max*sizeof(int));
 		if(Histogramme == NULL)exit (EXIT_FAILURE);
 
@@ -248,7 +251,7 @@ int main(void){
 
 		if(NombreComposantes == 3){
 
-			matrice Rouge,Verte,Bleue,ImageRGB;
+			matrice Rouge = NULL,Verte = NULL,Bleue = NULL,ImageRGB = NULL;
 			Rouge = allouerMemoire(Rouge,NbLignes,NbColonnes);
 			Verte = allouerMemoire(Verte,NbLignes,NbColonnes);
 			Bleue = allouerMemoire(Bleue,NbLignes,NbColonnes);
@@ -276,7 +279,7 @@ int main(void){
 		}
 		else if(NombreComposantes == 1){
 			//printf("choix effectue\n");
-			matrice Noire,ImageNB;
+			matrice Noire = NULL,ImageNB = NULL;
 
 			Noire = allouerMemoire(Noire,NbLignes,NbColonnes);
 			ImageNB = allouerMemoire(ImageNB,NbLignes,NbColonnes);
@@ -287,8 +290,8 @@ int main(void){
 
 			realiserHistogrammeNB(ImageNB,Noire,NbLignes,NbColonnes,n,Histogramme,taille_max);
 
-			Noire = libererMemoire(Noire,NbColonnes);
-			ImageNB = libererMemoire(ImageNB,NbColonnes);
+			/*Noire = libererMemoire(Noire,NbColonnes);
+			ImageNB = libererMemoire(ImageNB,NbColonnes);*/ // provoque une segmentation fault
 		}
 		else printf("Image non prise en charge \n");
 
@@ -310,6 +313,7 @@ int main(void){
 	printf("\n somme : %d\n",somme);
 	somme = 0;
 	free(Histogramme);
+	Histogramme = NULL;
 }
 	
 	fclose(fichier_descripteur);

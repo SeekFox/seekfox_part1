@@ -12,14 +12,13 @@ int quantifierRGB(int composante_rouge,int composante_vert,int composante_bleue,
 	int rouge[8] = {0},vert[8] = {0},bleue[8] = {0};
 	int i=0;
 	
-	while(composante_rouge > 0 || composante_vert > 0 || composante_bleue > 0){
+	for(int i=0;i<8;i++){
 		rouge[i] = composante_rouge%2;
 		composante_rouge = composante_rouge/2;
 		vert[i] = composante_vert%2;
 		composante_vert = composante_vert/2;
 		bleue[i] = composante_bleue%2;
 		composante_bleue = composante_bleue/2;
-		i++;
 	}
 		
 	if(dim == 6){
@@ -41,26 +40,30 @@ int quantifierRGB(int composante_rouge,int composante_vert,int composante_bleue,
 		a =(int)pow(2,dim-1-j);
 		resultat = resultat + (b[j]*a);
 		}
+	printf("%d\n",resultat);
 	free(b);
 return resultat;
 }
+
 int quantifierNB(int ComposanteNoire,int n){
-	int resultat = 0,i=0,noire[8] = {0},a=0;
+	int resultat = 0,noire[8] = {0},a = 0;
 
-	bits b = malloc(n*sizeof(float));
-	if(b == NULL)exit(1);
-
-	while(ComposanteNoire > 0){
-		noire[i] = ComposanteNoire%2;
+	bits b = malloc(n*sizeof(int));
+	if(b == NULL)exit(EXIT_FAILURE);
+	
+	for(int i=0;i<8;i++){
+		noire[i] = ComposanteNoire % 2;
 		ComposanteNoire = ComposanteNoire/2;
-		i++;
+		//printf("%d  ",noire[i]);
 	}
-
-	for(i = 0;i<n;i++){
-		b[i] = noire[i];
+	printf("\n");
+	for(int i = 0;i<n;i++){
+		b[i] = noire[7-i];
+		//printf("%d  ",b[i]);
 		a = (int)(pow(2,n-1-i));
 		resultat = resultat + (b[i]*a);
 	}
+	//printf("\n%d \n",resultat);
 	free(b);
 	return resultat;
 }
@@ -83,31 +86,68 @@ int** libererMemoire(matrice m,int colonnes){
 	return m;
 }
 
-int main(void){
-	/*int *x;
-	x = malloc(3*sizeof(int));
-	x[0] = 1;
-	x[1] = 2;
+void remplirMatrice(FILE **f,matrice M,int lignes,int colonnes){
 
-	printf("%d %d %d\n",x[0],x[1],x[2]);
-	free(x);
-	printf("%d %d %d\n",x[0],x[1],x[2]);*/
-	matrice m = NULL;
-	if(m == NULL)printf("la matrice est nulle\n");
-	m = allouerMemoire(m,3,3);
-	for(int i=0;i<3;i++){
-		for(int j=0;j<3;j++){
-			m[i][j] = 1;
-			printf("%d \n",m[i][j]);
+	for(int i=0;i<lignes;i++){
+		for(int j=0;j<colonnes;j++){
+			fscanf(*f,"%d",&M[i][j]); 		
 		}
 	}
-	m = libererMemoire(m,3);
-	if(m == NULL)printf("la matrice est nulle\n");
-	else printf("la matrice n'est pas nulle\n");
-	//m[1][1] = 2;
-	/*for(int i=0;i<3;i++)free(m[i]);
-	free(m);*/
-	//if(m == NULL)printf("la matrice est nulle\n");
-	//printf("%d \n",m[1][1]);
+}
+void realiserHistogrammeNB(matrice Image,matrice noire,int lignes,int colonnes,int n,int *Histogramme, int taille_max){
+
+	for(int i=0;i<lignes;i++){
+		for(int j=0;j<colonnes;j++){
+			Image[i][j] = quantifierNB(noire[i][j],n);
+		}
+	}
+	for(int i=0;i<lignes;i++){
+		for(int j=0;j<colonnes;j++){
+			for(int k=0;k<taille_max;k++){
+				if(Image[i][j] == k)Histogramme[k]++;
+			}
+		}
+	}
+}
+
+int main(void){
+	printf("debut programme\n");
+	int NbLignes,NbColonnes,NombreComposantes,n=3;
+	FILE *f;
+	f = fopen("../data/TEST_IMAGES/53.txt","r");
+	fscanf(f," %d%d%d",&NbLignes,&NbColonnes,&NombreComposantes);
+	
+	int taille_max =(int)pow(2,n*NombreComposantes);
+		
+		int *Histogramme = NULL;
+		Histogramme = malloc(taille_max*sizeof(int));
+		if(Histogramme == NULL)exit (EXIT_FAILURE);
+
+		Histogramme[taille_max] =(int){0};
+printf("ici \n");
+	matrice Noire = NULL,ImageNB = NULL;
+
+			Noire = allouerMemoire(Noire,NbLignes,NbColonnes);
+			ImageNB = allouerMemoire(ImageNB,NbLignes,NbColonnes);
+			//	printf("allocation memoire reussie\n");
+
+			remplirMatrice(&f,Noire,NbLignes,NbColonnes);
+			//printf("matrices remplies reussi\n");
+
+			realiserHistogrammeNB(ImageNB,Noire,NbLignes,NbColonnes,n,Histogramme,taille_max);
+
+			
+			Noire = libererMemoire(Noire,NbLignes);
+			ImageNB = libererMemoire(ImageNB,NbLignes);
+
+	int somme = 0;
+	for(int j=0;j<taille_max;j++){
+		printf("%d ",Histogramme[j]);
+		somme = somme + Histogramme[j];
+		Histogramme[j] = 0;
+	}
+	printf("\n somme : %d\n",somme);
+	free(Histogramme);
+	fclose(f);
 return 0;
 }

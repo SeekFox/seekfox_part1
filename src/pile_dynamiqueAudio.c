@@ -79,21 +79,22 @@ PILE dePILE(PILE newPile, int* oldTete){
 	return newPile;
 }
 
-PILE coPILE(PILE cpy){	
+PILE coPILE(PILE* cpy){	
 	int temp;
 	PILE INV_temp = init_PILE();	//Pile pour inverser
 	PILE newPile = init_PILE();
+	
+	if(*cpy != NULL){
+		while(!PILE_estVide(*cpy)){					//Copier la pile dans une pile tampon pour l'inverser, on doit la copier 2 fois 
+			*cpy = dePILE(*cpy, &temp);				//pour qu'elle garde son sens
+			INV_temp = emPILEVal(INV_temp, temp);	//
+		}
 
-
-	while(!PILE_estVide(cpy)){				//Copier la pile dans une pile tampon pour l'inverser, on doit la copier 2 fois 
-		cpy = dePILE(cpy, &temp);			//pour qu'elle garde son sens
-		INV_temp = emPILEVal(INV_temp, temp);	//
-	}
-
-	while(!PILE_estVide(INV_temp)){				//Recopier le tampon dans les 2 piles
-		INV_temp = dePILE(INV_temp, &temp);		//
-		newPile = emPILEVal(newPile, temp);		//
-		cpy = emPILEVal(cpy, temp);				//
+		while(!PILE_estVide(INV_temp)){				//Recopier le tampon dans les 2 piles
+			INV_temp = dePILE(INV_temp, &temp);		//
+			newPile = emPILEVal(newPile, temp);		//
+			*cpy = emPILEVal(*cpy, temp);		
+		}
 	}
 
 	return newPile;

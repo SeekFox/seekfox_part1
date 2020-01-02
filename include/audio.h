@@ -33,6 +33,7 @@ void resetFileCursor(FILE* p_file, int fileType);
 unsigned int getAudioFileSize(FILE* p_file, int fileType);
 int getSubdivisionValue(double val, int nbSubdivisions);
 DescripteurAudio creerDescripteurAudio(FILE* p_file, int tailleFenetre, int nbSubdivisions, int fileType);
-float getSimilarityValue(PILE pile1, PILE pile2, int tailleFenetre);
+float getSimilarityValue(PILE* pile1, PILE* pile2, int tailleFenetre);
+PILE comparerDescripteursAudio(DescripteurAudio jingle, DescripteurAudio fichierAudio, int tailleFenetre);
 
 #endif

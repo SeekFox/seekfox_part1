@@ -1,3 +1,22 @@
+
+/*	
+Le probleme est que mes descripteurs affichent d'importe quoi après la première image
+dans le cas des images RGB en quatification sur 3 bits.
+et la meme chose pour les images NB en quatification sur 2 bits.
+on peut le voir si on compile le programme avec la commande
+
+gcc -o test_image.out test_image.c -lm
+
+et l'exécution du programme 
+
+./test_image.out
+
+Le programme est assez commenté(enfin je pense)
+s'il y a des parties incompréhensibles envoyez moi un message
+
+Merci ^_^
+*/
+
 #include<stdio.h>
 #include<stdlib.h>
 #include<math.h>
@@ -290,6 +309,13 @@ int main(void){
 		Histogramme[taille_max] =(int){0};
 		// allocation dynamique et initialisation de l'histogramme
 
+		/*l'histogramme a une dimention de 2^NombreComposantes*nombre de bits sur quoi quantifier donc
+		RBG(trois composante) sur 2 bits Histogramme de 64 valeurs
+		RGB(trois composante) sur 3 bits Histogramme de 512 valeurs
+		NB(une composante) sur 2 bits Histogramme de 4 valeurs
+		NB(une composante) sur 3 bits Histogramme de 8 valeurs
+		cf : cahier de charges page 17
+		*/
 
 		if(NombreComposantes == 3){
 
@@ -378,7 +404,6 @@ int main(void){
 	printf("fin programme\n");
 	return 0;
 }
-
 
 
 

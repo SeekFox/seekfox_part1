@@ -114,9 +114,9 @@ int main(void){
 	printf("debut programme\n");
 	//int x = quantifierNB(64,2);
 
-	int NbLignes,NbColonnes,NombreComposantes,n=3;
+	int NbLignes,NbColonnes,NombreComposantes,n=2;
 	FILE *f;
-	f = fopen("../data/TEST_IMAGES/55.txt","r");
+	f = fopen("../data/TEST_IMAGES/51.txt","r");
 	fscanf(f," %d%d%d",&NbLignes,&NbColonnes,&NombreComposantes);
 	
 	int taille_max =(int)pow(2,n*NombreComposantes);

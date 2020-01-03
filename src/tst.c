@@ -56,7 +56,7 @@ int quantifierNB(int ComposanteNoire,int n){
 		ComposanteNoire = ComposanteNoire/2;
 		//printf("%d  ",noire[i]);
 	}
-	printf("\n");
+	//printf("\n");
 	for(int i = 0;i<n;i++){
 		b[i] = noire[7-i];
 		//printf("%d  ",b[i]);
@@ -112,9 +112,11 @@ void realiserHistogrammeNB(matrice Image,matrice noire,int lignes,int colonnes,i
 
 int main(void){
 	printf("debut programme\n");
+	//int x = quantifierNB(64,2);
+
 	int NbLignes,NbColonnes,NombreComposantes,n=3;
 	FILE *f;
-	f = fopen("../data/TEST_IMAGES/53.txt","r");
+	f = fopen("../data/TEST_IMAGES/55.txt","r");
 	fscanf(f," %d%d%d",&NbLignes,&NbColonnes,&NombreComposantes);
 	
 	int taille_max =(int)pow(2,n*NombreComposantes);
@@ -124,7 +126,7 @@ int main(void){
 		if(Histogramme == NULL)exit (EXIT_FAILURE);
 
 		Histogramme[taille_max] =(int){0};
-printf("ici \n");
+
 	matrice Noire = NULL,ImageNB = NULL;
 
 			Noire = allouerMemoire(Noire,NbLignes,NbColonnes);
@@ -149,5 +151,6 @@ printf("ici \n");
 	printf("\n somme : %d\n",somme);
 	free(Histogramme);
 	fclose(f);
+		printf("\nfin programme\n");
 return 0;
 }

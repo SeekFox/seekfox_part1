@@ -30,6 +30,23 @@ void affiche_PILE(PILE display){
 	}
 }
 
+PILE emPILEVal(PILE p_oldPile, int valeur){
+	PILE p_newPile;
+	ELEMENT e;
+
+	e = affect_ELEMENT(valeur);
+	p_newPile = (PILE)malloc(sizeof(CELLULE));
+	
+	if (p_oldPile == NULL){
+		(*p_newPile).valeur = e;
+		(*p_newPile).nextCell = NULL;
+	}else{
+		(*p_newPile).nextCell = p_oldPile;
+		(*p_newPile).valeur = e;
+	}
+	
+	return p_newPile;
+}
 
 PILE emPILE(PILE p_oldPile, ELEMENT e){
 	PILE p_newPile;
@@ -69,5 +86,26 @@ PILE dePILE(PILE newPile, int* oldTete){
 		fprintf(stderr, "La pile est vide");	
 	}
 		
+	return newPile;
+}
+
+PILE coPILE(PILE* cpy){	
+	int temp;
+	PILE INV_temp = init_PILE();	//Pile pour inverser
+	PILE newPile = init_PILE();
+	
+	if(*cpy != NULL){
+		while(!PILE_estVide(*cpy)){					//Copier la pile dans une pile tampon pour l'inverser, on doit la copier 2 fois 
+			*cpy = dePILE(*cpy, &temp);				//pour qu'elle garde son sens
+			INV_temp = emPILEVal(INV_temp, temp);	//
+		}
+
+		while(!PILE_estVide(INV_temp)){				//Recopier le tampon dans les 2 piles
+			INV_temp = dePILE(INV_temp, &temp);		//
+			newPile = emPILEVal(newPile, temp);		//
+			*cpy = emPILEVal(*cpy, temp);		
+		}
+	}
+
 	return newPile;
 }

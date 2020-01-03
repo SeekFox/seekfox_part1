@@ -100,5 +100,7 @@ int getSubdivisionValue(double val, int nbSubdivisions);
  * @return DescripteurAudio 
  */
 DescripteurAudio creerDescripteurAudio(FILE* p_file, int tailleFenetre, int nbSubdivisions, int fileType);
+float getSimilarityValue(PILE* pile1, PILE* pile2, int tailleFenetre);
+PILE comparerDescripteursAudio(DescripteurAudio jingle, DescripteurAudio fichierAudio, int tailleFenetre);
 
 #endif

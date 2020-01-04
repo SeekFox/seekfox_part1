@@ -17,6 +17,7 @@ LOG = log/*
 
 all :
 	@$(MAKE) compile -s
+	@dos2unix bin/readRequete.sh
 	@$(MAKE) run -s
 
 compile :
@@ -26,7 +27,6 @@ compile :
 	@mkdir -p data
 	@mkdir -p log
 	@mkdir -p requete 
-	@dos2unix bin/readRequete.sh
 	@$(GCC) $(CFLAGS) -I $(INCLUDE) -c $(SRC) $(LIBFLAGS)
 	@$(MOVE) *.o $(LIB)
 	@$(GCC) $(CFLAGS) -o $(EXC) $(LIB)*.o $(LIBFLAGS)
@@ -48,3 +48,4 @@ clean :
 
 cleanlog :
 	@rm -f $(shell find ./log -name *.)
+

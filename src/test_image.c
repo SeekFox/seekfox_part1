@@ -1,4 +1,25 @@
 
+/*
+C'est corrigé normalement !
+J'ai fais 2/3 petites modifications qui permettent au programme d'être un poil plus compact lisible mais rien de bien méchants.
+
+Le nombre de bit à quantifier sera disponible dans le fichier config, t'aura pas à le demander à l'utilisateur dans la version finale
+Tu as plus qu'à faire la fonction de création d'un descripteur (à partir d'un fichier)
+	Transformation de ce descripteur en string (et l'inverse)
+	Et comparaison
+
+	Il faudrait aussi que tu crée un fichier image.h avec les prototypes de tes fonctions :)
+
+Mais globalement, tu as fais le plus compliqué.
+Si tu as un probleme, n'hesite pas ^^
+
+Bonne chance !
+
+Clément :)
+
+*/
+
+
 /*	
 Le probleme est que mes descripteurs affichent d'importe quoi après la première image
 dans le cas des images RGB en quatification sur 3 bits.
@@ -131,7 +152,7 @@ void remplirMatrice(FILE **f,matrice M,int lignes,int colonnes){
 
 /*-------------------------------------------------------------------------------------*/
 
-void realiserHistogrammeRGB(matrice Image,matrice Rouge,matrice Verte,matrice Bleue,int lignes,int colonnes,int n,int *Histogramme,int taille_max){
+void realiserHistogrammeRGB(matrice Image,matrice Rouge,matrice Verte,matrice Bleue,int lignes,int colonnes,int n,int Histogramme[],int taille_max){
 	
 	//fonction permettant de realiser l'hitogramme d'une image à partir des trois matrices de composantes rouges vertes et blueues
 
@@ -143,13 +164,15 @@ void realiserHistogrammeRGB(matrice Image,matrice Rouge,matrice Verte,matrice Bl
 		}
 	}
 
+	//Mise à 0 des compososantes de l'histogramme
+	for(int k=0; k<taille_max;k++){
+		Histogramme[k]=0;
+	}
+
+	//remplissage de l'histogramme
 	for(int i=0;i<lignes;i++){
 		for(int j=0;j<colonnes;j++){
-			for(int k=0;k<taille_max;k++){
-
-				if(Image[i][j] == k)Histogramme[k]++;
-
-			}
+			Histogramme[Image[i][j]]++;
 		}
 	}
 }
@@ -177,13 +200,16 @@ void realiserHistogrammeNB(matrice Image,matrice noire,int lignes,int colonnes,i
 
 		}
 	}
+
+	//Mise à 0 des compososantes de l'histogramme
+	for(int k=0; k<taille_max;k++){
+		Histogramme[k]=0;
+	}
+
+	//Remplissage de l'histogramme
 	for(int i=0;i<lignes;i++){
 		for(int j=0;j<colonnes;j++){
-			for(int k=0;k<taille_max;k++){
-
-				if(Image[i][j] == k)Histogramme[k]++;
-
-			}
+			Histogramme[Image[i][j]]++;
 		}
 	}
 }
@@ -200,7 +226,7 @@ int main(void){
 	sprintf(commande,"%s %s%s","ls",path,"TEST_IMAGES > ../data/liste_des_images");
 
 	printf("execution de %s\n",commande);
-	//system(commande); // commande qui sert à mettre la liste des noms des fichiers(images) .txt à indexer
+	system(commande); // commande qui sert à mettre la liste des noms des fichiers(images) .txt à indexer
 
 	// la commande est ls ../data/TEST_IMAGES > ../data/liste_des_images
 
@@ -277,11 +303,12 @@ int main(void){
 			int taille_max =(int)pow(2,n*nbComposantes);
 			printf("%d\n",taille_max);
 			
-			int * Histogramme = NULL;
-			Histogramme = malloc(taille_max*sizeof(int));
-			if(Histogramme == NULL) exit (EXIT_FAILURE);
+			int Histogramme[taille_max];
+			//int * Histogramme = NULL;
+			//Histogramme = malloc(taille_max*sizeof(int));
+			//if(Histogramme == NULL) exit (EXIT_FAILURE);
 
-			Histogramme[taille_max] =(int){0};
+			//Histogramme[taille_max] =(int){0};
 			// allocation dynamique et initialisation de l'histogramme
 
 			/*l'histogramme a une dimention de 2^nbComposantes*nombre de bits sur quoi quantifier donc
@@ -368,8 +395,6 @@ int main(void){
 		printf("\n somme : %d\n",somme);
 		somme = 0;
 		//affichage des descripteurs avec la somme des nombres de pixels pour vérification du résultat
-
-		free(Histogramme);
 	}
 	
 	//fclose(fichier_descripteur);

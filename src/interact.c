@@ -197,15 +197,16 @@ void displayMenuAdmin(int *isAdmin){
 void displayMenuAdminConfig(){
   int choix = -1;
 
-  while(choix!=7){
+  while(choix!=8){
     displayConfig();
     printf("1\\- Changer le mot de passe\n");
     printf("2\\- Modifier la taille minimun d'un mot\n");
     printf("3\\- Modifier la valeur limite de mots\n");
     printf("4\\- Modifier le seuil limite de taille de mot\n");
-    printf("5\\- Modifier le nombre de fenetres d'analyse\n");
-    printf("6\\- Modifier le nombre d'intervalles\n");
-    printf("7\\- Retour\n");
+    printf("5\\- Modifier le nombre de bits de quantification\n");
+    printf("6\\- Modifier le nombre de fenetres d'analyse\n");
+    printf("7\\- Modifier le nombre d'intervalles\n");
+    printf("8\\- Retour\n");
 
     scanf("%d",&choix);
     CLEAR_STDIN
@@ -228,10 +229,14 @@ void displayMenuAdminConfig(){
         break;
 
       case 5:
+        changeNbBits();
+        break;
+
+      case 6:
         changeAudioN();
         break;
       
-      case 6:
+      case 7:
         changeAudioM();
         break;
 

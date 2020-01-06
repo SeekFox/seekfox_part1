@@ -44,6 +44,13 @@ int getVal();
 int getSeuil();
 
 /**
+ * @brief Get the Nb Bits object
+ * 
+ * @return int 
+ */
+int getNbBits();
+
+/**
  * @brief Get the Audio N object
  * 
  * @return int 
@@ -89,6 +96,15 @@ void setVal(Config *c, int val);
  * @param seuil 
  */
 void setSeuil(Config *c, int seuil);
+
+/**
+ * @brief Set the Nb Bits object
+ * 
+ * @param c 
+ * @param nbBits 
+ */
+void setNbBits(Config *c, int nbBits);
+
 /**
  * @brief Set the Audio N object
  * 
@@ -141,6 +157,12 @@ void changeVal();
  * 
  */
 void changeSeuil();
+
+/**
+ * @brief Change le parametre NbBits
+ * 
+ */
+void changeNbBits();
 
 /**
  * @brief Changer le parametre Audio N

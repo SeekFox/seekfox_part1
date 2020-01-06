@@ -33,6 +33,8 @@
  *  tailleMin               : La taille minimun pour qu'un mot soit regardé
  *  val                     : Les x mots les plus presents
  *  seuil                   : Les mots qui apparaissent plus de x fois
+ * IMAGE
+ *  nbBits                  : Nombre de bits de quantification de pixel 
  * AUDIO
  *  audio_n                 : Fenetre d'analyse 
  *  audio_m                 : Nombre d'intervalles de la fenetre d'analyse
@@ -46,6 +48,9 @@ struct config_s{
     int tailleMin;
     int val;
     int seuil;
+
+    //Image
+    int nbBits;
 
     //Audio
     int audio_n;
@@ -67,6 +72,10 @@ int getVal(){
 
 int getSeuil(){
     return (config->seuil);
+}
+
+int getNbBits(){
+    return (config->nbBits);
 }
 
 int getAudioN(){
@@ -92,6 +101,10 @@ void setVal(Config *c, int val){
 
 void setSeuil(Config *c, int seuil){
     (*c)->seuil=seuil;
+}
+
+void setNbBits(Config *c, int nbBits){
+    (*c)->nbBits=nbBits;
 }
 
 void setAudioN(Config *c, int n){
@@ -131,10 +144,14 @@ Config loadConfig(){
                     break;
 
                 case 4:
-                    setAudioN(&c,atoi(line));
+                    setNbBits(&c,atoi(line));
                     break;
 
                 case 5:
+                    setAudioN(&c,atoi(line));
+                    break;
+
+                case 6:
                     setAudioM(&c,atoi(line));
                     break;
 
@@ -169,6 +186,12 @@ void displayConfig(){
     printf("\tSeuil limite de taille de mot        ");
     color("1");
     printf("%d\n",getSeuil(config));
+    color("0");
+
+    printf("IMAGE \n");
+    printf("\tNombre de bits de quantification     ");
+    color("1");
+    printf("%d\n",getNbBits(config));
     color("0");
 
     printf("AUDIO \n");
@@ -268,12 +291,30 @@ void changeSeuil(){
     if(n>0){    //n positif
         config->seuil=n;
         color("32");
-        printf("\nLe seuil de taille de mot. a bien ete modifie !\n\n");
+        printf("\nLe seuil de taille de mot a bien ete modifie !\n\n");
         color("37");
         //on met a jour le fichier user.config
         majConfigFile();
     }else{
         displayError("Le seuil limite de taille de mot doit etre positif.\n");
+    }
+}
+
+void changeNbBits(){
+    int n;
+    printf("Entrez la nouvelle valeur de nombre de bits de quantification.\n");
+    scanf("%d",&n);
+    CLEAR_STDIN
+
+    if( n==2 || n==3 ){
+        config->nbBits=n;
+        color("32");
+        printf("\nLe nombre de bits de quantification a bien ete modifie ! \n\n");
+        color("37");
+        //On met a jout le fichier user.config
+        majConfigFile();
+    }else{
+        displayError("Le nombre de bits de quantification doit etre egal a 2 ou 3.\n");
     }
 }
 
@@ -325,6 +366,7 @@ void majConfigFile(){
         fprintf(fichier,"%d\n",getTailleMin());
         fprintf(fichier,"%d\n",getVal());
         fprintf(fichier,"%d\n",getSeuil());
+        fprintf(fichier,"%d\n",getNbBits());
         fprintf(fichier,"%d\n",getAudioN());
         fprintf(fichier,"%d\n",getAudioM());
     }else{

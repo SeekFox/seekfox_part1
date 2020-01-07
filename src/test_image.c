@@ -12,36 +12,14 @@ Bonne chance !
 Clément :)
 */
 
-
-/*
-C'est corrigé normalement !
-J'ai fais 2/3 petites modifications qui permettent au programme d'être un poil plus compact lisible mais rien de bien méchants.
-
-Le nombre de bit à quantifier sera disponible dans le fichier config, t'aura pas à le demander à l'utilisateur dans la version finale
-Tu as plus qu'à faire la fonction de création d'un descripteur (à partir d'un fichier)
-	Transformation de ce descripteur en string (et l'inverse)
-	Et comparaison
-
-	Il faudrait aussi que tu crée un fichier image.h avec les prototypes de tes fonctions :)
-
-Mais globalement, tu as fais le plus compliqué.
-Si tu as un probleme, n'hesite pas ^^
-
-Bonne chance !
-
-Clément :)
-
-*/
-
-
 /*	
 Le probleme est que mes descripteurs affichent d'importe quoi après la première image
 dans le cas des images RGB en quatification sur 3 bits.
 et la meme chose pour les images NB en quatification sur 2 bits.
 on peut le voir si on compile le programme avec la commande
-gcc -o test_image.out test_image.c -lm
+	gcc -o test_image.out test_image.c -lm
 et l'exécution du programme 
-./test_image.out
+	./test_image.out
 Le programme est assez commenté(enfin je pense)
 s'il y a des parties incompréhensibles envoyez moi un message
 Merci ^_^
@@ -51,23 +29,7 @@ Merci ^_^
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
-<<<<<<< HEAD
 #include "test_image.h"
-=======
-/*-------------------------------------------------------------------------------------*/
-
-typedef int * bits;
-typedef int ** matrice;
-
-/*typedef struct Descripteur{
-	char identifiant[5];
-	int *Histogramme
-}Descripteur;*/
-
-int quantifierRGB(int composante_rouge,int composante_vert,int composante_bleue,int n);
-//int taille_max =(int)pow(2,n*nbComposantes);
-
->>>>>>> 250eae82f20a67af1a0a3b51d0696f3b24f0e314
 
 /*-------------------------------------------------------------------------------------*/
 
@@ -299,7 +261,6 @@ int main(void){
 			} while(titre_fichier[5] != 't');*/ //verification du format du fichier .txt ou pas
 		
 			//printf("titre fichier lu\n");
-<<<<<<< HEAD
 
 			//printf("\n%s\n",titre_fichier);
 
@@ -341,53 +302,9 @@ int main(void){
 				//allocation dynamique des matrices représentant les composantes de l'image
 
 				//printf("allouer memoire reussi\n");
-=======
-
-			//printf("\n%s\n",titre_fichier);
-
-			char CHEMIN2[100]="../data/TEST_IMAGES/"; // chemin d'ouverture des fichiers
-			strcat(CHEMIN2,titre_fichier);
-
-			printf("\n%s\n",CHEMIN2);
-
-
-			entree = fopen(CHEMIN2,"r"); // ouverture des fichiers .txt en mode lecture
-			
-			fscanf(entree," %d%d%d",&nbLignes,&nbColonnes,&nbComposantes); // lecture de la première lignes dimension de l'image et les composantes
-			printf("%d %d %d\n",nbLignes,nbColonnes,nbComposantes);
-
-			int taille_max =(int)pow(2,n*nbComposantes);
-			printf("%d\n",taille_max);
-			
-			int Histogramme[taille_max];
-			//int * Histogramme = NULL;
-			//Histogramme = malloc(taille_max*sizeof(int));
-			//if(Histogramme == NULL) exit (EXIT_FAILURE);
-
-			//Histogramme[taille_max] =(int){0};
-			// allocation dynamique et initialisation de l'histogramme
-
-			/*l'histogramme a une dimention de 2^nbComposantes*nombre de bits sur quoi quantifier donc
-			RBG(trois composante) sur 2 bits Histogramme de 64 valeurs
-			RGB(trois composante) sur 3 bits Histogramme de 512 valeurs
-			NB(une composante) sur 2 bits Histogramme de 4 valeurs
-			NB(une composante) sur 3 bits Histogramme de 8 valeurs
-			cf : cahier de charges page 17
-			*/
-
-			if(nbComposantes == 3){
-
-				matrice Rouge = NULL,Verte = NULL,Bleue = NULL,ImageRGB = NULL;
-				Rouge = allouerMemoire(Rouge,nbLignes,nbColonnes);
-				Verte = allouerMemoire(Verte,nbLignes,nbColonnes);
-				Bleue = allouerMemoire(Bleue,nbLignes,nbColonnes);
-				ImageRGB = allouerMemoire(ImageRGB,nbLignes,nbColonnes);
-				//allocation dynamique des matrices représentant les composantes de l'image
->>>>>>> 250eae82f20a67af1a0a3b51d0696f3b24f0e314
 
 				//printf("allouer memoire reussi\n");
 
-<<<<<<< HEAD
 				remplirMatrice(&entree,Rouge,nbLignes,nbColonnes);
 				remplirMatrice(&entree,Verte,nbLignes,nbColonnes);
 				remplirMatrice(&entree,Bleue,nbLignes,nbColonnes);
@@ -450,70 +367,6 @@ int main(void){
 			Histogramme[j] = 0;
 		}
 
-=======
-
-				remplirMatrice(&entree,Rouge,nbLignes,nbColonnes);
-				remplirMatrice(&entree,Verte,nbLignes,nbColonnes);
-				remplirMatrice(&entree,Bleue,nbLignes,nbColonnes);
-				//lecture du contenu de l'image et remplissage des matrices
-
-				//printf("matrices remplies reussi\n");
-
-				realiserHistogrammeRGB(ImageRGB,Rouge,Verte,Bleue,nbLignes,nbColonnes,n,Histogramme,taille_max);
-				//realisation de l'histogramme avec passage en parametre du tableau Histogramme
-
-				//printf("histogramme reussi\n");
-
-				Rouge = libererMemoire(Rouge,nbColonnes);
-				Verte = libererMemoire(Verte,nbColonnes);
-				Bleue = libererMemoire(Bleue,nbColonnes);
-				ImageRGB = libererMemoire(ImageRGB,nbColonnes);
-				//libération de la mémoire
-
-			}
-			else if(nbComposantes == 1){
-				//printf("choix effectue\n");
-				matrice Noire = NULL,ImageNB = NULL;
-				//allocation dynamique de la matrice représentant la composante noire et l'image pour réaliser l'histogramme
-
-				Noire = allouerMemoire(Noire,nbLignes,nbColonnes);
-				ImageNB = allouerMemoire(ImageNB,nbLignes,nbColonnes);
-				//	printf("allocation memoire reussie\n");
-				//allocation dynamique de la matrice noire représentant l'image
-
-				remplirMatrice(&entree,Noire,nbLignes,nbColonnes);
-				//printf("matrices remplies reussi\n");
-				//lecture du contenu de l'image et remplissage de la matrice
-
-				realiserHistogrammeNB(ImageNB,Noire,nbLignes,nbColonnes,n,Histogramme,taille_max);
-				//realisation de l'histogramme avec passage en parametre du tableau Histogramme
-
-				Noire = libererMemoire(Noire,nbLignes);
-				ImageNB = libererMemoire(ImageNB,nbLignes);
-				//libération de la mémoire
-
-			}
-			else printf("Image non prise en charge \n");
-
-		/*fprintf(fichier_descripteur,"[ #id%d ]",i);
-
-		for(int j=0;j<taille_max;j++){
-			fprintf(fichier_descripteur,"%d ",Histogramme[j]);
-			Histogramme[j] = (int)0;
-		}
-		fprintf(fichier_descripteur,"\n");*/ // ecriture dans le fichier base_descripteur_image
-
-		int somme = 0;
-
-		printf("[ #id%d ]",i);
-
-		for(int j=0;j<taille_max;j++){
-			printf("%d ",Histogramme[j]);
-			somme = somme + Histogramme[j];
-			Histogramme[j] = 0;
-		}
-
->>>>>>> 250eae82f20a67af1a0a3b51d0696f3b24f0e314
 		printf("\n somme : %d\n",somme);
 		somme = 0;
 		//affichage des descripteurs avec la somme des nombres de pixels pour vérification du résultat

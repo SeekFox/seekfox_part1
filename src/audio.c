@@ -125,7 +125,9 @@ void displayDescripteur(DescripteurAudio display){
 //TODO : Transformer un string en descripteur
 
 
-//void descripteurAudioTo
+int descripteurAudioToString(char* sortie, DescripteurAudio descToString){
+
+}
 
 float getSimilarityValue(PILE* pile1, PILE* pile2, int tailleFenetre){
 	float sommeDesDifferences = 0;

@@ -135,7 +135,8 @@ void displayMenuResearch(char * file, enum FSM * state){
 
       printf("\n\t >>%s<<\n",line);
       strcpy(ext, strrchr(line,'.'));
-      printf("\n\t >>%s<<\n",ext);
+      printf("\n\t >>%s<<>>%s<<\n",getNameOfFile(line),ext);
+      
       (*state) = ( ( strcmp(ext,".bmp")==0 || strcmp(ext,".jpg")==0 ) ? R_IMAGE : (strcmp(ext,".xml")==0 ? R_TEXTE : (strcmp(ext,".wav")==0 || strcmp(ext,".bin")==0 ) ? R_SON : (*state)));
       strcpy(file,line);
     }else if(choixNb == -1){
@@ -317,6 +318,21 @@ char * getExtensionOfFile(char * file){
   strcpy(ext, strrchr(file,'.'));
   //printf("\t\t>%s< >> >%s<\n",file,ext);
   return ext;
+}
+
+char * getNameOfFile(char * file){
+  //TODO : Debug
+  char * s = NULL;
+  s = (char *)malloc(( strlen(file) ) * sizeof(char));
+  memset(s,0,strlen(s));
+
+  if( strchr(file,'.') != NULL){
+    strncpy(s,file,strlen(file)-strlen(strrchr(file,'.')));
+  }else{
+    strcpy(s,file);
+  }
+
+  return s;
 }
 
 void displayInformations(){

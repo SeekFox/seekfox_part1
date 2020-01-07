@@ -321,16 +321,18 @@ char * getExtensionOfFile(char * file){
 }
 
 char * getNameOfFile(char * file){
-  //TODO : Debug
   char * s = NULL;
   s = (char *)malloc(( strlen(file) ) * sizeof(char));
-  memset(s,0,strlen(s));
+  strcpy(s,"");
 
   if( strchr(file,'.') != NULL){
-    strncpy(s,file,strlen(file)-strlen(strrchr(file,'.')));
+    for(int i=0; (i<(strlen(file)-strlen(strrchr(file,'.'))));i++){
+      sprintf(s,"%s%c",s,file[i]);
+    }
   }else{
     strcpy(s,file);
   }
+  s[strcspn(s,"\r\n")] = 0; //Suppression du \n
 
   return s;
 }

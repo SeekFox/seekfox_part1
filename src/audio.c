@@ -3,6 +3,7 @@
 #include "../include/audio.h"
 
 #define SIMLIARITY_MAX_VALUE 0.01
+#define SECONDE_PAR_VALEUR 0.0000616795061349 
 
 	///////////////////////////////////
 	//    Librarie du descripteur    //
@@ -123,13 +124,8 @@ void displayDescripteur(DescripteurAudio display){
 
 //TODO : Transformer un string en descripteur
 
-//TODO : Comparer 2 descripteurs
 
-
-
-
-
-
+//void descripteurAudioTo
 
 float getSimilarityValue(PILE* pile1, PILE* pile2, int tailleFenetre){
 	float sommeDesDifferences = 0;
@@ -191,8 +187,8 @@ PILE comparerDescripteursAudio(DescripteurAudio jingle, DescripteurAudio fichier
 			}
 
 			if(jingleEstComprisDansLeFichier == 1 && fileHist != NULL){	//Si ici on s'est arrété parce que le jingle est fini, et pas parce que y'a eut une différence ou la fin du fichier audio
-				nameToSeconds = (int)(fileHist->name * tempsDuneFenetre);
-				printf("On est sur le : %d\n", fileHist->name);
+				nameToSeconds = (int)(fileHist->name *tailleFenetre* SECONDE_PAR_VALEUR);
+				//printf("On est sur le : %d\n", fileHist->name * tailleFenetre * SECONDE_PAR_VALEUR);
 				listeDesTimingsDesJingle = emPILEVal(listeDesTimingsDesJingle, nameToSeconds);	//C'est que le jingle est bien compris dedans
 			}
 			

@@ -12,10 +12,6 @@ Bonne chance !
 Clément :)
 */
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 6b38f120d536b5e44354687719638d8ae8ed80ac
 /*	
 Le probleme est que mes descripteurs affichent d'importe quoi après la première image
 dans le cas des images RGB en quatification sur 3 bits.
@@ -307,10 +303,7 @@ int main(void){
 
 				//printf("allouer memoire reussi\n");
 
-<<<<<<< HEAD
-=======
 				//printf("allouer memoire reussi\n");
->>>>>>> 6b38f120d536b5e44354687719638d8ae8ed80ac
 
 				remplirMatrice(&entree,Rouge,nbLignes,nbColonnes);
 				remplirMatrice(&entree,Verte,nbLignes,nbColonnes);

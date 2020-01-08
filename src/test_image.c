@@ -12,15 +12,18 @@ Bonne chance !
 Clément :)
 */
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 6b38f120d536b5e44354687719638d8ae8ed80ac
 /*	
 Le probleme est que mes descripteurs affichent d'importe quoi après la première image
 dans le cas des images RGB en quatification sur 3 bits.
 et la meme chose pour les images NB en quatification sur 2 bits.
 on peut le voir si on compile le programme avec la commande
-gcc -o test_image.out test_image.c -lm
+	gcc -o test_image.out test_image.c -lm
 et l'exécution du programme 
-./test_image.out
+	./test_image.out
 Le programme est assez commenté(enfin je pense)
 s'il y a des parties incompréhensibles envoyez moi un message
 Merci ^_^
@@ -304,6 +307,10 @@ int main(void){
 
 				//printf("allouer memoire reussi\n");
 
+<<<<<<< HEAD
+=======
+				//printf("allouer memoire reussi\n");
+>>>>>>> 6b38f120d536b5e44354687719638d8ae8ed80ac
 
 				remplirMatrice(&entree,Rouge,nbLignes,nbColonnes);
 				remplirMatrice(&entree,Verte,nbLignes,nbColonnes);

@@ -15,4 +15,4 @@ matrice libererMemoire(matrice m,int colonnes);
 
 void remplirMatrice(FILE **f,matrice M,int lignes,int colonnes);
 void realiserHistogrammeRGB(matrice Image,matrice Rouge,matrice Verte,matrice Bleue,int lignes,int colonnes,int n,int Histogramme[],int taille_max);
-void realiserHistogrammeNB(matrice Image,matrice noire,int lignes,int colonnes,int n,int *Histogramme,int taille_max);
+void realiserHistogrammeNB(matrice Image,matrice noire,int lignes,int colonnes,int n,int Histogramme[],int taille_max);

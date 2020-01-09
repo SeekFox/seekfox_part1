@@ -33,14 +33,14 @@ Merci ^_^
 
 /*-------------------------------------------------------------------------------------*/
 
-int quantifierRGB(int composante_rouge,int composante_vert,int composante_bleue,int n){ 
+/*int quantifierRGB(int composante_rouge,int composante_vert,int composante_bleue,int n){ 
 
 	// cette fonction sert à quantifier un pixel à partir de 3 composantes rouge verte est bleue cf : cahier de charges annexe page 15-16
 
 	int dim = n*3; // la dimension du tableau de bits
 	int resultat = 0;
 
-	bits b = malloc(dim*sizeof(int)); // allocation dynamique du tableau de bits
+	/*bits b = malloc(dim*sizeof(int)); // allocation dynamique du tableau de bits
 	if(b == NULL)exit(1);
 
 	int rouge[8];
@@ -67,6 +67,47 @@ int quantifierRGB(int composante_rouge,int composante_vert,int composante_bleue,
 	}
 
 return resultat;
+}*/
+int quantifierRGB(int composante_rouge,int composante_vert,int composante_bleue,int n){
+	int dim = n*3;
+	
+	bits b = malloc(dim*sizeof(float));
+	if(b == NULL)exit(1);
+
+	int rouge[8] = {0},vert[8] = {0},bleue[8] = {0};
+	int i=0;
+	
+	for(int i=0;i<8;i++){
+		rouge[i] = composante_rouge%2;
+		composante_rouge = composante_rouge/2;
+		vert[i] = composante_vert%2;
+		composante_vert = composante_vert/2;
+		bleue[i] = composante_bleue%2;
+		composante_bleue = composante_bleue/2;
+	}
+		
+	if(dim == 6){
+		for(i = 0;i<dim;i++){
+			if(i<2)b[i] = rouge[7-i];
+			else if(i<4)b[i] = vert[9-i];
+			else b[i] = bleue[11-i];
+		}
+	}
+	else if(dim == 9){
+		for(i=0;i<9;i++){
+			if(i<3)b[i] = rouge[7-i];
+			else if(i<6)b[i] = vert[10-i];
+			else b[i] = bleue[13-i];}
+	}
+		
+	int resultat = 0,a = 0;
+	for(int j=0;j<dim;j++){
+		a =(int)pow(2,dim-1-j);
+		resultat = resultat + (b[j]*a);
+		}
+	//printf("%d\n",resultat);
+	free(b);
+return resultat;
 }
 /*-------------------------------------------------------------------------------------*/
 
@@ -85,9 +126,11 @@ int quantifierNB(int ComposanteNoire,int n){
 	}
 
 	for(int i = 0;i<n;i++){
-		puissance = (int)(pow(2,n-1-i));
+
+		puissance = (int)(pow((int)2,(int)n-1-i));
 		b[i] = noire[7-i];
 		resultat = resultat + (b[i]*puissance);
+
 	}
 	free(b);
 	return resultat;
@@ -251,6 +294,7 @@ int main(void){
 /*-------------------------------------------------------------------------------------*/}
 	
 	for(int i=1;i<=nbFichiers;i++){ // boucle for qui dépend du nombre de fichiers
+
 		char titre_fichier[6];
 		fscanf(lecteur_fichier,"%s",titre_fichier);//lecture des titres des fichiers
 
@@ -283,7 +327,6 @@ int main(void){
 			
 			int Histogramme[taille_max];
 
-
 			/*l'histogramme a une dimention de 2^nbComposantes*nombre de bits sur quoi quantifier donc
 			RBG(trois composantes) sur 2 bits Histogramme de 64 valeurs
 			RGB(trois composantes) sur 3 bits Histogramme de 512 valeurs
@@ -293,7 +336,7 @@ int main(void){
 			*/
 
 			if(nbComposantes == 3){
-
+				
 				matrice Rouge = NULL,Verte = NULL,Bleue = NULL,ImageRGB = NULL;
 				Rouge = allouerMemoire(Rouge,nbLignes,nbColonnes);
 				Verte = allouerMemoire(Verte,nbLignes,nbColonnes);
@@ -303,19 +346,18 @@ int main(void){
 
 				//printf("allouer memoire reussi\n");
 
-				//printf("allouer memoire reussi\n");
 
 				remplirMatrice(&entree,Rouge,nbLignes,nbColonnes);
 				remplirMatrice(&entree,Verte,nbLignes,nbColonnes);
 				remplirMatrice(&entree,Bleue,nbLignes,nbColonnes);
 				//lecture du contenu de l'image et remplissage des matrices
 
-				//printf("matrices remplies reussi\n");
+				printf("matrices remplies reussi\n");
 
 				realiserHistogrammeRGB(ImageRGB,Rouge,Verte,Bleue,nbLignes,nbColonnes,n,Histogramme,taille_max);
 				//realisation de l'histogramme avec passage en parametre du tableau Histogramme
 
-				//printf("histogramme reussi\n");
+				printf("histogramme reussi\n");
 
 				Rouge = libererMemoire(Rouge,nbColonnes);
 				Verte = libererMemoire(Verte,nbColonnes);

@@ -18,5 +18,8 @@ PILE emPILEVal(PILE p_oldPile, int valeur);
 
 PILE dePILE(PILE newPile, int* oldTete);
 PILE coPILE(PILE *cpy);	//Des barres
+int taillePILE(PILE pileATester);
+
+int getElementValue(PILE pileAVider, int elementNb);
 
 #endif

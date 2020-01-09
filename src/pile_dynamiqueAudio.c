@@ -99,3 +99,26 @@ PILE coPILE(PILE* cpy){
 
 	return newPile;
 }
+
+
+int taillePILE(PILE pileATester){
+	int nbElements = 0;
+	PILE curseur = pileATester;
+	while(curseur != NULL){
+		nbElements++;
+		curseur = curseur->nextCell;
+	}
+	return nbElements;
+}
+
+int getElementValue(PILE pileAVider, int elementNb){
+	PILE curseur = pileAVider;
+
+	if(taillePILE(pileAVider) <= elementNb)
+		return -1;
+
+	for(int i = 0; i<elementNb ; i++)
+		curseur = curseur->nextCell;
+
+	return curseur->valeur.val; 
+}

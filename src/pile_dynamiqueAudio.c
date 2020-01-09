@@ -122,3 +122,4 @@ int getElementValue(PILE pileAVider, int elementNb){
 
 	return curseur->valeur.val; 
 }
+ 

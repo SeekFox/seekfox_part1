@@ -150,6 +150,7 @@ void fenetreToString(char* sortie, PILE workingFenetre){
 int descripteurAudioToString(char* sortie, DescripteurAudio descToString){
 	long int stringSize;
 }
+
 float getSimilarityValue(PILE* pile1, PILE* pile2, int tailleFenetre){
 	float sommeDesDifferences = 0;
 	unsigned int nbSubdivisions = 0;

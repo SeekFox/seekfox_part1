@@ -355,7 +355,7 @@ void suppressionOrphelins () {      // Supprime les fichiers indexés qui n'exis
     supprLignesIndex(lignasuppr);
 } 
 
-void indexationAutomatique () {
+void indexationAutomatique () {     // Indexation automatique : indexation totale ou suppression des descripteurs orphelins
 
     FILE * indexDesc = NULL;
     FILE * fichiersIndex = NULL;
@@ -385,4 +385,5 @@ void indexationAutomatique () {
 
 int main (int argc, char * argv[]) {
     indexationAutomatique();
+    return 0;
 }

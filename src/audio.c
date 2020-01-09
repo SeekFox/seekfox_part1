@@ -13,6 +13,7 @@
 #include "../include/audio.h"
 
 #define SIMLIARITY_MAX_VALUE 0.01
+#define SECONDE_PAR_VALEUR 0.0000616795061349 
 
 	///////////////////////////////////
 	//    Librarie du descripteur    //
@@ -106,6 +107,9 @@ DescripteurAudio creerDescripteurAudio(FILE* p_file, int tailleFenetre, int nbSu
 
 	newDescripteur.data = newHistogram;
 	newDescripteur.nbFenetres = FenetresCount;
+	newDescripteur.nbSubdivisions = nbSubdivisions;
+	newDescripteur.tailleFenetre = tailleFenetre;
+	
 	return newDescripteur;
 }
 
@@ -122,6 +126,7 @@ void displayFenetre(Histogramme display){
 void displayDescripteur(DescripteurAudio display){
 	Histogramme index;
 
+	printf("Descripteur de %u fenetres de %u valeurs, avec %d subdivisions\n", display.nbFenetres, display.tailleFenetre, display.nbSubdivisions);
 	index = display.data;
 	for(int i = 0; i < display.nbFenetres; i++){
 		displayFenetre(index);
@@ -133,18 +138,22 @@ void displayDescripteur(DescripteurAudio display){
 
 //TODO : Transformer un string en descripteur
 
-//TODO : Comparer 2 descripteurs
+void fenetreToString(char* sortie, PILE workingFenetre){ 
+	/*char* newString;
+	char* cpy;
 
+	for(int i = 0; i<taillePILE(workingFenetre); i++){
+		sprintf()
+	}*/
+}
 
-
-
-
-
-
+int descripteurAudioToString(char* sortie, DescripteurAudio descToString){
+	long int stringSize;
+}
 float getSimilarityValue(PILE* pile1, PILE* pile2, int tailleFenetre){
 	float sommeDesDifferences = 0;
 	unsigned int nbSubdivisions = 0;
-	int val1 = 0; 
+	int val1 = 0;
 	int val2 = 0;
 	PILE cpy1, cpy2;		
 	cpy1 = init_PILE();
@@ -170,14 +179,16 @@ float getSimilarityValue(PILE* pile1, PILE* pile2, int tailleFenetre){
 	return (sommeDesDifferences/(tailleFenetre*nbSubdivisions));		//Plus on est proche de 0 plus c'est la même chose
 }
 
-PILE comparerDescripteursAudio(DescripteurAudio jingle, DescripteurAudio fichierAudio, int tailleFenetre){
+PILE comparerDescripteursAudio(DescripteurAudio jingle, DescripteurAudio fichierAudio){
 	if(jingle.nbFenetres > fichierAudio.nbFenetres){
 		return NULL;
 	}
 	int jingleEstComprisDansLeFichier = 0;
 	int nameToSeconds = 0;
-	float tempsDuneFenetre =  (tailleFenetre*sizeof(double))/ 256000.;
 	PILE listeDesTimingsDesJingle = init_PILE();
+
+	if(jingle.tailleFenetre != fichierAudio.tailleFenetre || jingle.nbSubdivisions != fichierAudio.nbSubdivisions)
+		return NULL;
 
 	Histogramme jingleHist = jingle.data;		//Juste pour éviter de taper jingle.data a chaque fois	
 	Histogramme fileHist = fichierAudio.data;	//
@@ -186,12 +197,12 @@ PILE comparerDescripteursAudio(DescripteurAudio jingle, DescripteurAudio fichier
 
 	while(jingleHist != NULL && fileHist != NULL){
 		
-		if(getSimilarityValue(&jingleHist->subdivision, &fileHist->subdivision, tailleFenetre) <= SIMLIARITY_MAX_VALUE){	//Si on trouve la premiere fenetre dans le truc, on check les autres
+		if(getSimilarityValue(&jingleHist->subdivision, &fileHist->subdivision, jingle.tailleFenetre) <= SIMLIARITY_MAX_VALUE){	//Si on trouve la premiere fenetre dans le truc, on check les autres
 			jingleEstComprisDansLeFichier = 1;
 			
 			while((jingleHist != NULL) && (fileHist!=NULL) && (jingleEstComprisDansLeFichier == 1)){			// On a la premiere fenetre, on vérifie que toutes les fenetres ressemblent une a une (probablement pas une bonne idée)
 				
-				if(getSimilarityValue(&jingleHist->subdivision, &fileHist->subdivision, tailleFenetre) > SIMLIARITY_MAX_VALUE){		// Si le truc est trop différent, on dit que c'est pas bon
+				if(getSimilarityValue(&jingleHist->subdivision, &fileHist->subdivision, jingle.tailleFenetre) > SIMLIARITY_MAX_VALUE){		// Si le truc est trop différent, on dit que c'est pas bon
 					jingleEstComprisDansLeFichier = 0;
 					break;
 				}else{
@@ -201,8 +212,8 @@ PILE comparerDescripteursAudio(DescripteurAudio jingle, DescripteurAudio fichier
 			}
 
 			if(jingleEstComprisDansLeFichier == 1 && fileHist != NULL){	//Si ici on s'est arrété parce que le jingle est fini, et pas parce que y'a eut une différence ou la fin du fichier audio
-				nameToSeconds = (int)(fileHist->name * tempsDuneFenetre);
-				printf("On est sur le : %d\n", fileHist->name);
+				nameToSeconds = (int)(fileHist->name *jingle.tailleFenetre* SECONDE_PAR_VALEUR);
+				//printf("On est sur le : %d\n", fileHist->name * tailleFenetre * SECONDE_PAR_VALEUR);
 				listeDesTimingsDesJingle = emPILEVal(listeDesTimingsDesJingle, nameToSeconds);	//C'est que le jingle est bien compris dedans
 			}
 			

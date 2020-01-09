@@ -30,8 +30,9 @@ typedef struct Fenetre{
 typedef Fenetre* Histogramme;
 
 typedef struct audioDesc{
+	unsigned int nbSubdivisions;
+	unsigned int tailleFenetre;
 	unsigned int nbFenetres;
-	//char* fileID;
 	Histogramme data;
 }DescripteurAudio;
 
@@ -101,6 +102,6 @@ int getSubdivisionValue(double val, int nbSubdivisions);
  */
 DescripteurAudio creerDescripteurAudio(FILE* p_file, int tailleFenetre, int nbSubdivisions, int fileType);
 float getSimilarityValue(PILE* pile1, PILE* pile2, int tailleFenetre);
-PILE comparerDescripteursAudio(DescripteurAudio jingle, DescripteurAudio fichierAudio, int tailleFenetre);
+PILE comparerDescripteursAudio(DescripteurAudio jingle, DescripteurAudio fichierAudio);
 
 #endif

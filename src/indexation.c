@@ -300,10 +300,6 @@ void indexationTotale () {          // Fait l'indexation totale de la base de do
     /* Fermeture des fichiers */
     fclose(indexDesc);
     fclose(fichiersIndex);
-
-    color("32");
-    printf("\nL'indexation totale a ete effectuee !\n\n");
-    color("37");
 }
 
 void indexationUnique (char * adrDoc) {         // Indexe un unique document à partir de son adresse donnée en paramètre
@@ -427,4 +423,47 @@ void indexationAutomatique () {
         suppressionOrphelins();
     }
     //printf("Mise à jour réussie !\n");
+}
+
+void displayDescripteur(char * fichier){
+    /* Ouverture des fichiers qui contiendront les descripteurs et la liste des fichiers indexés, en supprimant leur contenu précédent */
+    FILE * indexDesc = NULL;
+    FILE * fichiersIndex = NULL;
+    char chaine[64] ="";
+
+    int compteur = 0;
+
+    indexDesc = fopen("data/descripteurs/descripteurs.txt", "r");
+    fichiersIndex = fopen("data/descripteurs/fichiersIndexes.txt", "r");
+
+    /* Vérification de l'ouverture correcte des fichiers */
+    if (indexDesc==NULL || fichiersIndex==NULL) {
+        displayError("Indexation : impossible d'accéder aux fichiers de descripteurs.");
+        return;
+    }
+    //On parcours le fichier fichiersIndexes
+    if (fichiersIndex != NULL){
+        while (fgets(chaine, 64, fichiersIndex) != NULL){ // On lit le fichier tant qu'on ne reçoit pas d'erreur (NULL)
+            chaine[strcspn(chaine,"\r\n")] = 0; //Suppression du \n
+            if(strcmp(chaine,fichier)==0){
+                break;
+            }
+            compteur++;
+        }
+        fclose(fichiersIndex);
+        
+    }
+
+     if (indexDesc != NULL){
+        for(int i=0; i<compteur+1; i++){
+            fgets(chaine, 64, indexDesc);
+            if(chaine==NULL){
+                break;
+            }
+        }
+
+        printf("%s\n", chaine);
+       
+        fclose(indexDesc);
+    }
 }

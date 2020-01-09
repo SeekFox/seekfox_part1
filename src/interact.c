@@ -154,13 +154,12 @@ void displayMenuResearch(char * file, enum FSM * state){
   }else{
     displayError("Ouverture du ficher index.dat impossible.");
   }
-
-
 }
 
 void displayMenuAdmin(int *isAdmin){
   printTitle("ADMINISTRATION");
   int choix = -1;
+  char fichier[64];
 
   while ((*isAdmin==1)){
     printf("1\\- Lancer l'indexation\n");
@@ -178,6 +177,13 @@ void displayMenuAdmin(int *isAdmin){
         break;
 
       case 2:
+        system("echo Vous etes dans le repertoire ${PWD##*/}");
+        printf("\nEntrez le chemin vers le fichier a indexer\n\t>");
+        color("36");
+        scanf("%64s",fichier);
+        color("37");
+        CLEAR_STDIN
+        displayDescripteur(fichier);
         //TODO: Visualiser un descripteur
         break;
 
@@ -281,6 +287,9 @@ void displayMenuAdminIndexation(){
     case 2:
       printf("Indexation des fichiers en cours...");
       indexationTotale();
+      color("32");
+      printf("\nL'indexation totale a ete effectuee !\n");
+      color("37");
       break;
 
     case 3:
@@ -361,7 +370,6 @@ void printTitle(char * msg){
   color("30");
   color("0");
 }
-
 
 void printSeekFox(){
   color("32");

@@ -63,7 +63,7 @@ void displayFenetre(Histogramme display); //For debug reasons
  * 
  * @param display 
  */
-void displayDescripteur(DescripteurAudio display);
+void displayDescripteurAudio(DescripteurAudio display);
 
 /**
  * @brief 

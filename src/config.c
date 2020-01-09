@@ -24,6 +24,10 @@
     #include <../include/interact.h>
 #endif
 
+#ifndef __INDEXATION__
+  #include <../include/indexation.h>
+#endif
+
 /**
  * @brief Structure de Configuration
  * 
@@ -374,4 +378,6 @@ void majConfigFile(){
         exit(-1);
     }
     fclose(fichier);
+
+    indexationTotale();
 }

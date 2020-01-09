@@ -123,7 +123,7 @@ void displayFenetre(Histogramme display){
 	}
 }
 
-void displayDescripteur(DescripteurAudio display){
+void displayDescripteurAudio(DescripteurAudio display){
 	Histogramme index;
 
 	printf("Descripteur de %u fenetres de %u valeurs, avec %d subdivisions\n", display.nbFenetres, display.tailleFenetre, display.nbSubdivisions);

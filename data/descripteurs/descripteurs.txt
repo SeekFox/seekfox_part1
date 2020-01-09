@@ -1,4 +1,2 @@
 Audio
 Audio
-Texte
-Image

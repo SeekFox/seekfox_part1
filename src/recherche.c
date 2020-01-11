@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "../include/recherche.h"
+#include "../include/indexation.h"
 #include "../include/audio.h"
 
 /*==================================================================================================================================*/
@@ -68,6 +69,169 @@ void ajouterFichierRecherche (RECHERCHE * r, FICHIER * f) {     // Ajoute un fic
 
 /*==================================================================================================================================*/
 
+
+/*==================================================================================================================================*/
+/* FONCTIONS DE RECHERCHE */
+
+RECHERCHE * rechercheParFichierTexte (char * adresse) {
+
+    /* Etape 1 : on crée un descripteur du fichier requête après avoir vérifié son existence */
+    FILE * requete = NULL;
+    requete = fopen(adresse, "r");
+    if (requete==NULL) {
+        /* WIP : affichage de l'erreur */
+        printf("ERREUR - Le fichier à rechercher n'existe pas ou n'a pas pu être ouvert.");
+        return NULL;
+    } else {
+        /* WIP : création du descripteur */
+        DESCRIPTEUR * descRequete = creerDescripteurTexte(requete);
+        fclose(requete);
+    }
+
+    /* Etape 2 : on compare ce descripteur à tous les descripteurs textes indexés */
+    FILE * fichiersIndexes = NULL;
+    FILE * descripteurs = NULL;
+    fopen("data/descripteurs/fichiersIndexes.txt", "r");
+    fopen("data/descripteurs/descripteurs.txt", "r");
+
+    if (fichiersIndexes==NULL || descripteurs==NULL) {      // Vérification de l'ouverture des fichiers
+        /* WIP : affichage de l'erreur */
+        printf("ERREUR - Problème d'accès à la base des descripteurs.");
+        return NULL;
+    }
+
+    char * fichCourant = malloc(200*sizeof(char));      // Stockage de l'adresse du fichier courant
+    char * descCourant = malloc(2000*sizeof(char));     // Stockage du descripteur associé
+    
+    RECHERCHE resultats = creerRechercheVide();     // File qui contiendra les résultats de la recherche
+    float seuil = recupSeuilRecherche();        // WIP : récupérer le seuil de similarité à partir duquel on considère un fichier suffisamment similaire pour être affiché
+    
+    while(fgets(fichCourant, 200, fichiersIndexes)!=NULL) {     // On passe chaque ligne du fichier listant les fichiers indexés en revue
+        fgets(descCourant, 2000, descripteurs);     // Pour chacune de ces lignes (donc pour chacun de ces fichiers), on récupère le descripteur associé
+        
+        if(extensionFichier(fichCourant)=="xml") {      // Cas où le descripteur récupéré est celui d'un fichier texte (on ne traite que ces cas)
+            DESCRIPTEUR * desc = convertirStringDescTexte(descCourant);     // On convertit le descripteur (jusque là au format string) en structure descripteur
+            float sim = comparaisonDescTexte(desc, descRequete);        // On calcule la similarité entre le fichier recherché et le fichier courant
+            if(sim>=seuil) {        // Cas où le descripteur récupéré a une similarité suffisante avec la recherche
+                FICHIER * fcomp = creerCelluleFichier(fichCourant, sim);
+                ajouterFichierRecherche(resultats, fcomp);      // On ajoute à la liste triée des fichiers compatibles avec la recherche
+            }
+        }
+    }
+
+    fclose(fichiersIndexes);
+    fclose(descripteurs);
+
+    return resultats;
+}
+
+RECHERCHE * rechercheParFichierImage (char * adresse) {
+
+    /* Etape 1 : on crée un descripteur du fichier requête après avoir vérifié son existence */
+    FILE * requete = NULL;
+    requete = fopen(adresse, "r");
+    if (requete==NULL) {
+        /* WIP : affichage de l'erreur */
+        printf("ERREUR - Le fichier à rechercher n'existe pas ou n'a pas pu être ouvert.");
+        return NULL;
+    } else {
+        /* WIP : création du descripteur */
+        DESCRIPTEUR * descRequete = creerDescripteurImage(requete);
+        fclose(requete);
+    }
+
+    /* Etape 2 : on compare ce descripteur à tous les descripteurs images indexés */
+    FILE * fichiersIndexes = NULL;
+    FILE * descripteurs = NULL;
+    fopen("data/descripteurs/fichiersIndexes.txt", "r");
+    fopen("data/descripteurs/descripteurs.txt", "r");
+
+    if (fichiersIndexes==NULL || descripteurs==NULL) {      // Vérification de l'ouverture des fichiers
+        /* WIP : affichage de l'erreur */
+        printf("ERREUR - Problème d'accès à la base des descripteurs.");
+        return NULL;
+    }
+
+    char * fichCourant = malloc(200*sizeof(char));      // Stockage de l'adresse du fichier courant
+    char * descCourant = malloc(2000*sizeof(char));     // Stockage du descripteur associé
+    
+    RECHERCHE resultats = creerRechercheVide();     // File qui contiendra les résultats de la recherche
+    float seuil = recupSeuilRecherche();        // WIP : récupérer le seuil de similarité à partir duquel on considère un fichier suffisamment similaire pour être affiché
+    
+    while(fgets(fichCourant, 200, fichiersIndexes)!=NULL) {     // On passe chaque ligne du fichier listant les fichiers indexés en revue
+        fgets(descCourant, 2000, descripteurs);     // Pour chacune de ces lignes (donc pour chacun de ces fichiers), on récupère le descripteur associé
+        
+        if(extensionFichier(fichCourant)=="jpg" || extensionFichier(fichCourant)=="bmp") {      // Cas où le descripteur récupéré est celui d'un fichier image (on ne traite que ces cas)
+            DESCRIPTEUR * desc = convertirStringDescImage(descCourant);     // On convertit le descripteur (jusque là au format string) en structure descripteur
+            float sim = comparaisonDescImage(desc, descRequete);        // On calcule la similarité entre le fichier recherché et le fichier courant
+            if(sim>=seuil) {        // Cas où le descripteur récupéré a une similarité suffisante avec la recherche
+                FICHIER * fcomp = creerCelluleFichier(fichCourant, sim);
+                ajouterFichierRecherche(resultats, fcomp);      // On ajoute à la liste triée des fichiers compatibles avec la recherche
+            }
+        }
+    }
+
+    fclose(fichiersIndexes);
+    fclose(descripteurs);
+
+    return resultats;
+}
+
+RECHERCHE * rechercheParFichierSon (char * adresse) {
+
+    /* Etape 1 : on crée un descripteur du fichier requête après avoir vérifié son existence */
+    FILE * requete = NULL;
+    requete = fopen(adresse, "r");
+    if (requete==NULL) {
+        /* WIP : affichage de l'erreur */
+        printf("ERREUR - Le fichier à rechercher n'existe pas ou n'a pas pu être ouvert.");
+        return NULL;
+    } else {
+        /* WIP : création du descripteur */
+        DESCRIPTEUR * descRequete = creerDescripteurSon(requete);
+        fclose(requete);
+    }
+
+    /* Etape 2 : on compare ce descripteur à tous les descripteurs sons indexés */
+    FILE * fichiersIndexes = NULL;
+    FILE * descripteurs = NULL;
+    fopen("data/descripteurs/fichiersIndexes.txt", "r");
+    fopen("data/descripteurs/descripteurs.txt", "r");
+
+    if (fichiersIndexes==NULL || descripteurs==NULL) {      // Vérification de l'ouverture des fichiers
+        /* WIP : affichage de l'erreur */
+        printf("ERREUR - Problème d'accès à la base des descripteurs.");
+        return NULL;
+    }
+
+    char * fichCourant = malloc(200*sizeof(char));      // Stockage de l'adresse du fichier courant
+    char * descCourant = malloc(2000*sizeof(char));     // Stockage du descripteur associé
+    
+    RECHERCHE resultats = creerRechercheVide();     // File qui contiendra les résultats de la recherche
+    float seuil = recupSeuilRecherche();        // WIP : récupérer le seuil de similarité à partir duquel on considère un fichier suffisamment similaire pour être affiché
+    
+    while(fgets(fichCourant, 200, fichiersIndexes)!=NULL) {     // On passe chaque ligne du fichier listant les fichiers indexés en revue
+        fgets(descCourant, 2000, descripteurs);     // Pour chacune de ces lignes (donc pour chacun de ces fichiers), on récupère le descripteur associé
+        
+        if(extensionFichier(fichCourant)=="wav" || extensionFichier(fichCourant)=="bin") {      // Cas où le descripteur récupéré est celui d'un fichier son (on ne traite que ces cas)
+            DESCRIPTEUR * desc = convertirStringDescSon(descCourant);     // On convertit le descripteur (jusque là au format string) en structure descripteur
+            float sim = comparaisonDescSon(desc, descRequete);        // On calcule la similarité entre le fichier recherché et le fichier courant
+            if(sim>=seuil) {        // Cas où le descripteur récupéré a une similarité suffisante avec la recherche
+                FICHIER * fcomp = creerCelluleFichier(fichCourant, sim);
+                ajouterFichierRecherche(resultats, fcomp);      // On ajoute à la liste triée des fichiers compatibles avec la recherche
+            }
+        }
+    }
+
+    fclose(fichiersIndexes);
+    fclose(descripteurs);
+
+    return resultats;
+}
+
+/*==================================================================================================================================*/
+
+
 int main (int argc, char * argv[]) {
 
     RECHERCHE * r = creerRechercheVide();
@@ -76,13 +240,16 @@ int main (int argc, char * argv[]) {
     FICHIER * f3 = creerCelluleFichier("Trajan", 70);
     FICHIER * f4 = creerCelluleFichier("Gallien", 8);
     FICHIER * f5 = creerCelluleFichier("Constantin", 30);
+    FICHIER * f6 = creerCelluleFichier("Septime Sévère", 33);
 
+    ajouterFichierRecherche(r, f6);
     ajouterFichierRecherche(r, f4);
     ajouterFichierRecherche(r, f1);
     ajouterFichierRecherche(r, f2);
     ajouterFichierRecherche(r, f3);
     ajouterFichierRecherche(r, f5);
 
+    /* Code pour afficher les résultats d'une recherche (ajouter de la mise en forme ?) */
     FICHIER * courant = r->premier;
     int i=1;
     while(courant!=NULL) {

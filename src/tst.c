@@ -1,18 +1,24 @@
-#include<stdio.h>
+/*#include<stdio.h>
 #include<stdlib.h>
 #include<math.h>
 #include<string.h>
 
-int main(void){
-	int *tab;
-	tab = calloc(5*5,sizeof(int));
-	for(int i=0;i<5;i++){
-		for(int j=0;j<5;j++){
-			tab[i][j]= 3;
-			printf("%d ",tab[i][j]);
+int test_matrice(int x,int y,int matrice1[x][y],int matrice2[x][y]){
+	int somme = 0;
+	for(int i=0;i<2;i++){
+		for(int j=0;j<2;j++){
+			matrice1[i][j] = 1;
+			matrice2[i][j] = 1;
+			somme = somme + matrice1[i][j] + matrice2[i][j];
 		}
-		printf("\n");
 	}
-
+	return somme;
+}
+int main(void){
+	int x,y;
+	scanf("%d%d",&x,&y);
+	int m1[x][y],m2[x][y];
+	int somme = test_matrice(x,y,m1,m2);
+	printf("%d\n",somme);
 return 0;
 }

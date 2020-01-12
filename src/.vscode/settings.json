@@ -1,6 +1,8 @@
 {
     "C_Cpp.errorSquiggles": "Disabled",
     "files.associations": {
-        "arbre_binaire.h": "c"
+        "arbre_binaire.h": "c",
+        "stdlib.h": "c",
+        "test_image.h": "c"
     }
 }

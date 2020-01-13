@@ -137,3 +137,28 @@ void realiserHistogrammeNB(int lignes,int colonnes,int Image[lignes][colonnes],i
 		}
 	}
 }
+
+/*-------------------------------------------------------------------------------------*/
+
+void mise_a_jour_base(int n,int i,int taille_max,int Histogramme[],char titre_fichier[]){
+	
+	//int somme = 0;
+
+		FILE *ecrire_dans_base;
+		ecrire_dans_base = fopen("../data/base_descripteur_image.txt","a+");
+		fprintf(ecrire_dans_base,"[ %d#id%d ]",n,i);
+		for(int j=0;j<taille_max;j++){
+			fprintf(ecrire_dans_base,"%d ",Histogramme[j]);
+			//somme += Histogramme[j];
+			Histogramme[j] = 0;
+		}
+		fprintf(ecrire_dans_base,"\n");
+		/*// ecriture dans le fichier base_descripteur_image*/
+		fclose(ecrire_dans_base);
+
+		FILE *images_indexees;
+		images_indexees = fopen("../data/liste_base_image.txt","a+");
+		fprintf(images_indexees,"%s [ %d#id%d ]\n",titre_fichier,n,i);
+		fclose(images_indexees);
+		
+		}

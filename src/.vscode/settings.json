@@ -3,6 +3,7 @@
     "files.associations": {
         "arbre_binaire.h": "c",
         "stdlib.h": "c",
-        "test_image.h": "c"
+        "test_image.h": "c",
+        "string.h": "c"
     }
 }

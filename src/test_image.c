@@ -31,6 +31,7 @@ Merci ^_^
 #include <string.h>
 #include "test_image.h"
 #include "fcts_test_image.c"
+
 /*-------------------------------------------------------------------------------------*/
 int main(void){
 
@@ -47,7 +48,7 @@ int main(void){
 
 	// la commande est ls ../data/TEST_IMAGES > ../data/liste_des_images
 
-	printf("commande reussie\n");
+	//printf("commande reussie\n");
 
 	/*------------------------------ouverture des fichiers à indexer--------------------------------------------------*/
 
@@ -69,142 +70,80 @@ int main(void){
 	//printf("%d\n",nbFichiers); // affichage du nombre de fichiers
 
 	fclose(compteur_fichiers);
-
-/*-----------------------------choix des bits sur quoi quantifier-------------------------*/
-	do
-	{
-		printf("choisir le nombre de bits sur quoi quantifier\n");
-		scanf("%d",&n);
-	} while (n != 3 && n != 2);
-{/*-------------------------------------------------------------------------------------*/
 	FILE *fichier_descripteur;
-	//int variable_de_test;
+	int variable_de_test;
 
-	fichier_descripteur = fopen("../data/base_descripteur_image.txt","r");// ouverture de la base des descripteurs en mode lecture ecriture à la fin
+	fichier_descripteur = fopen("../data/base_descripteur_image.txt","r");// ouverture de la base des descripteurs en mode lecture
 			
 	variable_de_test = fgetc(fichier_descripteur);//tester avec une variable si la base des descripteurs est vide
 			
-	if(variable_de_test != EOF){ // elle n'est pas vide 
-			
-			}
-			else{
+	if(variable_de_test == EOF){
 
-			}
-/*-------------------------------------------------------------------------------------*/}
+		for(int n=2;n<4;n++){
 	
-		FILE *ecrire;
-		ecrire = fopen("walou.txt","w");
+			for(int i=1;i<=nbFichiers;i++){ // boucle for qui dépend du nombre de fichiers
 
-	for(int i=1;i<=nbFichiers;i++){ // boucle for qui dépend du nombre de fichiers
+				char titre_fichier[6];
+				fscanf(lecteur_fichier,"%s",titre_fichier);//lecture des titres des fichiers
 
-		char titre_fichier[6];
-		fscanf(lecteur_fichier,"%s",titre_fichier);//lecture des titres des fichiers
+				char CHEMIN2[100]="../data/TEST_IMAGES/"; // chemin d'ouverture des fichiers
+				strcat(CHEMIN2,titre_fichier);
 
-		/*	do
-			{
-				fscanf(lecteur_fichier,"%s",titre_fichier);
-				if(titre_fichier[5] != 't')nbFichiers--;
-			} while(titre_fichier[5] != 't');*/ //verification du format du fichier .txt ou pas
-		
-			//printf("titre fichier lu\n");
 
-			//printf("\n%s\n",titre_fichier);
-
-			char CHEMIN2[100]="../data/TEST_IMAGES/"; // chemin d'ouverture des fichiers
-			strcat(CHEMIN2,titre_fichier);
-
-			/*FILE *images_indexees;
-			images_indexees = fopen("../data/liste_base_image.txt","r+");
-			fprintf(images_indexees,"%s [ #id%d ]\n",titre_fichier,i);*/ // ?
-
+				entree = fopen(CHEMIN2,"r"); // ouverture des fichiers .txt en mode lecture
 			
+				fscanf(entree," %d%d%d",&nbLignes,&nbColonnes,&nbComposantes); // lecture de la première lignes dimension de l'image et les composantes
 
-			entree = fopen(CHEMIN2,"r"); // ouverture des fichiers .txt en mode lecture
+				int taille_max =(int)pow(2,n*nbComposantes);
 			
-			fscanf(entree," %d%d%d",&nbLignes,&nbColonnes,&nbComposantes); // lecture de la première lignes dimension de l'image et les composantes
-			printf("%d %d %d\n",nbLignes,nbColonnes,nbComposantes);
+				int Histogramme[taille_max];
 
-			int taille_max =(int)pow(2,n*nbComposantes);
-			printf("%d\n",taille_max);
-			
-			int Histogramme[taille_max];
 
-			/*l'histogramme a une dimention de 2^nbComposantes*nombre de bits sur quoi quantifier donc
-			RBG(trois composantes) sur 2 bits Histogramme de 64 valeurs
-			RGB(trois composantes) sur 3 bits Histogramme de 512 valeurs
-			NB(une composante) sur 2 bits Histogramme de 4 valeurs
-			NB(une composante) sur 3 bits Histogramme de 8 valeurs
-			cf : cahier de charges page 17
-			*/
-
-			if(nbComposantes == 3){
+				if(nbComposantes == 3){	
 				
-				int Rouge[nbLignes][nbColonnes],Verte[nbLignes][nbColonnes],Bleue[nbLignes][nbColonnes],ImageRGB[nbLignes][nbColonnes];
+					int Rouge[nbLignes][nbColonnes],Verte[nbLignes][nbColonnes],Bleue[nbLignes][nbColonnes],ImageRGB[nbLignes][nbColonnes];
 
-				//allocation dynamique des matrices représentant les composantes de l'image
+					//allocation dynamique des matrices représentant les composantes de l'image
 
-				//printf("allouer memoire reussi\n");
+					//printf("allouer memoire reussi\n");
 
 
-				remplirMatrice(&entree,nbLignes,nbColonnes,Rouge);
-				remplirMatrice(&entree,nbLignes,nbColonnes,Verte);
-				remplirMatrice(&entree,nbLignes,nbColonnes,Bleue);
-				//lecture du contenu de l'image et remplissage des matrices
+					remplirMatrice(&entree,nbLignes,nbColonnes,Rouge);
+					remplirMatrice(&entree,nbLignes,nbColonnes,Verte);
+					remplirMatrice(&entree,nbLignes,nbColonnes,Bleue);
+					//lecture du contenu de l'image et remplissage des matrices
 
-				//printf("matrices remplies reussi\n");
+					//printf("matrices remplies reussi\n");
 
-				realiserHistogrammeRGB(nbLignes,nbColonnes,ImageRGB,Rouge,Verte,Bleue,n,Histogramme,taille_max);
-				//realisation de l'histogramme avec passage en parametre du tableau Histogramme
+					realiserHistogrammeRGB(nbLignes,nbColonnes,ImageRGB,Rouge,Verte,Bleue,n,Histogramme,taille_max);
+					//realisation de l'histogramme avec passage en parametre du tableau Histogramme
 
-				printf("histogramme reussi\n");
+					//printf("histogramme reussi\n");
+
+				}
+				else if(nbComposantes == 1){
+					//printf("choix effectue\n");
+					int Noire[nbLignes][nbColonnes],ImageNB[nbLignes][nbColonnes];
+					//delcaration de la matrice représentant la composante noire et l'image pour réaliser l'histogramme
+
+
+					remplirMatrice(&entree,nbLignes,nbColonnes,Noire);
+					//printf("matrices remplies reussi\n");
+					//lecture du contenu de l'image et remplissage de la matrice
+
+					realiserHistogrammeNB(nbLignes,nbColonnes,ImageNB,Noire,n,Histogramme,taille_max);
+					//realisation de l'histogramme avec passage en parametre du tableau Histogramme
+
+				}
+
+			mise_a_jour_base(n,i,taille_max,Histogramme,titre_fichier);
 
 			}
-			else if(nbComposantes == 1){
-				//printf("choix effectue\n");
-				int Noire[nbLignes][nbColonnes],ImageNB[nbLignes][nbColonnes];
-				//delcaration de la matrice représentant la composante noire et l'image pour réaliser l'histogramme
-
-
-				remplirMatrice(&entree,nbLignes,nbColonnes,Noire);
-				//printf("matrices remplies reussi\n");
-				//lecture du contenu de l'image et remplissage de la matrice
-
-				realiserHistogrammeNB(nbLignes,nbColonnes,ImageNB,Noire,n,Histogramme,taille_max);
-				//realisation de l'histogramme avec passage en parametre du tableau Histogramme
-
-			}
-			else printf("Image non prise en charge \n");
-			
-		//int somme = 0;
-
-		fprintf(ecrire,"[ #id%d ]",i);
-		for(int j=0;j<taille_max;j++){
-			fprintf(ecrire,"%d ",Histogramme[j]);
-			//somme += Histogramme[j];
-			Histogramme[j] = 0;
+			rewind(lecteur_fichier);
 		}
-		fprintf(ecrire,"\n");
-		/*// ecriture dans le fichier base_descripteur_image*/
-
-		
-
-		/*int somme = 0;
-
-		printf("[ #id%d ]",i);
-
-		for(int j=0;j<taille_max;j++){
-			
-			printf("%d ",Histogramme[j]);
-			somme += Histogramme[j];
-			Histogramme[j] = 0;
-		}
-
-		printf("\n somme : %d\n",somme);
-		somme = 0;*/
-		//affichage des descripteurs avec la somme des nombres de pixels pour vérification du résultat
 	}
-	fclose(ecrire);
-	//fclose(fichier_descripteur);
+	
+	fclose(fichier_descripteur);
 	fclose(lecteur_fichier);
 	fclose(entree);
 

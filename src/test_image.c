@@ -36,10 +36,8 @@ Merci ^_^
 int main(void){
 
 /*----------------------------partie commande unix pour lister les noms des fichiers------------------------------*/
-
-	int nbLignes = 0,nbColonnes = 0,nbComposantes = 0,n = 0,nbFichiers = 0;
 	char path[16] = "../data/";
-	char commande[64] = "";
+	char commande[100] = "";
 	
 	sprintf(commande,"%s %s%s","ls",path,"TEST_IMAGES > ../data/liste_des_images");
 
@@ -48,16 +46,13 @@ int main(void){
 
 	// la commande est ls ../data/TEST_IMAGES > ../data/liste_des_images
 
-	//printf("commande reussie\n");
+	printf("commande reussie\n");
 
-	/*------------------------------ouverture des fichiers à indexer--------------------------------------------------*/
-
-	FILE * entree;
-	FILE * lecteur_fichier;
+/*------------------------------ouverture des fichiers à indexer--------------------------------------------------*/
+	int n = 0,nbFichiers = 0;
+	
 	FILE * compteur_fichiers;
 
-
-	lecteur_fichier = fopen("../data/liste_des_images","r");
 	//ouverture du fichier contenant la liste des images.txt
 
 	system("wc -l ../data/liste_des_images > ../data/nbFichiers");
@@ -70,29 +65,31 @@ int main(void){
 	//printf("%d\n",nbFichiers); // affichage du nombre de fichiers
 
 	fclose(compteur_fichiers);
-	FILE *fichier_descripteur;
-	int variable_de_test;
+	
 
-	fichier_descripteur = fopen("../data/base_descripteur_image.txt","r");// ouverture de la base des descripteurs en mode lecture
-			
-	variable_de_test = fgetc(fichier_descripteur);//tester avec une variable si la base des descripteurs est vide
-			
-	if(variable_de_test == EOF){
+	FILE * lecteur_fichier;
+	lecteur_fichier = fopen("../data/liste_des_images","r");
+	FILE * lecteur_image;
+
+	int nbLignes = 0,nbColonnes = 0,nbComposantes = 0;
 
 		for(int n=2;n<4;n++){
-	
+			
 			for(int i=1;i<=nbFichiers;i++){ // boucle for qui dépend du nombre de fichiers
 
 				char titre_fichier[6];
+
+				
 				fscanf(lecteur_fichier,"%s",titre_fichier);//lecture des titres des fichiers
 
 				char CHEMIN2[100]="../data/TEST_IMAGES/"; // chemin d'ouverture des fichiers
 				strcat(CHEMIN2,titre_fichier);
 
 
-				entree = fopen(CHEMIN2,"r"); // ouverture des fichiers .txt en mode lecture
-			
-				fscanf(entree," %d%d%d",&nbLignes,&nbColonnes,&nbComposantes); // lecture de la première lignes dimension de l'image et les composantes
+				lecteur_image = fopen(CHEMIN2,"r"); // ouverture des fichiers .txt en mode lecture
+
+				
+				fscanf(lecteur_image," %d%d%d",&nbLignes,&nbColonnes,&nbComposantes); // lecture de la première lignes dimension de l'image et les composantes
 
 				int taille_max =(int)pow(2,n*nbComposantes);
 			
@@ -108,9 +105,9 @@ int main(void){
 					//printf("allouer memoire reussi\n");
 
 
-					remplirMatrice(&entree,nbLignes,nbColonnes,Rouge);
-					remplirMatrice(&entree,nbLignes,nbColonnes,Verte);
-					remplirMatrice(&entree,nbLignes,nbColonnes,Bleue);
+					remplirMatrice(&lecteur_image,nbLignes,nbColonnes,Rouge);
+					remplirMatrice(&lecteur_image,nbLignes,nbColonnes,Verte);
+					remplirMatrice(&lecteur_image,nbLignes,nbColonnes,Bleue);
 					//lecture du contenu de l'image et remplissage des matrices
 
 					//printf("matrices remplies reussi\n");
@@ -127,7 +124,7 @@ int main(void){
 					//delcaration de la matrice représentant la composante noire et l'image pour réaliser l'histogramme
 
 
-					remplirMatrice(&entree,nbLignes,nbColonnes,Noire);
+					remplirMatrice(&lecteur_image,nbLignes,nbColonnes,Noire);
 					//printf("matrices remplies reussi\n");
 					//lecture du contenu de l'image et remplissage de la matrice
 
@@ -139,13 +136,12 @@ int main(void){
 			mise_a_jour_base(n,i,taille_max,Histogramme,titre_fichier);
 
 			}
-			rewind(lecteur_fichier);
+		rewind(lecteur_fichier);
 		}
-	}
 	
-	fclose(fichier_descripteur);
+	
 	fclose(lecteur_fichier);
-	fclose(entree);
+	fclose(lecteur_image);
 
 	printf("fin programme\n");
 	return 0;

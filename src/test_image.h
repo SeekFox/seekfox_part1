@@ -13,3 +13,9 @@ void realiserHistogrammeRGB(int lignes,int colonnes,int Image[lignes][colonnes],
 void realiserHistogrammeNB(int lignes,int colonnes,int Image[lignes][colonnes],int noire[lignes][colonnes],int n,int Histogramme[],int taille_max);
 
 void mise_a_jour_base(int n,int i,int taille_max,int Histogramme[],char titre_fichier[]);
+
+int base_est_vide();
+
+void lister_fichiers();
+
+void generer_descripteur(char chemin[],int Histogramme[]);

@@ -146,7 +146,9 @@ void mise_a_jour_base(int n,int i,int taille_max,int Histogramme[],char titre_fi
 
 		FILE *ecrire_dans_base;
 		ecrire_dans_base = fopen("../data/base_descripteur_image.txt","a+");
+		if(ecrire_dans_base == NULL)printf("chemin errone\n");
 		fprintf(ecrire_dans_base,"[ %d#id%d ]",n,i);
+
 		for(int j=0;j<taille_max;j++){
 			fprintf(ecrire_dans_base,"%d ",Histogramme[j]);
 			//somme += Histogramme[j];
@@ -161,4 +163,39 @@ void mise_a_jour_base(int n,int i,int taille_max,int Histogramme[],char titre_fi
 		fprintf(images_indexees,"%s [ %d#id%d ]\n",titre_fichier,n,i);
 		fclose(images_indexees);
 		
-		}
+}
+
+
+/*-------------------------------------------------------------------------------------*/
+
+int base_est_vide(){
+
+	FILE *fichier_descripteur;
+	char variable_de_test;
+
+	fichier_descripteur = fopen("../data/base_descripteur_image.txt","r");// ouverture de la base des descripteurs en mode lecture
+			
+	variable_de_test = fgetc(fichier_descripteur);//tester avec une variable si la base des descripteurs est vide
+	
+	fclose(fichier_descripteur);
+
+	return variable_de_test == EOF;
+}
+
+/*-------------------------------------------------------------------------------------*/
+
+void lister_fichiers(){
+
+}
+
+/*-------------------------------------------------------------------------------------*/
+
+void generer_descripteur(char chemin[],int Histogramme[]){
+
+	int nbLignes = 0,nbColonnes = 0,nbComposantes = 0;
+
+}
+
+/*-------------------------------------------------------------------------------------*/
+
+int fichier_traite(char titre_fichier[]);

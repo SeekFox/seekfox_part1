@@ -145,7 +145,7 @@ void mise_a_jour_base(int n,int i,int taille_max,int Histogramme[],char titre_fi
 	//int somme = 0;
 
 		FILE *ecrire_dans_base;
-		ecrire_dans_base = fopen("../data/base_descripteur_image.txt","a+");
+		ecrire_dans_base = fopen("../data/base_descripteur_image","a+");
 		if(ecrire_dans_base == NULL)printf("chemin errone\n");
 		fprintf(ecrire_dans_base,"[ %d#id%d ]",n,i);
 
@@ -159,7 +159,7 @@ void mise_a_jour_base(int n,int i,int taille_max,int Histogramme[],char titre_fi
 		fclose(ecrire_dans_base);
 
 		FILE *images_indexees;
-		images_indexees = fopen("../data/liste_base_image.txt","a+");
+		images_indexees = fopen("../data/liste_base_image","a+");
 		fprintf(images_indexees,"%s [ %d#id%d ]\n",titre_fichier,n,i);
 		fclose(images_indexees);
 		

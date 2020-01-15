@@ -3,14 +3,18 @@
 #include<math.h>
 #include<string.h>
 
+
+
 int main(void){
-	FILE *lecteur_fichier;
-	for(int i=0;i<5;i++){
-		char titre_fichier[6],x[6];
-	
-	lecteur_fichier = fopen("../data/liste_des_images","r");
-				fscanf(lecteur_fichier,"%s",titre_fichier);//lecture des titres des fichiers
-				printf("%s\n",titre_fichier);
+int j= 0,i=0;
+for(i=0;i<5;i++){
+	for(j=0;j<5;j++){
+		printf("is ok \n");
+		if(j == 3)break;
 	}
-	fclose(lecteur_fichier);
+	if(j==3)break;
+	printf("%d\n",i);
+}
+printf("test reussi\n");
+	return 0;
 }

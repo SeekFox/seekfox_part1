@@ -32,9 +32,37 @@ Merci ^_^
 #include "test_image.h"
 #include "fcts_test_image.c"
 
-/*-------------------------------------------------------------------------------------*/
-int main(void){
+int equals(char string1[],char string2[],int taille){
+	int isok=0;
+	for(int i=0;i<taille;i++){
+		if(string1[i] == string2[i])isok++;
+	}
+	return isok == taille;
+}
 
+int fichier_deja_indexe(char titre_fichier[]){
+	char titre_aux[6];
+
+	FILE *f_indexe;
+	f_indexe = fopen("../data/liste_base_image","r");
+
+	do{
+		fscanf(f_indexe,"%s",titre_aux);//lecture des titres des fichiers
+
+		if(equals(titre_fichier,titre_aux,6)){
+			printf("le fichier : %s est deja indexe\n",titre_fichier);
+			fclose(f_indexe);
+			return 1;
+		}
+		
+	}while(!feof(f_indexe));
+
+	fclose(f_indexe);
+	return 0;
+}
+
+void lancer_indexation(){
+	
 /*----------------------------partie commande unix pour lister les noms des fichiers------------------------------*/
 	char path[16] = "../data/";
 	char commande[100] = "";
@@ -65,7 +93,7 @@ int main(void){
 	//printf("%d\n",nbFichiers); // affichage du nombre de fichiers
 
 	fclose(compteur_fichiers);
-	
+/*---------------------------------------------------------------------------------------------------------------*/
 
 	FILE * lecteur_fichier;
 	lecteur_fichier = fopen("../data/liste_des_images","r");
@@ -79,20 +107,26 @@ int main(void){
 
 				char titre_fichier[6];
 
+				do{
+					fscanf(lecteur_fichier,"%s",titre_fichier);//lecture des titres des fichiers
+					if(feof(lecteur_fichier)){
+						printf("tous les fichiers sont indexes\n");
+						break;
+					}
+				}while(fichier_deja_indexe(titre_fichier));
+
 				
-				fscanf(lecteur_fichier,"%s",titre_fichier);//lecture des titres des fichiers
+				if(feof(lecteur_fichier))break;
+				
 
 				char CHEMIN2[100]="../data/TEST_IMAGES/"; // chemin d'ouverture des fichiers
 				strcat(CHEMIN2,titre_fichier);
 
 
 				lecteur_image = fopen(CHEMIN2,"r"); // ouverture des fichiers .txt en mode lecture
-
 				
 				fscanf(lecteur_image," %d%d%d",&nbLignes,&nbColonnes,&nbComposantes); // lecture de la première lignes dimension de l'image et les composantes
-
 				int taille_max =(int)pow(2,n*nbComposantes);
-			
 				int Histogramme[taille_max];
 
 
@@ -133,16 +167,26 @@ int main(void){
 
 				}
 
-			mise_a_jour_base(n,i,taille_max,Histogramme,titre_fichier);
+				mise_a_jour_base(n,i,taille_max,Histogramme,titre_fichier);
 
 			}
+		if(feof(lecteur_fichier))break;
 		rewind(lecteur_fichier);
 		}
-	
 	
 	fclose(lecteur_fichier);
 	fclose(lecteur_image);
 
+}
+
+/*-------------------------------------------------------------------------------------*/
+int main(void){
+	char chemin[100];
+	printf("debut programme\n");
+	lancer_indexation();
+	printf("saisir chemin\n");
+	scanf("%s",chemin);
+	comparer_image();
 	printf("fin programme\n");
 	return 0;
 }

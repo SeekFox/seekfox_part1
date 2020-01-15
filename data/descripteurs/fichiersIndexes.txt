@@ -1,3 +1,2 @@
-base_de_documents/lasagne.xml
-base_de_documents/prout.wav
-base_de_documents/seekfox.bmp
+base_de_documents/corpus_fi.bin
+base_de_documents/jingle_fi.bin

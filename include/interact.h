@@ -139,3 +139,11 @@ int convertStringChoiceToInt(char * str, int max);
  * @return char* 
  */
 char * getExtensionOfFile(char * file);
+
+/**
+ * @brief Get the Name Of File object
+ * 
+ * @param file 
+ * @return char* 
+ */
+char * getNameOfFile(char * file);

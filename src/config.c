@@ -24,21 +24,39 @@
     #include <../include/interact.h>
 #endif
 
+#ifndef __INDEXATION__
+  #include <../include/indexation.h>
+#endif
+
 /**
  * @brief Structure de Configuration
  * 
  * GENERAL
  *  passwordAdmin           : Mot de passe administrateur chiffre
  * TEXTE
- *  Valeur limite           : Les x mots les plus presents
- *  Seuil                   : Les mots qui apparaissent plus de x fois
+ *  tailleMin               : La taille minimun pour qu'un mot soit regardé
+ *  val                     : Les x mots les plus presents
+ *  seuil                   : Les mots qui apparaissent plus de x fois
+ * IMAGE
+ *  nbBits                  : Nombre de bits de quantification de pixel 
  * AUDIO
  *  audio_n                 : Fenetre d'analyse 
  *  audio_m                 : Nombre d'intervalles de la fenetre d'analyse
  * 
  */
 struct config_s{
+    //General
     char passwordAdmin[32];
+
+    //Texte
+    int tailleMin;
+    int val;
+    int seuil;
+
+    //Image
+    int nbBits;
+
+    //Audio
     int audio_n;
     int audio_m;
 };
@@ -46,6 +64,22 @@ struct config_s{
 //Getter
 char * getPasswordAdmin(){
     return (config->passwordAdmin);
+}
+
+int getTailleMin(){
+    return (config->tailleMin);
+}
+
+int getVal(){
+    return (config->val);
+}
+
+int getSeuil(){
+    return (config->seuil);
+}
+
+int getNbBits(){
+    return (config->nbBits);
 }
 
 int getAudioN(){
@@ -59,6 +93,22 @@ int getAudioM(){
 //Setter
 void setPasswordAdmin(Config *c, char * pwd){
     strcpy((*c)->passwordAdmin,pwd);
+}
+
+void setTailleMin(Config *c, int tailleMin){
+    (*c)->tailleMin=tailleMin;
+}
+
+void setVal(Config *c, int val){
+    (*c)->val=val;
+}
+
+void setSeuil(Config *c, int seuil){
+    (*c)->seuil=seuil;
+}
+
+void setNbBits(Config *c, int nbBits){
+    (*c)->nbBits=nbBits;
 }
 
 void setAudioN(Config *c, int n){
@@ -86,12 +136,29 @@ Config loadConfig(){
                     break;
 
                 case 1:
-                    setAudioN(&c,atoi(line));
+                    setTailleMin(&c,atoi(line));
                     break;
 
                 case 2:
+                    setVal(&c,atoi(line));
+                    break;
+
+                case 3:
+                    setSeuil(&c,atoi(line));
+                    break;
+
+                case 4:
+                    setNbBits(&c,atoi(line));
+                    break;
+
+                case 5:
+                    setAudioN(&c,atoi(line));
+                    break;
+
+                case 6:
                     setAudioM(&c,atoi(line));
                     break;
+
                 
                 default:
                     break;
@@ -110,6 +177,27 @@ Config loadConfig(){
 
 void displayConfig(){
     printTitle("CONFIGURATIONS");
+
+    printf("TEXTE \n");
+    printf("\tTaille minimun d'un mot              ");
+    color("1");
+    printf("%d\n",getTailleMin(config));
+    color("0");
+    printf("\tValeur limite de mots                ");
+    color("1");
+    printf("%d\n",getVal(config));
+    color("0");
+    printf("\tSeuil limite de taille de mot        ");
+    color("1");
+    printf("%d\n",getSeuil(config));
+    color("0");
+
+    printf("IMAGE \n");
+    printf("\tNombre de bits de quantification     ");
+    color("1");
+    printf("%d\n",getNbBits(config));
+    color("0");
+
     printf("AUDIO \n");
     printf("\tTaille de la fenetre d'analyse       ");
     color("1");
@@ -162,6 +250,79 @@ void changePassword(){
     }
 }
 
+void changeTailleMin(){
+    int n;
+    printf("Entrez la nouvelle taille minimun d'un mot.\n");
+    scanf("%d",&n);
+    CLEAR_STDIN
+
+    if(n>=3){    //n superieur ou egale a 3
+        config->tailleMin=n;
+        color("32");
+        printf("\nLa taille minimun d'un mot a bien ete modifie !\n\n");
+        color("37");
+        //on met a jour le fichier user.config
+        majConfigFile();
+    }else{
+        displayError("La taille minimun d'un mot doit etre superieur ou egal a 3\n");
+    }
+}
+
+void changeVal(){
+    int n;
+    printf("Entrez la nouvelle valeur limite de mots.\n");
+    scanf("%d",&n);
+    CLEAR_STDIN
+
+    if(n>0){    //n positif
+        config->val=n;
+        color("32");
+        printf("\nLa tvaleur limite de mots a bien ete modifie !\n\n");
+        color("37");
+        //on met a jour le fichier user.config
+        majConfigFile();
+    }else{
+        displayError("La valeur limite de mots doit etre positive.\n");
+    }
+}
+
+void changeSeuil(){
+    int n;
+    printf("Entrez la nouvelle valeur de seuil de taille de mot.\n");
+    scanf("%d",&n);
+    CLEAR_STDIN
+
+    if(n>0){    //n positif
+        config->seuil=n;
+        color("32");
+        printf("\nLe seuil de taille de mot a bien ete modifie !\n\n");
+        color("37");
+        //on met a jour le fichier user.config
+        majConfigFile();
+    }else{
+        displayError("Le seuil limite de taille de mot doit etre positif.\n");
+    }
+}
+
+void changeNbBits(){
+    int n;
+    printf("Entrez la nouvelle valeur de nombre de bits de quantification.\n");
+    scanf("%d",&n);
+    CLEAR_STDIN
+
+    if( n==2 || n==3 ){
+        config->nbBits=n;
+        color("32");
+        printf("\nLe nombre de bits de quantification a bien ete modifie ! \n\n");
+        color("37");
+        //On met a jout le fichier user.config
+        majConfigFile();
+    }else{
+        displayError("Le nombre de bits de quantification doit etre egal a 2 ou 3.\n");
+    }
+}
+
+
 void changeAudioN(){
     int n;
     printf("Entrez la nouvelle taille de fenetre d'analyse.\n");
@@ -178,8 +339,6 @@ void changeAudioN(){
     }else{
         displayError("La taille de la fenetre d'analyse doit etre une puissance de 2 positive.\n");
     }
-
-
 }
 
 void changeAudioM(){
@@ -208,6 +367,10 @@ void majConfigFile(){
 
     if(fichier!=NULL){
         fprintf(fichier,"%s\n",getPasswordAdmin());
+        fprintf(fichier,"%d\n",getTailleMin());
+        fprintf(fichier,"%d\n",getVal());
+        fprintf(fichier,"%d\n",getSeuil());
+        fprintf(fichier,"%d\n",getNbBits());
         fprintf(fichier,"%d\n",getAudioN());
         fprintf(fichier,"%d\n",getAudioM());
     }else{
@@ -215,4 +378,6 @@ void majConfigFile(){
         exit(-1);
     }
     fclose(fichier);
+
+    indexationTotale();
 }

@@ -1,6 +1,6 @@
 /**
  * @file config.h
- * @author Clément Truillet (clement.truillet@univ-tlse3.fr)
+ * @author Clement Truillet (clement.truillet@univ-tlse3.fr)
  * @brief 
  * @version 0.1
  * @date 22/12/2019
@@ -21,6 +21,34 @@ extern Config config;
  * @return char* 
  */
 char * getPasswordAdmin();
+
+/**
+ * @brief Get the Taille Min object
+ * 
+ * @return int 
+ */
+int getTailleMin();
+
+/**
+ * @brief Get the Val object
+ * 
+ * @return int 
+ */
+int getVal();
+
+/**
+ * @brief Get the Seuil object
+ * 
+ * @return int 
+ */
+int getSeuil();
+
+/**
+ * @brief Get the Nb Bits object
+ * 
+ * @return int 
+ */
+int getNbBits();
 
 /**
  * @brief Get the Audio N object
@@ -44,6 +72,38 @@ int getAudioM();
  * @param pwd 
  */
 void setPasswordAdmin(Config *c, char * pwd);
+
+/**
+ * @brief Set the Taille Min object
+ * 
+ * @param c 
+ * @param tailleMin 
+ */
+void setTailleMin(Config *c, int tailleMin);
+
+/**
+ * @brief Set the Val object
+ * 
+ * @param c 
+ * @param val 
+ */
+void setVal(Config *c, int val);
+
+/**
+ * @brief Set the Seuil object
+ * 
+ * @param c 
+ * @param seuil 
+ */
+void setSeuil(Config *c, int seuil);
+
+/**
+ * @brief Set the Nb Bits object
+ * 
+ * @param c 
+ * @param nbBits 
+ */
+void setNbBits(Config *c, int nbBits);
 
 /**
  * @brief Set the Audio N object
@@ -79,6 +139,30 @@ void displayConfig();
  * 
  */
 void changePassword();
+
+/**
+ * @brief Changer la Taille Min
+ * 
+ */
+void changeTailleMin();
+
+/**
+ * @brief Changer la valeur limite de mots
+ * 
+ */
+void changeVal();
+
+/**
+ * @brief Changer le seuil limite de taille de mot
+ * 
+ */
+void changeSeuil();
+
+/**
+ * @brief Change le parametre NbBits
+ * 
+ */
+void changeNbBits();
 
 /**
  * @brief Changer le parametre Audio N

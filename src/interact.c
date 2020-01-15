@@ -135,7 +135,8 @@ void displayMenuResearch(char * file, enum FSM * state){
 
       printf("\n\t >>%s<<\n",line);
       strcpy(ext, strrchr(line,'.'));
-      printf("\n\t >>%s<<\n",ext);
+      printf("\n\t >>%s<<>>%s<<\n",getNameOfFile(line),ext);
+      
       (*state) = ( ( strcmp(ext,".bmp")==0 || strcmp(ext,".jpg")==0 ) ? R_IMAGE : (strcmp(ext,".xml")==0 ? R_TEXTE : (strcmp(ext,".wav")==0 || strcmp(ext,".bin")==0 ) ? R_SON : (*state)));
       strcpy(file,line);
     }else if(choixNb == -1){
@@ -153,13 +154,12 @@ void displayMenuResearch(char * file, enum FSM * state){
   }else{
     displayError("Ouverture du ficher index.dat impossible.");
   }
-
-
 }
 
 void displayMenuAdmin(int *isAdmin){
   printTitle("ADMINISTRATION");
   int choix = -1;
+  char fichier[64];
 
   while ((*isAdmin==1)){
     printf("1\\- Lancer l'indexation\n");
@@ -177,6 +177,13 @@ void displayMenuAdmin(int *isAdmin){
         break;
 
       case 2:
+        system("echo Vous etes dans le repertoire ${PWD##*/}");
+        printf("\nEntrez le chemin vers le fichier a indexer\n\t>");
+        color("36");
+        scanf("%64s",fichier);
+        color("37");
+        CLEAR_STDIN
+        displayDescripteur(fichier);
         //TODO: Visualiser un descripteur
         break;
 
@@ -197,12 +204,16 @@ void displayMenuAdmin(int *isAdmin){
 void displayMenuAdminConfig(){
   int choix = -1;
 
-  while(choix!=4){
+  while(choix!=8){
     displayConfig();
     printf("1\\- Changer le mot de passe\n");
-    printf("2\\- Modifier le nombre de fenetres d'analyse\n");
-    printf("3\\- Modifier le nombre d'intervalles\n");
-    printf("4\\- Retour\n");
+    printf("2\\- Modifier la taille minimun d'un mot\n");
+    printf("3\\- Modifier la valeur limite de mots\n");
+    printf("4\\- Modifier le seuil limite de taille de mot\n");
+    printf("5\\- Modifier le nombre de bits de quantification\n");
+    printf("6\\- Modifier le nombre de fenetres d'analyse\n");
+    printf("7\\- Modifier le nombre d'intervalles\n");
+    printf("8\\- Retour\n");
 
     scanf("%d",&choix);
     CLEAR_STDIN
@@ -213,10 +224,26 @@ void displayMenuAdminConfig(){
         break;
       
       case 2:
+        changeTailleMin();
+        break;
+
+      case 3:
+        changeVal();
+        break;
+
+      case 4:
+        changeSeuil();
+        break;
+
+      case 5:
+        changeNbBits();
+        break;
+
+      case 6:
         changeAudioN();
         break;
       
-      case 3:
+      case 7:
         changeAudioM();
         break;
 
@@ -250,7 +277,7 @@ void displayMenuAdminIndexation(){
       scanf("%64s",fichier);
       color("37");
       CLEAR_STDIN
-
+      //printf("\t>> >%s<\n",fichier);
       //On lance l'indexation
       indexationUnique(fichier);
 
@@ -260,6 +287,9 @@ void displayMenuAdminIndexation(){
     case 2:
       printf("Indexation des fichiers en cours...");
       indexationTotale();
+      color("32");
+      printf("\nL'indexation totale a ete effectuee !\n");
+      color("37");
       break;
 
     case 3:
@@ -292,10 +322,28 @@ int convertStringChoiceToInt(char * str, int max){
 }
 
 char * getExtensionOfFile(char * file){
-  char * ext = (char *)malloc(sizeof(char)*4);
-  strcpy(ext,"");
+  char * ext = "";
+  ext = (char *)malloc(sizeof(char)*4);
   strcpy(ext, strrchr(file,'.'));
+  //printf("\t\t>%s< >> >%s<\n",file,ext);
   return ext;
+}
+
+char * getNameOfFile(char * file){
+  char * s = NULL;
+  s = (char *)malloc(( strlen(file) ) * sizeof(char));
+  strcpy(s,"");
+
+  if( strchr(file,'.') != NULL){
+    for(int i=0; (i<(strlen(file)-strlen(strrchr(file,'.'))));i++){
+      sprintf(s,"%s%c",s,file[i]);
+    }
+  }else{
+    strcpy(s,file);
+  }
+  s[strcspn(s,"\r\n")] = 0; //Suppression du \n
+
+  return s;
 }
 
 void displayInformations(){
@@ -322,7 +370,6 @@ void printTitle(char * msg){
   color("30");
   color("0");
 }
-
 
 void printSeekFox(){
   color("32");

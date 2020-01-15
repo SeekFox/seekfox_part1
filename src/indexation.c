@@ -19,6 +19,12 @@
     #include "../include/interact.h"
 #endif
 
+#ifndef __CONFIG__
+    #include "../include/config.h"
+#endif
+
+#include "../include/audio.h"
+
 
 /*==================================================================================================================================*/
 /* FONCTIONS DE MANIPULATION DES STRUCTURES */
@@ -70,6 +76,7 @@ void ajouterDescPile (PILEDESC * p, DESC * d) {         // Ajoute un descripteur
 
 int isFileExist(char * adrDoc){
     FILE * fichier = NULL;
+    //printf("\t >> >%s<\n",adrDoc);
     fichier = fopen(adrDoc,"r");
     if(fichier==NULL){
         return 0;
@@ -80,6 +87,7 @@ int isFileExist(char * adrDoc){
 
 int dejaIndexe (char * adrDoc) {        // Dit si le fichier dont l'adresse est passée en paramètre est déjà indexé (0=oui, 1=non)
     FILE * fichiersIndex = NULL;
+    //printf("\t >> >%s<\n",adrDoc);
     fichiersIndex = fopen("data/descripteurs/fichiersIndexes.txt", "r");
     if (fichiersIndex==NULL) {
         displayError("Indexation : impossible d'accéder à l'index des fichiers indexés.");
@@ -88,10 +96,11 @@ int dejaIndexe (char * adrDoc) {        // Dit si le fichier dont l'adresse est 
 
     int pres = 1;
     char * fichCourant = malloc(200*sizeof(char));
-    char * adrDocMod = malloc((1+strlen(adrDoc))*sizeof(char));     // Pour comparer correctement avec les chaînes de caractère récupérées
-    sprintf(adrDocMod,"%s\n", adrDoc);      // On rajoute un saut de ligne à la fin de l'adresse (car il y en a dans le fichier)
+   
     while (fgets(fichCourant, 200, fichiersIndex)!=NULL) {
-        if(strcmp(adrDocMod, fichCourant)==0) pres=0;
+        fichCourant[strcspn(fichCourant,"\r\n")] = 0; //Suppression du \n
+        //printf("<%s> && <%s>\n",adrDoc,fichCourant);
+        if(strcmp(adrDoc, fichCourant)==0) pres=0;
     }
 
     fclose(fichiersIndex);
@@ -164,11 +173,12 @@ void supprLignesIndex (int * lignasuppr) {        // Supprime la ligne n du fich
 
 char * moveFileInBDB(char * adrDoc){
     char * adrDocOnBDB = (char*)malloc(24*sizeof(char) + strlen(adrDoc));
-    sprintf(adrDocOnBDB,"base_de_documents/%s", adrDoc);
-
-    rename(adrDoc,adrDocOnBDB);
-
-    return adrDocOnBDB;
+    if(strncmp("base_de_documents",adrDoc,strlen("base_de_documents") )!=0){
+        sprintf(adrDocOnBDB,"base_de_documents/%s", adrDoc);
+        rename(adrDoc,adrDocOnBDB);
+        return adrDocOnBDB;
+    }
+    return adrDoc;    
 }
 
 void displayFichierIndexes(){
@@ -228,9 +238,11 @@ void empilementDesDescripteurs (PILEDESC * pileDesc, PILEDESC * adrFichiers) {  
             DESC * adr = creerDesc(adrDoc);
             ajouterDescPile(adrFichiers, adr);
         }
-        if (strcmp(ext, ".wav")==0 || strcmp(ext, ".bin")==0) {       // Cas d'un fichier audio
+        if (strcmp(ext, ".bin")==0) {                               // Cas d'un fichier audio
+        //if (strcmp(ext, ".wav")==0 || strcmp(ext, ".bin")==0) {       
             //printf("C'est du son.\n");
-            //DescripteurSon ds = creerDescripteurSon(adrDoc);
+
+            DescripteurAudio ds = creerDescripteurAudio(fopen(adrDoc,"r"),getAudioN(),getAudioM(),((strcmp(ext, ".wav")==0)?WAV_FILE:BIN_FILE));
             char * desc = "Audio";
             DESC * strDesc = creerDesc(desc);
             ajouterDescPile(pileDesc, strDesc);
@@ -288,10 +300,6 @@ void indexationTotale () {          // Fait l'indexation totale de la base de do
     /* Fermeture des fichiers */
     fclose(indexDesc);
     fclose(fichiersIndex);
-
-    color("32");
-    printf("\nL'indexation totale a ete effectuee !\n\n");
-    color("37");
 }
 
 void indexationUnique (char * adrDoc) {         // Indexe un unique document à partir de son adresse donnée en paramètre
@@ -334,8 +342,9 @@ void indexationUnique (char * adrDoc) {         // Indexe un unique document à 
         fprintf(indexDesc, "%s\n", strDt);
         fprintf(fichiersIndex, "%s\n", adrDoc);
     }
-    if (strcmp(ext, ".wav")==0 || strcmp(ext, ".bin")==0) {
-        // DescripteurSon ds = creerDescripteurSon(adrDoc);
+    if (strcmp(ext, ".bin")==0) {
+    //if (strcmp(ext, ".wav")==0 || strcmp(ext, ".bin")==0) {
+        DescripteurAudio ds = creerDescripteurAudio(fopen(adrDoc,"r"),getAudioN(),getAudioM(),((strcmp(ext, ".wav")==0)?WAV_FILE:BIN_FILE));
         char * strDs = "Audio";
         fprintf(indexDesc, "%s\n", strDs);
         fprintf(fichiersIndex, "%s\n", adrDoc);
@@ -414,4 +423,47 @@ void indexationAutomatique () {
         suppressionOrphelins();
     }
     //printf("Mise à jour réussie !\n");
+}
+
+void displayDescripteur(char * fichier){
+    /* Ouverture des fichiers qui contiendront les descripteurs et la liste des fichiers indexés, en supprimant leur contenu précédent */
+    FILE * indexDesc = NULL;
+    FILE * fichiersIndex = NULL;
+    char chaine[64] ="";
+
+    int compteur = 0;
+
+    indexDesc = fopen("data/descripteurs/descripteurs.txt", "r");
+    fichiersIndex = fopen("data/descripteurs/fichiersIndexes.txt", "r");
+
+    /* Vérification de l'ouverture correcte des fichiers */
+    if (indexDesc==NULL || fichiersIndex==NULL) {
+        displayError("Indexation : impossible d'accéder aux fichiers de descripteurs.");
+        return;
+    }
+    //On parcours le fichier fichiersIndexes
+    if (fichiersIndex != NULL){
+        while (fgets(chaine, 64, fichiersIndex) != NULL){ // On lit le fichier tant qu'on ne reçoit pas d'erreur (NULL)
+            chaine[strcspn(chaine,"\r\n")] = 0; //Suppression du \n
+            if(strcmp(chaine,fichier)==0){
+                break;
+            }
+            compteur++;
+        }
+        fclose(fichiersIndex);
+        
+    }
+
+     if (indexDesc != NULL){
+        for(int i=0; i<compteur+1; i++){
+            fgets(chaine, 64, indexDesc);
+            if(chaine==NULL){
+                break;
+            }
+        }
+
+        printf("%s\n", chaine);
+       
+        fclose(indexDesc);
+    }
 }

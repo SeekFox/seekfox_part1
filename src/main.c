@@ -1,6 +1,6 @@
 /**
  * @file main.c
- * @author Clément Truillet (clement.truillet@univ-tlse3.fr)
+ * @author Clement Truillet (clement.truillet@univ-tlse3.fr)
  * @brief 
  * @version 0.11
  * @date 10/12/2019

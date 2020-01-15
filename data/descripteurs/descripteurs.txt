@@ -1,3 +1,2 @@
-Texte
 Audio
-Image
+Audio

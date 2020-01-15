@@ -127,12 +127,19 @@ void indexationTotale();
  * @brief Fait l'indexation d'un fichier dont l'adresse est donnée en paramètre - DEUXIEME MODE MANUEL
  * 
  */
-void indexationUnique (char *);
+void indexationUnique (char * adrDoc);
 
 /**
  * @brief MODE AUTOMATIQUE : si rien d'indexé, fait une indexation totale, sinon supprime les descripteurs orphelins
  * 
  */
 void indexationAutomatique();
+
+/**
+ * @brief Affiche le descripteur du fichier
+ * 
+ * @param fichier 
+ */
+void displayDescripteur(char * fichier);
 
 #endif

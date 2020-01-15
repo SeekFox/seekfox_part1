@@ -17,6 +17,7 @@ LOG = log/*
 
 all :
 	@$(MAKE) compile -s
+	@dos2unix bin/readRequete.sh
 	@$(MAKE) run -s
 
 compile :
@@ -47,3 +48,4 @@ clean :
 
 cleanlog :
 	@rm -f $(shell find ./log -name *.)
+

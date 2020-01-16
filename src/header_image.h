@@ -1,3 +1,10 @@
+#ifndef HEADER_IMAGE
+#define HEADER_IMAGE
+ 
+#include <stdio.h>
+#include <stdlib.h>
+#include <math.h>
+#include <string.h>
 
 
 typedef int * bits;
@@ -39,3 +46,5 @@ descripteur generer_descripteur(char CHEMIN2[],int *taille_max,int n);
 
 void lancer_indexation();
 //descripteur generer_descripteur(char chemin[],int Histogramme[]);
+
+#endif

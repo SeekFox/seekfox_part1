@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "../include/audio.h"
 
 #define SIMLIARITY_MAX_VALUE 0.01
@@ -128,18 +129,34 @@ void displayDescripteur(DescripteurAudio display){
 
 //TODO : Transformer un string en descripteur
 
-void fenetreToString(char* sortie, PILE workingFenetre){ 
-	/*char* newString;
-	char* cpy;
+char* fenetreToString(PILE workingFenetre, int* size){ //Attention, cela détruit la fenetre
+	int taillePile = taillePILE(workingFenetre);
+	char* newString = (char*)malloc(sizeof(char) * taillePile*7);//On laisse 5 chiffres + 1 séparateur par élement de la pile+1 de marge au cas où //TODO : protéger contre les gros nombres
+	char temp[6] = "haha";
+	int dataToSave = 0;
+	unsigned int currentSize = 0;
 
-	for(int i = 0; i<taillePILE(workingFenetre); i++){
-		sprintf()
-	}*/
+
+	if(newString == NULL)printf("PUTAIN");
+
+	while(!PILE_estVide(workingFenetre)){
+		workingFenetre = dePILE(workingFenetre,&dataToSave);
+		sprintf(temp, "%4d,", dataToSave);
+		for(int i = 0; i < 5; i++){
+			newString[currentSize] = temp[i];
+			currentSize++;
+		}
+	}
+	*size = currentSize; 
+	return newString;
 }
+
 
 int descripteurAudioToString(char* sortie, DescripteurAudio descToString){
 	long int stringSize;
 }
+
+
 float getSimilarityValue(PILE* pile1, PILE* pile2, int tailleFenetre){
 	float sommeDesDifferences = 0;
 	unsigned int nbSubdivisions = 0;

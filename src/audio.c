@@ -25,6 +25,15 @@ Histogramme addFenetre(Histogramme oldHistogram){
 	return newHistogram;
 }
 
+Histogramme deleteFenetre(Histogramme oldHistogram, Fenetre* oldFenetre){
+	Histogramme newHistogram = oldHistogram;
+
+	newHistogram = newHistogram->nextFenetre;
+	*oldFenetre = *oldHistogram;
+	free(oldHistogram);
+	return newHistogram;
+}
+
 
 	//////////////////////////////
 	//   CREER UN DESCRIPTEUR   //
@@ -67,7 +76,7 @@ DescripteurAudio creerDescripteurAudio(FILE* p_file, int tailleFenetre, int nbSu
 	int newHistogramLine[nbSubdivisions+1];			//Nouvelle ligne de l'histogramme final
 	int subPosition;
 	ELEMENT temp;
-	int FenetresCount = 0;
+	unsigned long int FenetresCount = 0;
 	int nbElementsLus = 0;
 
 	//fileSize = getAudioFileSize(p_file, fileType);
@@ -129,31 +138,42 @@ void displayDescripteur(DescripteurAudio display){
 
 //TODO : Transformer un string en descripteur
 
-char* fenetreToString(PILE workingFenetre, int* size){ //Attention, cela détruit la fenetre
-	int taillePile = taillePILE(workingFenetre);
+char* fenetreToString(Fenetre workingFenetre, int* size){ //Attention, cela détruit la fenetre
+	PILE workingPile = workingFenetre.subdivision;
+
+	unsigned int taillePile = taillePILE(workingPile);
 	char* newString = (char*)malloc(sizeof(char) * taillePile*7);//On laisse 5 chiffres + 1 séparateur par élement de la pile+1 de marge au cas où //TODO : protéger contre les gros nombres
-	char temp[6] = "haha";
+	char temp[6] = "";
 	int dataToSave = 0;
 	unsigned int currentSize = 0;
-
-
+	sprintf(newString,"%7u:", workingFenetre.name);
+	currentSize = 8;
 	if(newString == NULL)printf("PUTAIN");
 
-	while(!PILE_estVide(workingFenetre)){
-		workingFenetre = dePILE(workingFenetre,&dataToSave);
+	while(!PILE_estVide(workingPile)){
+		workingPile = dePILE(workingPile,&dataToSave);
 		sprintf(temp, "%4d,", dataToSave);
 		for(int i = 0; i < 5; i++){
 			newString[currentSize] = temp[i];
 			currentSize++;
 		}
 	}
+	newString[currentSize] = '|';
+	currentSize++;
 	*size = currentSize; 
 	return newString;
 }
 
 
-int descripteurAudioToString(char* sortie, DescripteurAudio descToString){
-	long int stringSize;
+int descripteurAudioToString(char* sortie, DescripteurAudio descToString){	//nbSubdivisions;tailleFenetre;nbFenetres
+	char* newString = (char*)malloc(sizeof(char)*20);
+	long unsigned int currentSize = 20;
+
+	char* newFenetreString;
+	sprintf(newString,"%4u;%7u;%7u", descToString.nbSubdivisions, descToString.tailleFenetre, descToString.nbFenetres);
+
+	for(long unsigned int i =0; i < descToString.nbFenetres; i ++)
+		return 2;
 }
 
 
@@ -175,11 +195,7 @@ float getSimilarityValue(PILE* pile1, PILE* pile2, int tailleFenetre){
 		
 		cpy1 = dePILE(cpy1, &val1);
 		cpy2 = dePILE(cpy2, &val2);
-
-		//printf("val 1 : %d", val1);
-		//printf(" val 2 : %d", val2);
 		sommeDesDifferences += (float)(abs(val1 - val2));
-		//printf(" sommeDesDif: %f\n\r", sommeDesDifferences);
 		nbSubdivisions++;
 	}
 

@@ -168,9 +168,9 @@ char* fenetreToString(Fenetre workingFenetre, int* size){ //Attention, cela dét
 
 
 char* descripteurAudioToString(unsigned long * size, DescripteurAudio descToString){	//nbSubdivisions;tailleFenetre;nbFenetres
-	char* newString = (char*)malloc(sizeof(char)*20);
-	unsigned long int currentSize = 20;
-	unsigned long int index = 20;
+	char* newString = (char*)malloc(sizeof(char)*21);
+	unsigned long int currentSize = 21;
+	unsigned long int index = 21;
 	int newFenetreSize = 0;
 	Fenetre fenetreATraiter;
 	char* newFenetreString;
@@ -188,8 +188,24 @@ char* descripteurAudioToString(unsigned long * size, DescripteurAudio descToStri
 
 
 	}
+	newString[currentSize] = '!';
+	currentSize++;
 	*size = currentSize;
 	return newString;
+}
+
+
+DescripteurAudio stringToDescripteurAudio(char* stringToParse, int size){
+	DescripteurAudio newDescripteur;
+	int index = 0;
+	char tempString [30];
+
+	for(int i = 0; i < 21 ; i++){ 	//Get les 21 permiers caractères, c'est les infos du descripteur
+		tempString[i] = stringToParse[i];
+	}
+
+	sscanf(tempString,"%4u;%7u;%7u;", newDescripteur.nbSubdivisions, newDescripteur.tailleFenetre, newDescripteur.nbFenetres);
+
 }
 
 

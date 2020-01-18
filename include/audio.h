@@ -28,6 +28,8 @@ typedef struct audioDesc{
 
 Histogramme initHistogramme();
 Histogramme addFenetre(Histogramme oldHistogram);
+Histogramme deleteFenetre(Histogramme oldHistogram, Fenetre* oldFenetre);
+
 void displayFenetre(Histogramme display); //For debug reasons
 void displayDescripteur(DescripteurAudio display);
 void resetFileCursor(FILE* p_file, int fileType);
@@ -37,5 +39,5 @@ DescripteurAudio creerDescripteurAudio(FILE* p_file, int tailleFenetre, int nbSu
 float getSimilarityValue(PILE* pile1, PILE* pile2, int tailleFenetre);
 PILE comparerDescripteursAudio(DescripteurAudio jingle, DescripteurAudio fichierAudio);
 char* fenetreToString(Fenetre workingFenetre, int* size);
-
+char* descripteurAudioToString(unsigned long * size, DescripteurAudio descToString);
 #endif

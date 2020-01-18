@@ -35,6 +35,8 @@ Histogramme deleteFenetre(Histogramme oldHistogram, Fenetre* oldFenetre){
 }
 
 
+
+
 	//////////////////////////////
 	//   CREER UN DESCRIPTEUR   //
 	//////////////////////////////
@@ -165,15 +167,29 @@ char* fenetreToString(Fenetre workingFenetre, int* size){ //Attention, cela dét
 }
 
 
-int descripteurAudioToString(char* sortie, DescripteurAudio descToString){	//nbSubdivisions;tailleFenetre;nbFenetres
+char* descripteurAudioToString(unsigned long * size, DescripteurAudio descToString){	//nbSubdivisions;tailleFenetre;nbFenetres
 	char* newString = (char*)malloc(sizeof(char)*20);
-	long unsigned int currentSize = 20;
-
+	unsigned long int currentSize = 20;
+	unsigned long int index = 20;
+	int newFenetreSize = 0;
+	Fenetre fenetreATraiter;
 	char* newFenetreString;
-	sprintf(newString,"%4u;%7u;%7u", descToString.nbSubdivisions, descToString.tailleFenetre, descToString.nbFenetres);
+	sprintf(newString,"%4u;%7u;%7u;", descToString.nbSubdivisions, descToString.tailleFenetre, descToString.nbFenetres);
 
-	for(long unsigned int i =0; i < descToString.nbFenetres; i ++)
-		return 2;
+	for(long unsigned int i =0; i < descToString.nbFenetres; i ++){
+		descToString.data = deleteFenetre(descToString.data, &fenetreATraiter);		//On supprime la fenetre & créé une fenetre
+		newFenetreString = fenetreToString(fenetreATraiter, &newFenetreSize);		
+		index = currentSize;	//L'ancienne position de currentSize, donc l'endroit où commencer a écrire;
+		currentSize+=newFenetreSize;												//On rajoute la place qu'il faut
+		newString = (char*)realloc(newString,sizeof(char)*currentSize);
+		for(int i = 0; i<newFenetreSize; i++){				
+			newString[index+i] = newFenetreString[i];
+		}
+
+
+	}
+	*size = currentSize;
+	return newString;
 }
 
 
@@ -235,7 +251,7 @@ PILE comparerDescripteursAudio(DescripteurAudio jingle, DescripteurAudio fichier
 			}
 
 			if(jingleEstComprisDansLeFichier == 1 && fileHist != NULL){	//Si ici on s'est arrété parce que le jingle est fini, et pas parce que y'a eut une différence ou la fin du fichier audio
-				nameToSeconds = (int)(fileHist->name *jingle.tailleFenetre* SECONDE_PAR_VALEUR);
+				nameToSeconds = (int)((fileHist->name - jingle.nbFenetres) *jingle.tailleFenetre* SECONDE_PAR_VALEUR);
 				//printf("On est sur le : %d\n", fileHist->name * tailleFenetre * SECONDE_PAR_VALEUR);
 				listeDesTimingsDesJingle = emPILEVal(listeDesTimingsDesJingle, nameToSeconds);	//C'est que le jingle est bien compris dedans
 			}

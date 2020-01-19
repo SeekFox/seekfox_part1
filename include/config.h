@@ -64,6 +64,27 @@ int getAudioN();
  */
 int getAudioM();
 
+/**
+ * @brief Get the Logiciel Texte object
+ * 
+ * @return char* 
+ */
+char * getLogicielTexte();
+
+/**
+ * @brief Get the Logiciel Image object
+ * 
+ * @return char* 
+ */
+char * getLogicielImage();
+
+/**
+ * @brief Get the Logiciel Audio object
+ * 
+ * @return char* 
+ */
+char * getLogicielAudio();
+
 //Setter
 /**
  * @brief Set the Password Admin object
@@ -120,6 +141,30 @@ void setAudioN(Config *c, int n);
  * @param m 
  */
 void setAudioM(Config *c, int m);
+
+/**
+ * @brief Set the Logiciel Texte object
+ * 
+ * @param c 
+ * @param str 
+ */
+void setLogicielTexte(Config *c, char * str);
+
+/**
+ * @brief Set the Logiciel Image object
+ * 
+ * @param c 
+ * @param str 
+ */
+void setLogicielImage(Config *c, char * str);
+
+/**
+ * @brief Set the Logiciel Audio object
+ * 
+ * @param c 
+ * @param str 
+ */
+void setLogicielAudio(Config *c, char * str);
 
 /**
  * @brief Recupere les infos du fichier config 

@@ -30,6 +30,17 @@ void affiche_PILE(PILE display){
 	}
 }
 
+PILE inversePILE(PILE oldPile){
+	PILE newPile = init_PILE();
+	int dataToTransfer;
+
+	while(!PILE_estVide(oldPile)){
+		oldPile = dePILE(oldPile, &dataToTransfer);
+		newPile = emPILEVal(newPile, dataToTransfer);
+	}
+	return newPile;
+}
+
 PILE emPILEVal(PILE p_oldPile, int valeur){
 	PILE p_newPile;
 	ELEMENT e;

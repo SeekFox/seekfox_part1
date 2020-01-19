@@ -35,6 +35,21 @@ Histogramme addFenetre(Histogramme oldHistogram){
 	return newHistogram;
 }
 
+Histogramme appendFenetre(Histogramme oldHistogram, unsigned long nameOfNewFenetre, PILE pileOfNewFenetre){	//Pas optimisé, mais flemme de faire 
+	Histogramme index = oldHistogram;																		//mieux j'ai pas trop le temps là
+	Histogramme newFenetre;
+	newFenetre = (Histogramme)malloc(sizeof(Fenetre));
+	newFenetre->name = nameOfNewFenetre;
+	newFenetre->subdivision = pileOfNewFenetre;
+	if(index == NULL)	
+		return newFenetre;
+
+	while(index->nextFenetre != NULL)	//On va a l'avant dernier élement pour pouvoir le rajouter
+		index = index->nextFenetre;
+	index->nextFenetre = newFenetre;
+	return oldHistogram;		
+}
+
 Histogramme deleteFenetre(Histogramme oldHistogram, Fenetre* oldFenetre){
 	Histogramme newHistogram = oldHistogram;
 
@@ -170,8 +185,7 @@ char* fenetreToString(Fenetre workingFenetre, int* size){ //Attention, cela dét
 			currentSize++;
 		}
 	}
-	newString[currentSize] = '|';
-	currentSize++;
+	newString[currentSize-1] = '|';
 	*size = currentSize; 
 	return newString;
 }
@@ -191,15 +205,14 @@ char* descripteurAudioToString(unsigned long * size, DescripteurAudio descToStri
 		newFenetreString = fenetreToString(fenetreATraiter, &newFenetreSize);		
 		index = currentSize;	//L'ancienne position de currentSize, donc l'endroit où commencer a écrire;
 		currentSize+=newFenetreSize;												//On rajoute la place qu'il faut
-		newString = (char*)realloc(newString,sizeof(char)*currentSize);
+		newString = (char*)realloc(newString,sizeof(char)*(currentSize+1));
 		for(int i = 0; i<newFenetreSize; i++){				
 			newString[index+i] = newFenetreString[i];
 		}
 
 
 	}
-	newString[currentSize] = '!';
-	currentSize++;
+	newString[currentSize-1] = '!';
 	*size = currentSize;
 	return newString;
 }
@@ -207,15 +220,41 @@ char* descripteurAudioToString(unsigned long * size, DescripteurAudio descToStri
 
 DescripteurAudio stringToDescripteurAudio(char* stringToParse, int size){
 	DescripteurAudio newDescripteur;
-	int index = 0;
+	Histogramme newHistogram = initHistogramme();
+	PILE newPile;
+	unsigned long newFenetreName;
+	int valueToStore;
+	int index = 21;
 	char tempString [30];
 
 	for(int i = 0; i < 21 ; i++){ 	//Get les 21 permiers caractères, c'est les infos du descripteur
 		tempString[i] = stringToParse[i];
 	}
+	tempString[21] = '\0';	//On mets un \0 pour s'assurer que ce soit bien un string, pas sûr que ce soit nécessaire mais ça peut pas faire de mal
+	sscanf(tempString,"%4u;%7u;%7u;", &newDescripteur.nbSubdivisions, &newDescripteur.tailleFenetre, &newDescripteur.nbFenetres);
+	for(int fenetreCount = 0; fenetreCount < newDescripteur.nbFenetres; fenetreCount++){
+		newPile = init_PILE();	//Raz de la pile a stocker
 
-	sscanf(tempString,"%4u;%7u;%7u;", newDescripteur.nbSubdivisions, newDescripteur.tailleFenetre, newDescripteur.nbFenetres);
+		for(int i = 0; i < 8; i++)		//Chopper fenetre name
+			tempString[i] = stringToParse[index+i];
+		index+=8;			//On avance l'index de lecture
+		tempString[8] = '\0';
 
+		sscanf(tempString,"%7u:",&newFenetreName);		
+		for(int i = 0; i < newDescripteur.nbSubdivisions; i++){		//Get tous les élements de la pile (ils sont dans le sens inverse a cause de la pile)
+			for(int i = 0; i < 5; i++)		//Chopper un element de la pile
+				tempString[i] = stringToParse[index+i];
+			index+=5;
+			tempString[5] = '\0';
+			sscanf(tempString, "%4d", &valueToStore);		//Lire la valeur et la stocker dans la pile
+			newPile = emPILEVal(newPile, valueToStore);
+		}
+		newPile = inversePILE(newPile);	//On remet la pile dans le bon ordre
+		newHistogram = appendFenetre(newHistogram, newFenetreName, newPile);
+	}
+
+	newDescripteur.data = newHistogram;
+	return newDescripteur;
 }
 
 float getSimilarityValue(PILE* pile1, PILE* pile2, int tailleFenetre){

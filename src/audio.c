@@ -10,6 +10,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "../include/audio.h"
 
 #define SIMLIARITY_MAX_VALUE 0.01
@@ -33,6 +34,17 @@ Histogramme addFenetre(Histogramme oldHistogram){
 		newHistogram->name = oldHistogram->name+1;
 	return newHistogram;
 }
+
+Histogramme deleteFenetre(Histogramme oldHistogram, Fenetre* oldFenetre){
+	Histogramme newHistogram = oldHistogram;
+
+	newHistogram = newHistogram->nextFenetre;
+	*oldFenetre = *oldHistogram;
+	free(oldHistogram);
+	return newHistogram;
+}
+
+
 
 
 	//////////////////////////////
@@ -76,7 +88,7 @@ DescripteurAudio creerDescripteurAudio(FILE* p_file, int tailleFenetre, int nbSu
 	int newHistogramLine[nbSubdivisions+1];			//Nouvelle ligne de l'histogramme final
 	int subPosition;
 	ELEMENT temp;
-	int FenetresCount = 0;
+	unsigned long int FenetresCount = 0;
 	int nbElementsLus = 0;
 
 	//fileSize = getAudioFileSize(p_file, fileType);
@@ -138,17 +150,72 @@ void displayDescripteurAudio(DescripteurAudio display){
 
 //TODO : Transformer un string en descripteur
 
-void fenetreToString(char* sortie, PILE workingFenetre){ 
-	/*char* newString;
-	char* cpy;
+char* fenetreToString(Fenetre workingFenetre, int* size){ //Attention, cela détruit la fenetre
+	PILE workingPile = workingFenetre.subdivision;
 
-	for(int i = 0; i<taillePILE(workingFenetre); i++){
-		sprintf()
-	}*/
+	unsigned int taillePile = taillePILE(workingPile);
+	char* newString = (char*)malloc(sizeof(char) * taillePile*7);//On laisse 5 chiffres + 1 séparateur par élement de la pile+1 de marge au cas où //TODO : protéger contre les gros nombres
+	char temp[6] = "";
+	int dataToSave = 0;
+	unsigned int currentSize = 0;
+	sprintf(newString,"%7u:", workingFenetre.name);
+	currentSize = 8;
+	if(newString == NULL)printf("PUTAIN");
+
+	while(!PILE_estVide(workingPile)){
+		workingPile = dePILE(workingPile,&dataToSave);
+		sprintf(temp, "%4d,", dataToSave);
+		for(int i = 0; i < 5; i++){
+			newString[currentSize] = temp[i];
+			currentSize++;
+		}
+	}
+	newString[currentSize] = '|';
+	currentSize++;
+	*size = currentSize; 
+	return newString;
 }
 
-int descripteurAudioToString(char* sortie, DescripteurAudio descToString){
-	long int stringSize;
+
+char* descripteurAudioToString(unsigned long * size, DescripteurAudio descToString){	//nbSubdivisions;tailleFenetre;nbFenetres
+	char* newString = (char*)malloc(sizeof(char)*21);
+	unsigned long int currentSize = 21;
+	unsigned long int index = 21;
+	int newFenetreSize = 0;
+	Fenetre fenetreATraiter;
+	char* newFenetreString;
+	sprintf(newString,"%4u;%7u;%7u;", descToString.nbSubdivisions, descToString.tailleFenetre, descToString.nbFenetres);
+
+	for(long unsigned int i =0; i < descToString.nbFenetres; i ++){
+		descToString.data = deleteFenetre(descToString.data, &fenetreATraiter);		//On supprime la fenetre & créé une fenetre
+		newFenetreString = fenetreToString(fenetreATraiter, &newFenetreSize);		
+		index = currentSize;	//L'ancienne position de currentSize, donc l'endroit où commencer a écrire;
+		currentSize+=newFenetreSize;												//On rajoute la place qu'il faut
+		newString = (char*)realloc(newString,sizeof(char)*currentSize);
+		for(int i = 0; i<newFenetreSize; i++){				
+			newString[index+i] = newFenetreString[i];
+		}
+
+
+	}
+	newString[currentSize] = '!';
+	currentSize++;
+	*size = currentSize;
+	return newString;
+}
+
+
+DescripteurAudio stringToDescripteurAudio(char* stringToParse, int size){
+	DescripteurAudio newDescripteur;
+	int index = 0;
+	char tempString [30];
+
+	for(int i = 0; i < 21 ; i++){ 	//Get les 21 permiers caractères, c'est les infos du descripteur
+		tempString[i] = stringToParse[i];
+	}
+
+	sscanf(tempString,"%4u;%7u;%7u;", newDescripteur.nbSubdivisions, newDescripteur.tailleFenetre, newDescripteur.nbFenetres);
+
 }
 
 float getSimilarityValue(PILE* pile1, PILE* pile2, int tailleFenetre){
@@ -169,11 +236,7 @@ float getSimilarityValue(PILE* pile1, PILE* pile2, int tailleFenetre){
 		
 		cpy1 = dePILE(cpy1, &val1);
 		cpy2 = dePILE(cpy2, &val2);
-
-		//printf("val 1 : %d", val1);
-		//printf(" val 2 : %d", val2);
 		sommeDesDifferences += (float)(abs(val1 - val2));
-		//printf(" sommeDesDif: %f\n\r", sommeDesDifferences);
 		nbSubdivisions++;
 	}
 
@@ -213,7 +276,7 @@ PILE comparerDescripteursAudio(DescripteurAudio jingle, DescripteurAudio fichier
 			}
 
 			if(jingleEstComprisDansLeFichier == 1 && fileHist != NULL){	//Si ici on s'est arrété parce que le jingle est fini, et pas parce que y'a eut une différence ou la fin du fichier audio
-				nameToSeconds = (int)(fileHist->name *jingle.tailleFenetre* SECONDE_PAR_VALEUR);
+				nameToSeconds = (int)((fileHist->name - jingle.nbFenetres) *jingle.tailleFenetre* SECONDE_PAR_VALEUR);
 				//printf("On est sur le : %d\n", fileHist->name * tailleFenetre * SECONDE_PAR_VALEUR);
 				listeDesTimingsDesJingle = emPILEVal(listeDesTimingsDesJingle, nameToSeconds);	//C'est que le jingle est bien compris dedans
 			}

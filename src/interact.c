@@ -189,7 +189,6 @@ void displayMenuAdmin(int *isAdmin){
         color("37");
         CLEAR_STDIN
         displayDescripteur(fichier);
-        //TODO: Visualiser un descripteur
         break;
 
       case 3: //Options

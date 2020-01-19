@@ -102,7 +102,6 @@ DescripteurAudio creerDescripteurAudio(FILE* p_file, int tailleFenetre, int nbSu
 	//int sizeSubdivision = tailleFenetre/nbSubdivisions;	//Taille d'une subdivision
 	int newHistogramLine[nbSubdivisions+1];			//Nouvelle ligne de l'histogramme final
 	int subPosition;
-	ELEMENT temp;
 	unsigned long int FenetresCount = 0;
 	int nbElementsLus = 0;
 
@@ -144,7 +143,7 @@ void displayFenetre(Histogramme display){
 	if(display == NULL)
 		printf("Fenetre est vide\n");
 	else{
-		printf("nom : %5d comprenant : ", display->name);
+		printf("nom : %5lu comprenant : ", display->name);
 		affiche_PILE(display->subdivision);
 		printf("\n");
 	}
@@ -153,7 +152,7 @@ void displayFenetre(Histogramme display){
 void displayDescripteurAudio(DescripteurAudio display){
 	Histogramme index;
 
-	printf("Descripteur de %u fenetres de %u valeurs, avec %d subdivisions\n", display.nbFenetres, display.tailleFenetre, display.nbSubdivisions);
+	printf("Descripteur de %lu fenetres de %u valeurs, avec %d subdivisions\n", display.nbFenetres, display.tailleFenetre, display.nbSubdivisions);
 	index = display.data;
 	for(int i = 0; i < display.nbFenetres; i++){
 		displayFenetre(index);
@@ -173,7 +172,7 @@ char* fenetreToString(Fenetre workingFenetre, int* size){ //Attention, cela dét
 	char temp[6] = "";
 	int dataToSave = 0;
 	unsigned int currentSize = 0;
-	sprintf(newString,"%7u:", workingFenetre.name);
+	sprintf(newString,"%7lu:", workingFenetre.name);
 	currentSize = 8;
 	if(newString == NULL)printf("PUTAIN");
 
@@ -198,7 +197,7 @@ char* descripteurAudioToString(DescripteurAudio descToString){	//nbSubdivisions;
 	int newFenetreSize = 0;
 	Fenetre fenetreATraiter;
 	char* newFenetreString;
-	sprintf(newString,"%4u;%7u;%7u;", descToString.nbSubdivisions, descToString.tailleFenetre, descToString.nbFenetres);
+	sprintf(newString,"%4u;%7u;%7lu;", descToString.nbSubdivisions, descToString.tailleFenetre, descToString.nbFenetres);
 
 	for(long unsigned int i =0; i < descToString.nbFenetres; i ++){
 		descToString.data = deleteFenetre(descToString.data, &fenetreATraiter);		//On supprime la fenetre & créé une fenetre
@@ -229,7 +228,7 @@ DescripteurAudio stringToDescripteurAudio(char* stringToParse){
 		tempString[i] = stringToParse[i];
 	}
 	tempString[21] = '\0';	//On mets un \0 pour s'assurer que ce soit bien un string, pas sûr que ce soit nécessaire mais ça peut pas faire de mal
-	sscanf(tempString,"%4u;%7u;%7u;", &newDescripteur.nbSubdivisions, &newDescripteur.tailleFenetre, &newDescripteur.nbFenetres);
+	sscanf(tempString,"%4u;%7u;%7lu;", &newDescripteur.nbSubdivisions, &newDescripteur.tailleFenetre, &newDescripteur.nbFenetres);
 	for(int fenetreCount = 0; fenetreCount < newDescripteur.nbFenetres; fenetreCount++){
 		newPile = init_PILE();	//Raz de la pile a stocker
 
@@ -238,7 +237,7 @@ DescripteurAudio stringToDescripteurAudio(char* stringToParse){
 		index+=8;			//On avance l'index de lecture
 		tempString[8] = '\0';
 
-		sscanf(tempString,"%7u:",&newFenetreName);		
+		sscanf(tempString,"%7lu:",&newFenetreName);		
 		for(int i = 0; i < newDescripteur.nbSubdivisions; i++){		//Get tous les élements de la pile (ils sont dans le sens inverse a cause de la pile)
 			for(int i = 0; i < 5; i++)		//Chopper un element de la pile
 				tempString[i] = stringToParse[index+i];

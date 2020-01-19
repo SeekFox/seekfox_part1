@@ -6,9 +6,8 @@ typedef int * bits;
 typedef struct descripteur
 {
 	char identifiant[10];
-	int* Histogramme;
+	int *Histogramme;
 }descripteur;
-
 int quantifierRGB(int composante_rouge,int composante_vert,int composante_bleue,int n){
 	int dim = n*3;
 	
@@ -48,6 +47,7 @@ int quantifierRGB(int composante_rouge,int composante_vert,int composante_bleue,
 		}
 	//printf("%d\n",resultat);
 	free(b);
+	
 return resultat;
 }
 
@@ -233,12 +233,15 @@ int fichier_deja_indexe(char titre_fichier[]){
 	fclose(f_indexe);
 	return 0;
 }
-void generer_identifiant(int n,char CHEMIN2[],descripteur *d){
+void generer_identifiant(int n,char titre_fichier[],descripteur *d){
 
-	char s[1],s2[1];
+char s[0] = "",s2[3] = "";
+	int x = 0;
+	
 	toString(n,s);
-	s2[0] = CHEMIN2[21];
-	s2[1] = CHEMIN2[22];
+	x = atoi(titre_fichier);
+	sprintf(s2,"%d",x);
+	
 	strcpy(d->identifiant,s);
 	strcat(d->identifiant,"[");
 	strcat(d->identifiant,"#id");
@@ -247,17 +250,24 @@ void generer_identifiant(int n,char CHEMIN2[],descripteur *d){
 
 }
 
-descripteur generer_descripteur(char CHEMIN2[],int *taille_max,int n){
+void generer_descripteur(descripteur *d,char CHEMIN2[],char titre_fichier[],int *taille_max,int n){
+
 	int nbLignes = 0,nbColonnes = 0,nbComposantes = 0;
-	descripteur d;
+	strcat(CHEMIN2,titre_fichier);
 	FILE * lecteur_image;
 	lecteur_image = fopen(CHEMIN2,"r"); // ouverture des fichiers .txt en mode lecture
 				
+	printf("%s\n",CHEMIN2);
 	fscanf(lecteur_image," %d%d%d",&nbLignes,&nbColonnes,&nbComposantes); // lecture de la première lignes dimension de l'image et les composantes
+	
 	*taille_max =(int)pow(2,n*nbComposantes);
 	int Histogramme[*taille_max];
 
-	if(nbComposantes == 3){	
+	printf("%d\n",*taille_max);
+
+	d->Histogramme = malloc((*taille_max)*sizeof(int));
+	if(d->Histogramme == NULL){printf("erreur d'allcation dynamique;");exit(1);}
+
 				
 					int Rouge[nbLignes][nbColonnes],Verte[nbLignes][nbColonnes],Bleue[nbLignes][nbColonnes],ImageRGB[nbLignes][nbColonnes];
 
@@ -273,140 +283,29 @@ descripteur generer_descripteur(char CHEMIN2[],int *taille_max,int n){
 
 					//printf("matrices remplies reussi\n");
 
-					realiserHistogrammeRGB(nbLignes,nbColonnes,ImageRGB,Rouge,Verte,Bleue,n,d.Histogramme,*taille_max);
+					realiserHistogrammeRGB(nbLignes,nbColonnes,ImageRGB,Rouge,Verte,Bleue,n,d->Histogramme,*taille_max);
 					//realisation de l'histogramme avec passage en parametre du tableau Histogramme
 
 					//printf("histogramme reussi\n");
 
+	generer_identifiant(n,titre_fichier,d);
+	for(int i=0;i<*taille_max;i++){
+		printf("%d ",d->Histogramme[i]);
 	}
-	else if(nbComposantes == 1){
-					//printf("choix effectue\n");
-					int Noire[nbLignes][nbColonnes],ImageNB[nbLignes][nbColonnes];
-					//delcaration de la matrice représentant la composante noire et l'image pour réaliser l'histogramme
-
-
-					remplirMatrice(&lecteur_image,nbLignes,nbColonnes,Noire);
-					//printf("matrices remplies reussi\n");
-					//lecture du contenu de l'image et remplissage de la matrice
-
-					realiserHistogrammeNB(nbLignes,nbColonnes,ImageNB,Noire,n,d.Histogramme,*taille_max);
-					//realisation de l'histogramme avec passage en parametre du tableau Histogramme
-
-	}
-	generer_identifiant(n,CHEMIN2,&d);
-
 	fclose(lecteur_image);
-	return d;
-}
-
-void lancer_indexation(){
-	
- /*----------------------------partie commande unix pour lister les noms des fichiers------------------------------*/
-	char path[16] = "../data/";
-	char commande[100] = "";
-	
-	sprintf(commande,"%s %s%s","ls",path,"TEST_IMAGES > ../data/liste_des_images");
-
-	printf("execution de %s\n",commande);
-	system(commande); // commande qui sert à mettre la liste des noms des fichiers(images) .txt à indexer
-
-	// la commande est ls ../data/TEST_IMAGES > ../data/liste_des_images
-
-	printf("commande reussie\n");
-
- /*------------------------------ouverture des fichiers à indexer--------------------------------------------------*/
-	int n = 0,nbFichiers = 0;
-	
-	FILE * compteur_fichiers;
-
-	//ouverture du fichier contenant la liste des images.txt
-
-	system("wc -l ../data/liste_des_images > ../data/nbFichiers");
-	//commande unix wc -l pour compter le nombre de lignes dans la liste des images 
-
-	compteur_fichiers = fopen("../data/nbFichiers","r");
-	fscanf(compteur_fichiers," %d",&nbFichiers);
-	//lecture du nombre de fichiers
-
-	//printf("%d\n",nbFichiers); // affichage du nombre de fichiers
-
-	fclose(compteur_fichiers);
- /*---------------------------------------------------------------------------------------------------------------*/
-
-	FILE * lecteur_fichier;
-	
-	lecteur_fichier = fopen("../data/liste_des_images","r");
-	
-
-	
-
-		for(int n=2;n<4;n++){
-			
-			for(int i=1;i<=nbFichiers;i++){ // boucle for qui dépend du nombre de fichiers
-
-				char titre_fichier[6];
-
-				do{
-					fscanf(lecteur_fichier,"%s",titre_fichier);//lecture des titres des fichiers
-					if(feof(lecteur_fichier)){
-						printf("tous les fichiers sont indexes\n");
-						break;
-					}
-				}while(fichier_deja_indexe(titre_fichier));
-
-				if(feof(lecteur_fichier))break;
-				
-
-				char CHEMIN2[100]="../data/TEST_IMAGES/"; // chemin d'ouverture des fichiers
-				strcat(CHEMIN2,titre_fichier);
-				
-				int taille_max;
-				descripteur d = generer_descripteur(CHEMIN2,&taille_max,n);
-
-				mise_a_jour_base(n,i,taille_max,titre_fichier,d);
-
-			}
-		if(feof(lecteur_fichier))break;
-		rewind(lecteur_fichier);
-		}
-	
-	fclose(lecteur_fichier);
-	
-
 }
 
 int main(void){
-	descripteur d1;
-	char chemin[100] = "../data/TEST_IMAGES/01.txt";
-	int taille_max = 0,nblig = 0,nbcol = 0,nombre_composantes = 0,n=2;
-	FILE *f;
-	f = fopen(chemin,"r");
-	fscanf(f,"%d%d%d",&nblig,&nbcol,&nombre_composantes);
 
-	taille_max =(int)pow(2,n*nombre_composantes);
-	int Histogramme[taille_max];
-	int Rouge[nblig][nbcol],Verte[nblig][nbcol],Bleue[nblig][nbcol],ImageRGB[nblig][nbcol];
+	FILE *comparateur;
+	comparateur = fopen("../data/base_descripteur_image","r");
+	char c[8];
+	while(!feof(comparateur)){
+		fscanf(comparateur,"%s",c);
+		printf("%s\n",c);
+		}
+	fclose(comparateur);
 
-					//allocation dynamique des matrices représentant les composantes de l'image
-
-					//printf("allouer memoire reussi\n");
-
-
-					remplirMatrice(&f,nblig,nbcol,Rouge);
-					remplirMatrice(&f,nblig,nbcol,Verte);
-					remplirMatrice(&f,nblig,nbcol,Bleue);
-					//lecture du contenu de l'image et remplissage des matrices
-
-					//printf("matrices remplies reussi\n");
-
-					realiserHistogrammeRGB(nblig,nbcol,ImageRGB,Rouge,Verte,Bleue,n,Histogramme,taille_max);
-	strcpy(d1.identifiant,"identifiant 1");
-	&Histogramme = d1->Histogramme;
-	//d1 = generer_descripteur(chemin,&taille_max,2);
-	printf("isok ici \n");
-	printf("%s\n",d1.identifiant);
-	for(int i=0;i<taille_max;i++){
-		printf("%d ",Histogramme[i]);
-	}
+	printf("\nfin du programme\n");
 	return 0;
 }

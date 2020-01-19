@@ -109,6 +109,6 @@ DescripteurAudio creerDescripteurAudio(FILE* p_file, int tailleFenetre, int nbSu
 float getSimilarityValue(PILE* pile1, PILE* pile2, int tailleFenetre);
 PILE comparerDescripteursAudio(DescripteurAudio jingle, DescripteurAudio fichierAudio);
 char* fenetreToString(Fenetre workingFenetre, int* size);
-char* descripteurAudioToString(unsigned long * size, DescripteurAudio descToString);
-DescripteurAudio stringToDescripteurAudio(char* stringToParse, int size);
+char* descripteurAudioToString(DescripteurAudio descToString); //Attention, cela détruit l'intérieur du descripteur, il est inutilisable après
+DescripteurAudio stringToDescripteurAudio(char* stringToParse);
 #endif

@@ -191,7 +191,7 @@ char* fenetreToString(Fenetre workingFenetre, int* size){ //Attention, cela dét
 }
 
 
-char* descripteurAudioToString(unsigned long * size, DescripteurAudio descToString){	//nbSubdivisions;tailleFenetre;nbFenetres
+char* descripteurAudioToString(DescripteurAudio descToString){	//nbSubdivisions;tailleFenetre;nbFenetres
 	char* newString = (char*)malloc(sizeof(char)*21);
 	unsigned long int currentSize = 21;
 	unsigned long int index = 21;
@@ -209,16 +209,14 @@ char* descripteurAudioToString(unsigned long * size, DescripteurAudio descToStri
 		for(int i = 0; i<newFenetreSize; i++){				
 			newString[index+i] = newFenetreString[i];
 		}
-
-
 	}
 	newString[currentSize-1] = '!';
-	*size = currentSize;
+	newString[currentSize] ='\0';
 	return newString;
 }
 
 
-DescripteurAudio stringToDescripteurAudio(char* stringToParse, int size){
+DescripteurAudio stringToDescripteurAudio(char* stringToParse){
 	DescripteurAudio newDescripteur;
 	Histogramme newHistogram = initHistogramme();
 	PILE newPile;

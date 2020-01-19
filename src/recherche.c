@@ -1,12 +1,12 @@
-#include <stdio.h>
+/*#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "../include/recherche.h"
 #include "../include/indexation.h"
 #include "../include/audio.h"
 
-/*==================================================================================================================================*/
-/* FONCTIONS DE MANIPULATION DES STRUCTURES */
+//==================================================================================================================================
+// FONCTIONS DE MANIPULATION DES STRUCTURES /
 
 FICHIER * initCelluleFichier () {           // Initialise une cellule vide
     FICHIER * f = malloc(sizeof(FICHIER));
@@ -67,35 +67,35 @@ void ajouterFichierRecherche (RECHERCHE * r, FICHIER * f) {     // Ajoute un fic
     }
 }
 
-/*==================================================================================================================================*/
+//==================================================================================================================================
 
 
-/*==================================================================================================================================*/
-/* FONCTIONS DE RECHERCHE */
+//==================================================================================================================================
+// FONCTIONS DE RECHERCHE 
 
 RECHERCHE * rechercheParFichierTexte (char * adresse) {
 
-    /* Etape 1 : on crée un descripteur du fichier requête après avoir vérifié son existence */
+    //Etape 1 : on crée un descripteur du fichier requête après avoir vérifié son existence
     FILE * requete = NULL;
     requete = fopen(adresse, "r");
     if (requete==NULL) {
-        /* WIP : affichage de l'erreur */
+        // WIP : affichage de l'erreur
         printf("ERREUR - Le fichier à rechercher n'existe pas ou n'a pas pu être ouvert.");
         return NULL;
     } else {
-        /* WIP : création du descripteur */
+        // WIP : création du descripteur
         DESCRIPTEUR * descRequete = creerDescripteurTexte(requete);
         fclose(requete);
     }
 
-    /* Etape 2 : on compare ce descripteur à tous les descripteurs textes indexés */
+    // Etape 2 : on compare ce descripteur à tous les descripteurs textes indexés
     FILE * fichiersIndexes = NULL;
     FILE * descripteurs = NULL;
     fopen("data/descripteurs/fichiersIndexes.txt", "r");
     fopen("data/descripteurs/descripteurs.txt", "r");
 
     if (fichiersIndexes==NULL || descripteurs==NULL) {      // Vérification de l'ouverture des fichiers
-        /* WIP : affichage de l'erreur */
+        // WIP : affichage de l'erreur
         printf("ERREUR - Problème d'accès à la base des descripteurs.");
         return NULL;
     }
@@ -127,27 +127,27 @@ RECHERCHE * rechercheParFichierTexte (char * adresse) {
 
 RECHERCHE * rechercheParFichierImage (char * adresse) {
 
-    /* Etape 1 : on crée un descripteur du fichier requête après avoir vérifié son existence */
+    // Etape 1 : on crée un descripteur du fichier requête après avoir vérifié son existence
     FILE * requete = NULL;
     requete = fopen(adresse, "r");
     if (requete==NULL) {
-        /* WIP : affichage de l'erreur */
+        // WIP : affichage de l'erreur
         printf("ERREUR - Le fichier à rechercher n'existe pas ou n'a pas pu être ouvert.");
         return NULL;
     } else {
-        /* WIP : création du descripteur */
+        // WIP : création du descripteur
         DESCRIPTEUR * descRequete = creerDescripteurImage(requete);
         fclose(requete);
     }
 
-    /* Etape 2 : on compare ce descripteur à tous les descripteurs images indexés */
+    // Etape 2 : on compare ce descripteur à tous les descripteurs images indexés
     FILE * fichiersIndexes = NULL;
     FILE * descripteurs = NULL;
     fopen("data/descripteurs/fichiersIndexes.txt", "r");
     fopen("data/descripteurs/descripteurs.txt", "r");
 
     if (fichiersIndexes==NULL || descripteurs==NULL) {      // Vérification de l'ouverture des fichiers
-        /* WIP : affichage de l'erreur */
+        // WIP : affichage de l'erreur
         printf("ERREUR - Problème d'accès à la base des descripteurs.");
         return NULL;
     }
@@ -179,27 +179,27 @@ RECHERCHE * rechercheParFichierImage (char * adresse) {
 
 RECHERCHE * rechercheParFichierSon (char * adresse) {
 
-    /* Etape 1 : on crée un descripteur du fichier requête après avoir vérifié son existence */
+    // Etape 1 : on crée un descripteur du fichier requête après avoir vérifié son existence
     FILE * requete = NULL;
     requete = fopen(adresse, "r");
     if (requete==NULL) {
-        /* WIP : affichage de l'erreur */
+        //WIP : affichage de l'erreur
         printf("ERREUR - Le fichier à rechercher n'existe pas ou n'a pas pu être ouvert.");
         return NULL;
     } else {
-        /* WIP : création du descripteur */
+        // WIP : création du descripteur
         DESCRIPTEUR * descRequete = creerDescripteurSon(requete);
         fclose(requete);
     }
 
-    /* Etape 2 : on compare ce descripteur à tous les descripteurs sons indexés */
+    // Etape 2 : on compare ce descripteur à tous les descripteurs sons indexés
     FILE * fichiersIndexes = NULL;
     FILE * descripteurs = NULL;
     fopen("data/descripteurs/fichiersIndexes.txt", "r");
     fopen("data/descripteurs/descripteurs.txt", "r");
 
     if (fichiersIndexes==NULL || descripteurs==NULL) {      // Vérification de l'ouverture des fichiers
-        /* WIP : affichage de l'erreur */
+        // WIP : affichage de l'erreur
         printf("ERREUR - Problème d'accès à la base des descripteurs.");
         return NULL;
     }
@@ -229,9 +229,9 @@ RECHERCHE * rechercheParFichierSon (char * adresse) {
     return resultats;
 }
 
-/*==================================================================================================================================*/
+//==================================================================================================================================
 
-/*
+
 int main (int argc, char * argv[]) {
 
     RECHERCHE * r = creerRechercheVide();

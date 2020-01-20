@@ -243,7 +243,10 @@ void empilementDesDescripteurs (PILEDESC * pileDesc, PILEDESC * adrFichiers) {  
             //printf("C'est du son.\n");
 
             DescripteurAudio ds = creerDescripteurAudio(fopen(adrDoc,"r"),getAudioN(),getAudioM(),((strcmp(ext, ".wav")==0)?WAV_FILE:BIN_FILE));
-            char * desc = "Audio";
+
+            //char * desc = "Audio";
+            char * desc = descripteurAudioToString(ds);
+
             DESC * strDesc = creerDesc(desc);
             ajouterDescPile(pileDesc, strDesc);
             DESC * adr = creerDesc(adrDoc);
@@ -345,7 +348,9 @@ void indexationUnique (char * adrDoc) {         // Indexe un unique document à 
     if (strcmp(ext, ".bin")==0) {
     //if (strcmp(ext, ".wav")==0 || strcmp(ext, ".bin")==0) {
         DescripteurAudio ds = creerDescripteurAudio(fopen(adrDoc,"r"),getAudioN(),getAudioM(),((strcmp(ext, ".wav")==0)?WAV_FILE:BIN_FILE));
-        char * strDs = "Audio";
+
+        //char * strDs = "Audio";
+        char * strDs = descripteurAudioToString(ds);
         fprintf(indexDesc, "%s\n", strDs);
         fprintf(fichiersIndex, "%s\n", adrDoc);
     }
@@ -427,17 +432,18 @@ void indexationAutomatique () {
 
 void displayDescripteur(char * fichier){
     /* Ouverture des fichiers qui contiendront les descripteurs et la liste des fichiers indexés, en supprimant leur contenu précédent */
-    FILE * indexDesc = NULL;
+    //FILE * indexDesc = NULL;
     FILE * fichiersIndex = NULL;
-    char chaine[64] ="";
+    char chaine[128] ="";
 
     int compteur = 0;
 
-    indexDesc = fopen("data/descripteurs/descripteurs.txt", "r");
+    //indexDesc = fopen("data/descripteurs/descripteurs.txt", "r");
     fichiersIndex = fopen("data/descripteurs/fichiersIndexes.txt", "r");
 
     /* Vérification de l'ouverture correcte des fichiers */
-    if (indexDesc==NULL || fichiersIndex==NULL) {
+    if (fichiersIndex==NULL) {
+    //if (indexDesc==NULL || fichiersIndex==NULL) {
         displayError("Indexation : impossible d'accéder aux fichiers de descripteurs.");
         return;
     }
@@ -453,17 +459,6 @@ void displayDescripteur(char * fichier){
         fclose(fichiersIndex);
         
     }
-
-     if (indexDesc != NULL){
-        for(int i=0; i<compteur+1; i++){
-            fgets(chaine, 64, indexDesc);
-            if(chaine==NULL){
-                break;
-            }
-        }
-
-        printf("%s\n", chaine);
-       
-        fclose(indexDesc);
-    }
+    sprintf(chaine,"sed -n %dp data/descripteurs/descripteurs.txt > data/descripteurs/descripteur.txt; %s data/descripteurs/descripteur.txt",compteur+1,getLogicielTexte());
+    system(chaine);
 }

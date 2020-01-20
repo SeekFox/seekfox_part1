@@ -22,7 +22,7 @@
 
 
 typedef struct Fenetre{
-	unsigned int name; // de 0 a plein, correspond a sa position dans le fichier / taille fenetre
+	unsigned long name; // de 0 a plein, correspond a sa position dans le fichier / taille fenetre
 	struct Fenetre* nextFenetre;
 	PILE subdivision;
 }Fenetre;
@@ -32,7 +32,7 @@ typedef Fenetre* Histogramme;
 typedef struct audioDesc{
 	unsigned int nbSubdivisions;
 	unsigned int tailleFenetre;
-	unsigned int nbFenetres;
+	unsigned long int nbFenetres;
 	Histogramme data;
 }DescripteurAudio;
 
@@ -54,8 +54,13 @@ Histogramme addFenetre(Histogramme oldHistogram);
 /**
  * @brief 
  * 
- * @param display 
+ * @param oldHistogram 
+ * @param oldFenetre 
+ * @return Histogramme 
  */
+Histogramme deleteFenetre(Histogramme oldHistogram, Fenetre* oldFenetre);
+Histogramme appendFenetre(Histogramme oldHistogram, unsigned long nameOfNewFenetre, PILE pileOfNewFenetre);
+
 void displayFenetre(Histogramme display); //For debug reasons
 
 /**
@@ -103,5 +108,7 @@ int getSubdivisionValue(double val, int nbSubdivisions);
 DescripteurAudio creerDescripteurAudio(FILE* p_file, int tailleFenetre, int nbSubdivisions, int fileType);
 float getSimilarityValue(PILE* pile1, PILE* pile2, int tailleFenetre);
 PILE comparerDescripteursAudio(DescripteurAudio jingle, DescripteurAudio fichierAudio);
-
+char* fenetreToString(Fenetre workingFenetre, int* size);
+char* descripteurAudioToString(DescripteurAudio descToString); //Attention, cela détruit l'intérieur du descripteur, il est inutilisable après
+DescripteurAudio stringToDescripteurAudio(char* stringToParse);
 #endif

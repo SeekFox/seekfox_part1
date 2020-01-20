@@ -47,6 +47,9 @@
 struct config_s{
     //General
     char passwordAdmin[32];
+    char logiciel_texte[16];
+    char logiciel_image[16];
+    char logiciel_audio[16];
 
     //Texte
     int tailleMin;
@@ -90,6 +93,18 @@ int getAudioM(){
     return (config->audio_m);
 }
 
+char * getLogicielTexte(){
+    return (config->logiciel_texte);
+}
+
+char * getLogicielImage(){
+    return (config->logiciel_image);
+}
+
+char * getLogicielAudio(){
+   return (config->logiciel_audio); 
+}
+
 //Setter
 void setPasswordAdmin(Config *c, char * pwd){
     strcpy((*c)->passwordAdmin,pwd);
@@ -118,6 +133,19 @@ void setAudioN(Config *c, int n){
 void setAudioM(Config *c, int m){
     (*c)->audio_m = m;
 }
+
+void setLogicielTexte(Config *c, char * str){
+    strcpy((*c)->logiciel_texte,str);
+}
+
+void setLogicielImage(Config *c, char * str){
+    strcpy((*c)->logiciel_image,str);
+}
+
+void setLogicielAudio(Config *c, char * str){
+    strcpy((*c)->logiciel_audio,str);
+}
+
 
 Config loadConfig(){
     Config c = (Config)malloc(sizeof(struct config_s));
@@ -159,6 +187,17 @@ Config loadConfig(){
                     setAudioM(&c,atoi(line));
                     break;
 
+                case 7:
+                    setLogicielTexte(&c,line);
+                    break;
+
+                case 8:
+                    setLogicielImage(&c,line);
+                    break;
+
+                case 9:
+                    setLogicielAudio(&c,line);
+                    break;
                 
                 default:
                     break;
@@ -191,11 +230,19 @@ void displayConfig(){
     color("1");
     printf("%d\n",getSeuil(config));
     color("0");
+    printf("\tLogiciel de visualisation            ");
+    color("1");
+    printf("%s\n",getLogicielTexte(config));
+    color("0");
 
     printf("IMAGE \n");
     printf("\tNombre de bits de quantification     ");
     color("1");
     printf("%d\n",getNbBits(config));
+    color("0");
+    printf("\tLogiciel de visualisation            ");
+    color("1");
+    printf("%s\n",getLogicielImage(config));
     color("0");
 
     printf("AUDIO \n");
@@ -206,6 +253,10 @@ void displayConfig(){
     printf("\tNombre d'intervalles                 ");
     color("1");
     printf("%d\n",getAudioM(config));
+    color("0");
+    printf("\tLogiciel de visualisation            ");
+    color("1");
+    printf("%s\n",getLogicielAudio(config));
     color("0");
     printf("\n");
 }   
@@ -373,6 +424,11 @@ void majConfigFile(){
         fprintf(fichier,"%d\n",getNbBits());
         fprintf(fichier,"%d\n",getAudioN());
         fprintf(fichier,"%d\n",getAudioM());
+        fprintf(fichier,"%s\n",getLogicielTexte());
+        fprintf(fichier,"%s\n",getLogicielImage());
+        fprintf(fichier,"%s\n",getLogicielAudio());
+
+
     }else{
         displayError("Fichier de config inexistant");
         exit(-1);

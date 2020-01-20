@@ -8,6 +8,12 @@ typedef struct descripteur
 	char identifiant[10];
 	int *Histogramme;
 }descripteur;
+
+typedef struct structure{
+	char identifiant[20];
+	float Valeur;
+}Resultat;
+
 int quantifierRGB(int composante_rouge,int composante_vert,int composante_bleue,int n){
 	int dim = n*3;
 	
@@ -235,7 +241,7 @@ int fichier_deja_indexe(char titre_fichier[]){
 }
 void generer_identifiant(int n,char titre_fichier[],descripteur *d){
 
-char s[0] = "",s2[3] = "";
+	char s[0] = "",s2[3] = "";
 	int x = 0;
 	
 	toString(n,s);
@@ -253,21 +259,27 @@ char s[0] = "",s2[3] = "";
 void generer_descripteur(descripteur *d,char CHEMIN2[],char titre_fichier[],int *taille_max,int n){
 
 	int nbLignes = 0,nbColonnes = 0,nbComposantes = 0;
-	strcat(CHEMIN2,titre_fichier);
+
+	char chemin_aux[100] = "";
+	strcpy(chemin_aux,CHEMIN2);
 	FILE * lecteur_image;
-	lecteur_image = fopen(CHEMIN2,"r"); // ouverture des fichiers .txt en mode lecture
-				
-	printf("%s\n",CHEMIN2);
-	fscanf(lecteur_image," %d%d%d",&nbLignes,&nbColonnes,&nbComposantes); // lecture de la première lignes dimension de l'image et les composantes
+
+	//printf("le chemin est %s\n et le fichier est %s\n",CHEMIN2,titre_fichier);
+	strcat(chemin_aux,titre_fichier);
+
+	lecteur_image = fopen(chemin_aux,"r"); // ouverture des fichiers .txt en mode lecture
 	
+
+	fscanf(lecteur_image," %d%d%d",&nbLignes,&nbColonnes,&nbComposantes); // lecture de la première lignes dimension de l'image et les composantes
+
 	*taille_max =(int)pow(2,n*nbComposantes);
-	int Histogramme[*taille_max];
-
-	printf("%d\n",*taille_max);
-
 	d->Histogramme = malloc((*taille_max)*sizeof(int));
-	if(d->Histogramme == NULL){printf("erreur d'allcation dynamique;");exit(1);}
+	if(d->Histogramme == NULL){
+		printf("erreur d'allcation dynamique\n");
+		exit(1);
+	}
 
+	if(nbComposantes == 3){	
 				
 					int Rouge[nbLignes][nbColonnes],Verte[nbLignes][nbColonnes],Bleue[nbLignes][nbColonnes],ImageRGB[nbLignes][nbColonnes];
 
@@ -288,23 +300,287 @@ void generer_descripteur(descripteur *d,char CHEMIN2[],char titre_fichier[],int 
 
 					//printf("histogramme reussi\n");
 
-	generer_identifiant(n,titre_fichier,d);
-	for(int i=0;i<*taille_max;i++){
-		printf("%d ",d->Histogramme[i]);
 	}
+	else if(nbComposantes == 1){
+					//printf("choix effectue\n");
+					int Noire[nbLignes][nbColonnes],ImageNB[nbLignes][nbColonnes];
+					//delcaration de la matrice représentant la composante noire et l'image pour réaliser l'histogramme
+
+
+					remplirMatrice(&lecteur_image,nbLignes,nbColonnes,Noire);
+					//printf("matrices remplies reussi\n");
+					//lecture du contenu de l'image et remplissage de la matrice
+
+					realiserHistogrammeNB(nbLignes,nbColonnes,ImageNB,Noire,n,d->Histogramme,*taille_max);
+					//realisation de l'histogramme avec passage en parametre du tableau Histogramme
+
+	}
+	generer_identifiant(n,titre_fichier,d);
+	//strcpy(d->identifiant,"identifiant");
+
 	fclose(lecteur_image);
 }
 
-int main(void){
 
+void tri_decroissant( Resultat tab[], int tab_size)                                            
+{                                                                              
+	int tmp = 0;
+	char id_aux[20] = "";
+	id_aux[19] = '\0';    
+
+  for(int i = 0; i < tab_size; i++)                                         
+    {                                                                          
+      for(int j = 1; j < tab_size; j++)                        
+        {                                                                      
+          if(tab[i].Valeur > tab[j].Valeur)                                                        
+            {  
+			  
+              tmp = tab[i].Valeur;  
+			  strcpy(id_aux,tab[i].identifiant);
+
+              tab[i].Valeur = tab[j].Valeur;   
+			  strcpy(tab[i].identifiant,tab[j].identifiant);   
+
+              tab[j].Valeur = tmp;   
+			  strcpy(tab[j].identifiant,id_aux);            
+
+              //j--;        
+
+            }                                                                  
+        }                                                                      
+    }                                                                                                                                             
+}
+
+void ouvrir_image(char identifiant[]){
+
+	char titre_fichier[7] = "";
+	titre_fichier[6] = '\0';
+
+	char id[14] = "";
+	char aux[7] = "";
+	aux[6] = '\0';
+	//strcpy(aux,".txt");
+	//id[] = '\0';
+	
+
+	char commande[50] = "";
+	char titre_image[15] = "";
+	titre_image[14] = '\0';
+	commande[49] = '\0';
+	strcpy(commande,"eog ../data/TEST_RGB_NB/");
+	
+	FILE *chercheur_image;
+	chercheur_image = fopen("../data/liste_base_image","r");
+
+	do{
+
+		strcpy(id,"");
+
+		for(int i=0;i<6;i++){
+			if(i==0)fscanf(chercheur_image,"%s",titre_fichier);
+			fscanf(chercheur_image,"%s",aux);
+			strcat(id,aux);
+			strcat(id," ");
+		}
+		
+
+		
+
+		//printf("%s\n%s\n",id,identifiant);
+
+		if(equals(id,identifiant,14)){
+
+			strcpy(titre_image,"");
+
+			titre_image[0] = titre_fichier[0];
+			titre_image[1] = titre_fichier[1];
+
+			strcat(titre_image,".jpg");
+
+			strcat(commande,titre_image);
+			system(commande);
+			break;
+		}
+	}while(!feof(chercheur_image));
+	fclose(chercheur_image);
+}
+
+
+
+void afficher_les_resultats(Resultat r[]){
+
+	Resultat meilleur_resultat;
+	meilleur_resultat.Valeur = 0;
+
+	for(int i=0;i<100;i++){
+
+		if(r[i].Valeur != 0){
+
+			if(r[i].Valeur == 0)printf("cette valuer est nulle \n");
+
+			printf("%f   %s\n",r[i].Valeur,r[i].identifiant);
+
+			if(meilleur_resultat.Valeur < r[i].Valeur){
+
+				meilleur_resultat.Valeur = r[i].Valeur;
+
+				strcpy(meilleur_resultat.identifiant,r[i].identifiant);
+
+				//printf("%f  %s",meilleur_resultat.Valeur,meilleur_resultat.identifiant);
+
+				meilleur_resultat.identifiant[19] = '\0';
+				}
+		}
+		
+	}
+	ouvrir_image(meilleur_resultat.identifiant);
+}
+
+void ajouter_au_resultats(Resultat r[],int resultat,int *j,char identifiant[]){
+
+
+	r[(*j)].Valeur = resultat;
+	strcpy(r[(*j)].identifiant,"");
+	strcat(r[(*j)].identifiant,identifiant);
+	r[(*j)].identifiant[19] = '\0';
+	//printf("%d  %f   %s\n",*j,r[*j].Valeur,r[*j].identifiant);
+	(*j)++;
+	
+
+}
+
+void initialiser_resultat(Resultat r[]){
+		for(int i=0;i<100;i++){
+			r[i].Valeur = 0;
+			strcpy(r[i].identifiant,"");
+		}
+}
+
+void comparer_images(char chemin[],char titre_fichier[],int n){
+
+	int taille_max = 0,taille_aux,n_aux,j = 0,valeur = 0;
+	float resultat = 0;
+	descripteur d;
+	Resultat resultat_comparaison[100];
+	initialiser_resultat(resultat_comparaison);
+
+	char identifiant[20] = "",valeur_histogramme[4];
+	char c[10];
+	char N[3];
+
+	N[2] = '\0';
+	c[9] = '\0';
+	identifiant[19] = '\0';
+	toString(n,N);
+	
+	generer_descripteur(&d,chemin,titre_fichier,&taille_max,n);
+	
+	char string[1500] = "";
 	FILE *comparateur;
 	comparateur = fopen("../data/base_descripteur_image","r");
-	char c[8];
+
+	
 	while(!feof(comparateur)){
-		fscanf(comparateur,"%s",c);
-		printf("%s\n",c);
+		strcpy(identifiant,"");
+
+		for(int i=0;i<6;i++){
+			
+			fscanf(comparateur,"%s",c);
+			
+			if(i == 0)strcpy(identifiant,"");
+			if(i == 1)toInt(c,&taille_aux);
+			if(i == 3)toInt(c,&n_aux);
+
+
+			strcat(identifiant,c);
+			strcat(identifiant," ");	//identifiant acquérit
+			//printf("%s\n",c);
+			
 		}
+			//printf("%s\n",identifiant);
+		
+		strcpy(resultat_comparaison[j].identifiant,identifiant);
+
+		//printf("%s\n",resultat_comparaison[j].identifiant);
+		
+		if(taille_aux == taille_max){
+			//printf("taille max is %d\n",taille_max);
+			for(int i=0;i<taille_max;i++){
+				
+				fscanf(comparateur,"%s",valeur_histogramme);
+				
+				toInt(valeur_histogramme,&valeur);
+				
+				if(d.Histogramme[i] == valeur)resultat++;
+				
+			}
+			resultat = (resultat*100)/(float)taille_max;
+			
+			//strcpy(resultat_comparaison[0].identifiant,identifiant);
+			//printf("%s\n",resultat_comparaison[0].identifiant);
+			ajouter_au_resultats(resultat_comparaison,resultat,&j,identifiant);
+			resultat = 0;
+		}else{
+			fgets(string,1500,comparateur);
+		}
+		
+	}
 	fclose(comparateur);
+
+	tri_decroissant(resultat_comparaison,100);
+	afficher_les_resultats(resultat_comparaison);
+
+}
+
+
+
+int main(void){
+	/*int y;
+	float resultat = 0;
+	int histogramme[65];
+	float pas;
+	int taille_max = 65;
+	pas = (float)taille_max/100;
+
+	printf("le pas est %f\n",pas);
+	int p = 5;
+	FILE *comparateur;
+	comparateur = fopen("../data/base_descripteur_image","r");
+	char c[66] = "",c_aux[4];
+	c[65] = '\0';
+	c_aux[3] = '\0'; 
+	strcpy(c,"");
+	for(int i=0;i<9;i++){
+
+		fscanf(comparateur,"%s",c_aux);
+		printf("%s\n",c);
+		strcat(c,c_aux);
+	
+	}
+	printf("la position du curseur est %ld\n",ftell(comparateur));
+	fclose(comparateur);
+
+	char string1[15] = "",string2[20] = "";
+	strcpy(string1,"s a l a m");
+	strcpy(string2,"s");
+	strcat(string2," ");
+	strcat(string2,"a");
+	strcat(string2," ");
+	strcat(string2,"l");
+	strcat(string2," ");
+	strcat(string2,"a");
+	strcat(string2," ");
+	strcat(string2,"m");
+
+ 
+	printf("les deux string sont %d\n",equals(string2,string1,15));
+
+
+	//printf(" le resultat est %.2f",resultat);
+*/
+	//ouvrir_image("[ 64 #id 2 1 ]");
+	
+	comparer_images("../data/TEST_IMAGES/","01.txt",2);
 
 	printf("\nfin du programme\n");
 	return 0;

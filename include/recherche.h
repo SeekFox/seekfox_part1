@@ -25,6 +25,8 @@ FICHIER * creerCelluleFichier (char *, float);                  // Crée une cel
 RECHERCHE * creerRechercheVide ();                              // Crée une file triée recherche vide
 void ajouterFichierRecherche (RECHERCHE *, FICHIER *);          // Ajoute une cellule fichier dans la file en la triant (par ordre décroissant)
 
+void afficherResultats(RECHERCHE *r);
+
 /* FONCTIONS DE RECHERCHE PAR FICHIER */
 // /!\ IMPORTANT : ces fonctions ont besoin de toutes les fonctions de manipulation/création de descripteur pour pouvoir fonctionner
 RECHERCHE * rechercheParFichierTexte (char *);

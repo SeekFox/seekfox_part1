@@ -1,9 +1,11 @@
-/*#include <stdio.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "../include/recherche.h"
 #include "../include/indexation.h"
 #include "../include/audio.h"
+#include "../include/config.h"
+#include "../include/interact.h"
 
 //==================================================================================================================================
 // FONCTIONS DE MANIPULATION DES STRUCTURES 
@@ -69,10 +71,19 @@ void ajouterFichierRecherche (RECHERCHE * r, FICHIER * f) {     // Ajoute un fic
 
 //==================================================================================================================================
 
+void afficherResultats(RECHERCHE *r){
+    FICHIER * courant = r->premier;
+    int i=1;
+    while(courant!=NULL) {
+        printf("%d - %s -> %f\n", i, courant->adresse, courant->similarite);
+        courant = courant->suivant;
+        i++;
+    }
+}
 
 //==================================================================================================================================
 // FONCTIONS DE RECHERCHE 
-
+/*
 RECHERCHE * rechercheParFichierTexte (char * adresse) {
 
     // Etape 1 : on crée un descripteur du fichier requête après avoir vérifié son existence 
@@ -125,7 +136,8 @@ RECHERCHE * rechercheParFichierTexte (char * adresse) {
 
     return resultats;
 }
-
+*/
+/*
 RECHERCHE * rechercheParFichierImage (char * adresse) {
 
     // Etape 1 : on crée un descripteur du fichier requête après avoir vérifié son existence 
@@ -177,7 +189,7 @@ RECHERCHE * rechercheParFichierImage (char * adresse) {
     fclose(descripteurs);
 
     return resultats;
-}
+}*/
 
 RECHERCHE * rechercheParFichierSon (char * adresse) {
     // IMPORTANT : pour les fichiers audio, les résultats de la recherche sont triés par nombre de fenêtres de corpus contenant le jingle et non par similitude 
@@ -195,8 +207,8 @@ RECHERCHE * rechercheParFichierSon (char * adresse) {
         int tailleFenetre = getAudioN();        // Taille d'une fenêtre, pour le descripteur
         int nbIntervalles = getAudioM();        // Nombre d'intervalles, pour le descripteur
         int numExt;
-        if (extensionFichier(adresse)=="wav") numExt=1;     // Numéro correspondant au type du fichier, pour le descripteur
-        else if (extensionFichier(adresse)=="bin") numExt=2;
+        if (strcmp(getExtensionOfFile(adresse),".wav")==0) numExt=1;     // Numéro correspondant au type du fichier, pour le descripteur
+        else if (strcmp(getExtensionOfFile(adresse),".bin")==0) numExt=2;
         else numExt=0;
         *descRequete = creerDescripteurAudio(requete, tailleFenetre, nbIntervalles, numExt);
         fclose(requete);
@@ -222,11 +234,11 @@ RECHERCHE * rechercheParFichierSon (char * adresse) {
     while(fgets(fichCourant, 200, fichiersIndexes)!=NULL) {     // On passe chaque ligne du fichier listant les fichiers indexés en revue
         fgets(descCourant, 2000, descripteurs);     // Pour chacune de ces lignes (donc pour chacun de ces fichiers), on récupère le descripteur associé
         
-        if(extensionFichier(fichCourant)=="wav" || extensionFichier(fichCourant)=="bin") {      // Cas où le descripteur récupéré est celui d'un fichier son (on ne traite que ces cas)
-            DescripteurAudio desc = stringToDescripteurAudio(descCourant, strlen(descCourant));     // On convertit le descripteur (jusque là au format string) en structure descripteur
+        if((strcmp(getExtensionOfFile(adresse),".wav")==0) || (strcmp(getExtensionOfFile(adresse),".bin")==0)) {      // Cas où le descripteur récupéré est celui d'un fichier son (on ne traite que ces cas)
+            DescripteurAudio desc = stringToDescripteurAudio(descCourant);     // On convertit le descripteur (jusque là au format string) en structure descripteur
             PILE sim = comparerDescripteursAudio(desc, *descRequete);        // On calcule la similarité entre le fichier recherché et le fichier courant
             if(taillePILE(sim)>=1) {        // Cas où le descripteur récupéré contient au moins une fois le jingle recherché
-                FICHIER * fcomp = creerCelluleFichier(fichCourant, taillePile(sim));
+                FICHIER * fcomp = creerCelluleFichier(fichCourant, taillePILE(sim));
                 ajouterFichierRecherche(resultats, fcomp);      // On ajoute à la liste triée des fichiers compatibles avec la recherche
             }
         }
@@ -240,7 +252,7 @@ RECHERCHE * rechercheParFichierSon (char * adresse) {
 
 //==================================================================================================================================
 
-
+/*
 int main (int argc, char * argv[]) {
 
     RECHERCHE * r = creerRechercheVide();

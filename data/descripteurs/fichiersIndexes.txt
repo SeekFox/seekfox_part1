@@ -1,2 +1,2 @@
-base_de_documents/corpus_fi.bin
+NA
 base_de_documents/jingle_fi.bin

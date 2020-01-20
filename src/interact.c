@@ -29,6 +29,9 @@
   #include <../include/indexation.h>
 #endif
 
+#ifndef RECHERCHE_H
+  #include "../include/recherche.h"
+#endif
 
 void displayMenu(int *isAdmin, enum FSM * state, char * file){
   int nextState = (*state);
@@ -75,6 +78,8 @@ void displayMenu(int *isAdmin, enum FSM * state, char * file){
 
     case R_SON:
       printf("Recherche par SON\n");
+      printf(">>>%s\n",file);
+      afficherResultats(rechercheParFichierSon(file));
       //TODO : Recherche par SON
       (*state) = TITLE;
       break;
@@ -138,9 +143,9 @@ void displayMenuResearch(char * file, enum FSM * state){
         fscanf(listFile,"%s\n",line);
       }
 
-      printf("\n\t >>%s<<\n",line);
+      printf("Choix du fichier \"%s\"\n\n",line);
       strcpy(ext, strrchr(line,'.'));
-      printf("\n\t >>%s<<>>%s<<\n",getNameOfFile(line),ext);
+      //printf("\n\t >>%s<<>>%s<<\n",getNameOfFile(line),ext);
       
       (*state) = ( ( strcmp(ext,".bmp")==0 || strcmp(ext,".jpg")==0 ) ? R_IMAGE : (strcmp(ext,".xml")==0 ? R_TEXTE : (strcmp(ext,".wav")==0 || strcmp(ext,".bin")==0 ) ? R_SON : (*state)));
       strcpy(file,line);

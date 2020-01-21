@@ -2,6 +2,7 @@
 #include<stdlib.h>
 #include<math.h>
 #include<string.h>
+#include<ctype.h>
 typedef int * bits;
 typedef struct descripteur
 {
@@ -584,19 +585,12 @@ int main(void){
 	
 	//comparer_images("../data/TEST_IMAGES/","05.txt",2);
 
-	int x = 255,y = 125,z = 64;
-	int a = 0,b,c;
-	int tab[] = {255 , 125 , 64 , 125 , 64, 255};
-
-	for(int i=0;i<6;i++){
-		a = 0;
-		for(int j=0;j<6;j++){
-			if(tab[i] == tab[j])a++;
-		}
-	}
-	printf("%d\n",a);
 	//printf("%X %X %X",tab[0],tab[1],tab[2]);
 
+
+	char c1[] = "salam",c2[] = "salam";
+	
+	printf("%d",isdigit('['));
 	printf("\nfin du programme\n");
 	return 0;
 }

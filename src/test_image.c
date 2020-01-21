@@ -29,18 +29,20 @@ Merci ^_^
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
+#include<ctype.h>
+
 //#include "header_image.h"
 
-typedef int * bits;
+typedef int * bits; // type qui sert à la quantification
 
-typedef struct descriptor{
-    char identifiant[20];
+typedef struct descriptor{ //structure d'un descripteur :
+    char identifiant[20]; //une chaine representant un identifiant et un pointeur qui va prendre l'histogramme
     int *Histogramme;
 }descripteur;
 
-typedef struct structure{
-	char identifiant[20];
-	float Valeur;
+typedef struct structure{ // structure qui représente les résultats de la recherche elle comprend 
+	char identifiant[20]; // l'identifiant du fichier
+	float Valeur;	// la valeur de compatibilité avec le fichier à comparer
 }Resultat;
 
 int quantifierRGB(int composante_rouge,int composante_vert,int composante_bleue,int n){
@@ -84,12 +86,13 @@ int quantifierRGB(int composante_rouge,int composante_vert,int composante_bleue,
 	free(b);
 	
 return resultat;
-}
+}	//une fonction qui sert à la quantification : entree composantes RGB sortie résultat cd : page 15 cahier de charges
+
+/*-------------------------------------------------------------------------------------*/
 
 int quantifierNB(int ComposanteNoire,int n){
 
-	// la meme chose que la fonction quantifierRGB mais avec une seule composante
-
+	
 	int resultat = 0,noire[8] = {0},puissance=0;
 
 	bits b = malloc(n*sizeof(int));
@@ -109,20 +112,19 @@ int quantifierNB(int ComposanteNoire,int n){
 	}
 	free(b);
 	return resultat;
-}
+} // la meme chose que la fonction quantifierRGB mais avec une seule composante
 
 /*-------------------------------------------------------------------------------------*/
 
 void remplirMatrice(FILE **f,int lignes,int colonnes,int M[lignes][colonnes]){
 
-	//fonction permettant de remplir la matrice passée en paramètre
 
 	for(int i=0;i<lignes;i++){
 		for(int j=0;j<colonnes;j++){
 			fscanf(*f,"%d",&M[i][j]);
 		}
 	}
-}
+} //focntion qui sert à extraire les matrices à partir d'un flux overt vers un fichier .txt
 
 /*-------------------------------------------------------------------------------------*/
 
@@ -184,25 +186,24 @@ void mise_a_jour_base(int n,int i,int taille_max,char titre_fichier[],descripteu
 
 		
 		FILE *ecrire_dans_base;
-		ecrire_dans_base = fopen("../data/base_descripteur_image","a+");
+		ecrire_dans_base = fopen("../data/base_descripteur_image","a+"); // ouverture d'un chemin vers la base_descripteur_image
 		if(ecrire_dans_base == NULL)printf("chemin ecrire dans base errone\n");
-		fprintf(ecrire_dans_base,"%s ",d.identifiant);
+		fprintf(ecrire_dans_base,"%s ",d.identifiant);	//ecrire l'identifiant dans la base
 
 		for(int j=0;j<taille_max;j++){
-			fprintf(ecrire_dans_base,"%d ",d.Histogramme[j]);
-			//somme += Histogramme[j];
+			fprintf(ecrire_dans_base,"%d ",d.Histogramme[j]); // ecrire l'histogramme
+			//somme += Histogramme[j]; // une somme pondérée qui sert à vérifier le nombre de pixels
 			d.Histogramme[j] = 0;
 		}
 		fprintf(ecrire_dans_base,"\n");
-		/*// ecriture dans le fichier base_descripteur_image*/
 		fclose(ecrire_dans_base);
 
 		FILE *images_indexees;
-		images_indexees = fopen("../data/liste_base_image","a+");
-		fprintf(images_indexees,"%s %s\n",titre_fichier,d.identifiant);
+		images_indexees = fopen("../data/liste_base_image","a+"); //ouvrerture de flux sur le fichier liste_base_image
+		fprintf(images_indexees,"%s %s\n",titre_fichier,d.identifiant); //écriture du titre du fichier et de l'identifiant du descripteur associé
 		fclose(images_indexees);
 		
-}
+} // fonction qui sert à ajouter(à la fin) un descripteur dans la base_descripteur_image
 
 
 /*-------------------------------------------------------------------------------------*/
@@ -219,27 +220,28 @@ int base_est_vide(){
 	fclose(fichier_descripteur);
 
 	return variable_de_test == EOF;
-}
+}// fonction qui vérifie si la base_descripteur_image est vide renvoie 1 si la base est vide 0 sinon
 
 /*-------------------------------------------------------------------------------------*/
 
 void lister_fichiers(){
 
-}
-
-/*-------------------------------------------------------------------------------------*/
-
-
+}//à ajouter ici les commandes unix dans la fonction lancer_indexation
+/* j'ai pas ajouté cette fonction parce qu'elle marchait pas quand je l'ai testé du coup c'est à vous de jouer*/
 
 /*-------------------------------------------------------------------------------------*/
 
 void toString(int entier,char chaine[]){
 	sprintf(chaine,"%d",entier);
-}
+} //fonction qui sert à convertir un entier en une chaine de caractère
+
+/*-------------------------------------------------------------------------------------*/
 
 void toInt(char chaine[],int *entier){
 	*entier  = atoi(chaine);
-}
+} //fonction qui sert à convertir une chaine de caractères en entier
+
+/*-------------------------------------------------------------------------------------*/
 
 int equals(char string1[],char string2[],int taille){
 	int isok=0;
@@ -247,28 +249,35 @@ int equals(char string1[],char string2[],int taille){
 		if(string1[i] == string2[i])isok++;
 	}
 	return isok == taille;
-}
+} /*
+	fonction qui compare deux parties de chaine de caractères retourne 1 si les deux chaines sont identiques 0 sinon
+	elle prend les deux chaines en entree avec la taille des chaines à comparer
+*/
+
+/*-------------------------------------------------------------------------------------*/
 
 int fichier_deja_indexe(char titre_fichier[]){
 
 	char titre_aux[8] = "";
 
 	FILE *f_indexe;
-	f_indexe = fopen("../data/liste_base_image","r");
+	f_indexe = fopen("../data/liste_base_image","r"); //ouverture d'un flux sur le fichier liste_base_image
 	do{
-		fscanf(f_indexe,"%s",titre_aux);//lecture des titres des fichiers
+		fscanf(f_indexe,"%s",titre_aux);	//lecture du titre du fichier sur une chaine auxilière
 
-		if(equals(titre_fichier,titre_aux,7)){
-			printf("le fichier : %s est deja indexe\n",titre_fichier);
+		if(equals(titre_fichier,titre_aux,7)){	//comparaison entre le titre passé en paramètre et le titre lu(titre_aux)
+			printf("le fichier : %s est deja indexe\n",titre_fichier);	//affichage du titre du fichier et retour de 1
 			fclose(f_indexe);
-			return 1;
+			return 1;	
 		}
 		
 	}while(!feof(f_indexe));
 
 	fclose(f_indexe);
 	return 0;
-}
+}	// fonction qui retourne 1 si lefichier est déja indéxé et 0 sinon
+
+/*-------------------------------------------------------------------------------------*/
 
 void generer_identifiant(int n,char titre_fichier[],descripteur *d,int taille_max){
 	int x = 0;
@@ -302,10 +311,24 @@ void generer_identifiant(int n,char titre_fichier[],descripteur *d,int taille_ma
 	d->identifiant[19] = '\0';
 
 
-}
+} /*	
+Cette fonction sert à générer des identifiants de descripteurs à partir du nombre de bits de quantification,
+du titre du fichier, de la taille max de l'histogramme du descripteur
+le descripteur est passé par adresse pour qu'on puisse le modifier
+la structure de l'identifiant est comme suit 
+
+[ taille_max #id n c]
+taille_max : la taille de l'histogramme
+n : le nombre de bits sur quoi on va quantifier
+c : le titre du fichier transformé en int
+
+*/
+	
+/*-------------------------------------------------------------------------------------*/
 
 void generer_descripteur(descripteur *d,char CHEMIN2[],char titre_fichier[],int *taille_max,int n){
-		int nbLignes = 0,nbColonnes = 0,nbComposantes = 0;
+
+	int nbLignes = 0,nbColonnes = 0,nbComposantes = 0;
 
 	char chemin_aux[100] = "";
 	strcpy(chemin_aux,CHEMIN2);
@@ -314,60 +337,79 @@ void generer_descripteur(descripteur *d,char CHEMIN2[],char titre_fichier[],int 
 	//printf("le chemin est %s\n et le fichier est %s\n",CHEMIN2,titre_fichier);
 	strcat(chemin_aux,titre_fichier);
 
-	lecteur_image = fopen(chemin_aux,"r"); // ouverture des fichiers .txt en mode lecture
+	lecteur_image = fopen(chemin_aux,"r"); // ouverture du fichier .txt en mode lecture
 	
 
-	fscanf(lecteur_image," %d%d%d",&nbLignes,&nbColonnes,&nbComposantes); // lecture de la première lignes dimension de l'image et les composantes
+	fscanf(lecteur_image," %d%d%d",&nbLignes,&nbColonnes,&nbComposantes); 
+	// lecture de la première ligne : dimensions de l'image et les composantes de l'image
 
 	*taille_max =(int)pow(2,n*nbComposantes);
 	d->Histogramme = malloc((*taille_max)*sizeof(int));
+	//allocation dynamique du descripteur en fonction de sa taille
+
 	if(d->Histogramme == NULL){
 		printf("erreur d'allcation dynamique\n");
 		exit(1);
 	}
+	//test d'allocation
 
 	if(nbComposantes == 3){	
 				
-					int Rouge[nbLignes][nbColonnes],Verte[nbLignes][nbColonnes],Bleue[nbLignes][nbColonnes],ImageRGB[nbLignes][nbColonnes];
+		int Rouge[nbLignes][nbColonnes],Verte[nbLignes][nbColonnes],Bleue[nbLignes][nbColonnes],ImageRGB[nbLignes][nbColonnes];
 
-					//allocation dynamique des matrices représentant les composantes de l'image
-
-					//printf("allouer memoire reussi\n");
+		//declaration des matrices représentant les composantes de l'image
 
 
-					remplirMatrice(&lecteur_image,nbLignes,nbColonnes,Rouge);
-					remplirMatrice(&lecteur_image,nbLignes,nbColonnes,Verte);
-					remplirMatrice(&lecteur_image,nbLignes,nbColonnes,Bleue);
-					//lecture du contenu de l'image et remplissage des matrices
+		remplirMatrice(&lecteur_image,nbLignes,nbColonnes,Rouge);
 
-					//indexer_par_couleur_dominante(nbLignes,nbColonnes,Rouge,Verte,Bleue,titre_fichier);
+		remplirMatrice(&lecteur_image,nbLignes,nbColonnes,Verte);
 
-					//printf("matrices remplies reussi\n");
+		remplirMatrice(&lecteur_image,nbLignes,nbColonnes,Bleue);
 
-					realiserHistogrammeRGB(nbLignes,nbColonnes,ImageRGB,Rouge,Verte,Bleue,n,d->Histogramme,*taille_max);
-					//realisation de l'histogramme avec passage en parametre du tableau Histogramme
+		//lecture du contenu de l'image en remplissant les matrices
 
-					//printf("histogramme reussi\n");
+		//indexer_par_couleur_dominante(nbLignes,nbColonnes,Rouge,Verte,Bleue,titre_fichier);
+
+		//printf("matrices remplies reussi\n");
+
+		realiserHistogrammeRGB(nbLignes,nbColonnes,ImageRGB,Rouge,Verte,Bleue,n,d->Histogramme,*taille_max);
+
+		//realisation de l'histogramme avec passage en parametre du tableau Histogramme
+
+		//printf("histogramme reussi\n");
 
 	}
 	else if(nbComposantes == 1){
+
 					//printf("choix effectue\n");
-					int Noire[nbLignes][nbColonnes],ImageNB[nbLignes][nbColonnes];
-					//delcaration de la matrice représentant la composante noire et l'image pour réaliser l'histogramme
+
+		int Noire[nbLignes][nbColonnes],ImageNB[nbLignes][nbColonnes];
+
+		//delcaration de la matrice représentant la composante noire et l'image pour réaliser l'histogramme
 
 
-					remplirMatrice(&lecteur_image,nbLignes,nbColonnes,Noire);
-					//printf("matrices remplies reussi\n");
-					//lecture du contenu de l'image et remplissage de la matrice
+		remplirMatrice(&lecteur_image,nbLignes,nbColonnes,Noire);
 
-					realiserHistogrammeNB(nbLignes,nbColonnes,ImageNB,Noire,n,d->Histogramme,*taille_max);
-					//realisation de l'histogramme avec passage en parametre du tableau Histogramme
+		//lecture du contenu de l'image et remplissage de la matrice
+
+		realiserHistogrammeNB(nbLignes,nbColonnes,ImageNB,Noire,n,d->Histogramme,*taille_max);
+
+		//realisation de l'histogramme avec passage en parametre du tableau Histogramme
 
 	}
 	generer_identifiant(n,titre_fichier,d,*taille_max);
 
+	//generation de l'identifiant du descripteur
+
 	fclose(lecteur_image);
 }
+
+/*
+		fonction qui sert à créer un descripteur(passé en paramètre) à partir du chemin et du titre du fichier
+		(chaines en paramètre), le nombre de bits sur quoi on va quantifier(n) et qui modifie la taille_max de
+		 l'histogramme du descripteur, celle-ci va être utile pour d'autre fonctions qui viennent après
+	*/
+
 
 /*-------------------------------------------------------------------------------------*/
 
@@ -379,6 +421,11 @@ void afficher_descripteur(descripteur d,int taille_max){
 	}
 	printf("\n");
 }
+/* 
+fonction qui sert à afficher un descripteur passé en paramètre avec sa taille maximale
+*/
+
+/*-------------------------------------------------------------------------------------*/
 
 void lancer_indexation(int indice_indexation){ // vaut 0 pour une première indexation et 1 pour une mise à jour;
 	
@@ -420,7 +467,7 @@ void lancer_indexation(int indice_indexation){ // vaut 0 pour une première inde
 
 		for(int n=2;n<4;n++){
 			
-			for(int i=1;i<=nbFichiers;i++){ // boucle for qui dépend du nombre de fichiers
+			for(int i=1;i<=nbFichiers;i++){ // boucle for qui dépend du nombre de fichiers un while(!feof()) marchera tres bien aussi
 
 				char titre_fichier[6];
 
@@ -444,11 +491,11 @@ void lancer_indexation(int indice_indexation){ // vaut 0 pour une première inde
 				descripteur d,d3;
 				int taille_max;
 
-				generer_descripteur(&d,CHEMIN2,titre_fichier,&taille_max,n);
+				generer_descripteur(&d,CHEMIN2,titre_fichier,&taille_max,n);	//création des descripteurs
 
-				afficher_descripteur(d,taille_max);
+				//afficher_descripteur(d,taille_max);	//affichage des descripteurs(optionnel)
 
-				mise_a_jour_base(n,i,taille_max,titre_fichier,d);
+				mise_a_jour_base(n,i,taille_max,titre_fichier,d); // ajout dans le fichier base descripteur_image
 
 				free(d.Histogramme);
 			}
@@ -461,11 +508,17 @@ void lancer_indexation(int indice_indexation){ // vaut 0 pour une première inde
 	fclose(lecteur_fichier);
 	
 
-}
+}	
+/*
+	la fonction principale qui sert à lancer l'indexation de toutes les images si elle ne sont pas déja indéxées
+	avec passage en paramètre d'un indice d'indexation qui vaut 0 quant on veut effectuer l'indexation 
+	pour la première fois et 1 quand on veut juste ajouter un fichier
+
+*/
+
 /*-------------------------------------------------------------------------------------*/
 
-void tri_decroissant( Resultat tab[], int tab_size)                                            
-{                                                                              
+void tri_decroissant( Resultat tab[], int tab_size){                                                                              
 	int tmp = 0;
 	char id_aux[20] = "";
 	id_aux[19] = '\0';    
@@ -491,7 +544,7 @@ void tri_decroissant( Resultat tab[], int tab_size)
             }                                                                  
         }                                                                      
     }                                                                                                                                             
-}
+} // une focntion qui trie les elements d'un tableau de manière décroissante
 /*
 void ouvrir_image(char identifiant[]){
 
@@ -609,6 +662,9 @@ void ouvrir_image(char identifiant[]){
 	}while(!feof(chercheur_image));
 	fclose(chercheur_image);
 }
+/*
+fonction qui sert à ouvrir une image à partir de son identifiant
+*/
 
 void afficher_les_resultats(Resultat r[]){
 
@@ -637,6 +693,9 @@ void afficher_les_resultats(Resultat r[]){
 	}
 	ouvrir_image(meilleur_resultat.identifiant);
 }
+/*
+fonction qui sert à afficher les resultats de la recherche stockés dans le tableau passé en paramètre
+*/
 
 void ajouter_au_resultats(Resultat r[],int resultat,int *j,char identifiant[]){
 
@@ -649,7 +708,9 @@ void ajouter_au_resultats(Resultat r[],int resultat,int *j,char identifiant[]){
 	(*j)++;
 	
 
-}
+}/*
+fonction qui sert à ajouter des resultats dans le tableau de résultats passé en paramètre
+*/
 
 void initialiser_resultat(Resultat r[]){
 		for(int i=0;i<100;i++){
@@ -657,10 +718,10 @@ void initialiser_resultat(Resultat r[]){
 			strcpy(r[i].identifiant,"");
 		}
 }
+// initialisation du tableau qui comporte les résultats de la recherche
 
 
-
-void comparer_images(char chemin[],char titre_fichier[],int n){
+void rechercher_image(char chemin[],char titre_fichier[],int n){
 
 	int taille_max = 0,taille_aux,n_aux,j = 0,valeur = 0;
 	float resultat = 0;
@@ -687,6 +748,7 @@ void comparer_images(char chemin[],char titre_fichier[],int n){
 	while(!feof(comparateur)){
 		strcpy(identifiant,"");
 
+
 		for(int i=0;i<6;i++){
 			
 			fscanf(comparateur,"%s",c);
@@ -700,7 +762,8 @@ void comparer_images(char chemin[],char titre_fichier[],int n){
 			strcat(identifiant," ");	//identifiant acquérit
 			//printf("%s\n",c);
 			
-		}
+		}	//boucle qui sert à lire l'identifiant d'un descripteur et mettre à jour la taille max et le nombre de quantification n
+
 			//printf("%s\n",identifiant);
 		
 		strcpy(resultat_comparaison[j].identifiant,identifiant);
@@ -717,11 +780,13 @@ void comparer_images(char chemin[],char titre_fichier[],int n){
 				
 				if(d.Histogramme[i] == valeur)resultat++;
 				
-			}
+			}//boucle qui sert à comparer deux Histogrammes
+
 			resultat = (resultat*100)/(float)taille_max;
 			
 			//strcpy(resultat_comparaison[0].identifiant,identifiant);
 			//printf("%s\n",resultat_comparaison[0].identifiant);
+
 			ajouter_au_resultats(resultat_comparaison,resultat,&j,identifiant);
 			resultat = 0;
 		}else{
@@ -735,8 +800,12 @@ void comparer_images(char chemin[],char titre_fichier[],int n){
 	afficher_les_resultats(resultat_comparaison);
 
 }
+/*une fonction qui sert à rechercher l'image et afficher les résultats 
+en ordre décroissant avec ouverture de l'image la plus pertinante 
+*/
 
-void descripteur_to_string(descripteur d,char string[],int taille_max){
+
+void descripteur_image_to_string(descripteur d,char string[],int taille_max){
 
 	char chaine[7] = "";
 	chaine[6] = '\0';
@@ -751,103 +820,64 @@ void descripteur_to_string(descripteur d,char string[],int taille_max){
 
 }
 
-void string_to_descripteur(char string[],descripteur *d){
+void string_to_descripteur_image(char string[],descripteur *d){
 
-	int i = 0,taille = 0;
-	char aux[3] = "0";
-	aux[0] = string[2];
-	aux[1] = string[3];
-	aux[2] = string[4];
-	while(1){
-		d->identifiant[i] = string[i];
-		i++;
-		if(string[i] == ']'){
-			d->identifiant[i] = string[i];
-			break;
-		}
+	int taille_max = 0;
+	int longueur_chaine = 0,aux = 0,j=0;
+	char c[4]="";
+	c[3] = '\0';
+	longueur_chaine = strlen(string);
+
+	for(int i = 0;i<20;i++){
+		if(i<15)d->identifiant[i] = string[i];
+		if(i>=1 && i<5)c[i-1] = string[i];
+		if(string[i] == ']')break;
 	}
 
-	toInt(aux,&taille);
-	//d->Histogramme = malloc(taille*sizeof(int));
+	toInt(c,&taille_max);
+	//printf("la taille max est %d\n",taille_max);
 
-	int tab[taille];
-}
-
-void indexer_par_couleur_dominante(/*int nbLignes,int nbColonnes,int Rouge[nbLignes][nbColonnes],int Verte[nbLignes][nbColonnes],int Bleue[nbLignes][nbColonnes]*/){
-
-	FILE *ptr_base_couleur;
-	ptr_base_couleur = fopen("../data/TEST_IMAGES/01.txt","r");
-	int tab[3]= {0},k = 0;
-	int x,y,z;
-	int nbLignes = 200,nbColonnes = 200;
-	int Rouge[nbLignes][nbColonnes],Verte[nbLignes][nbColonnes],Bleue[nbLignes][nbColonnes];
-	char c[6] = "",string[6] = "";
-	
-	int a=0;
-	fscanf(ptr_base_couleur,"%d%d%d",&x,&y,&z);
-
-	remplirMatrice(&ptr_base_couleur,nbLignes,nbColonnes,Rouge);
-	remplirMatrice(&ptr_base_couleur,nbLignes,nbColonnes,Verte);
-	remplirMatrice(&ptr_base_couleur,nbLignes,nbColonnes,Bleue);
-	strcpy(string,"");
-
-	for(int i=0;i<nbLignes;i++){
-		for(int j=0;j<nbColonnes;j++){
-			
-			tab[0] = Rouge[i][j];
-			tab[1] = Verte[i][j];
-			tab[2] = Bleue[i][j];
-			
-			sprintf(c,"%X%X%X",tab[0],tab[1],tab[2]);
-			//sprintf(string,"%X%X%X",tab[0],tab[1],tab[2]);
-			//strcpy(string,c);
-			toInt(c,&a);
-
-			//printf("%s\n",string);
-			printf("%s  %d\n",c,a);
-			//printf("%d %d %d\n",tab[0][k],tab[1][k],tab[2][k]);
-		}
+	d->Histogramme = malloc(taille_max*sizeof(int));
+	if(d->Histogramme == NULL){
+		printf("erreur allocation dynamique\n");
+		exit(1);
 	}
-	//printf("%s\n",string);
-	int hist[40000] = {0};
-/*
-	for(int i=0;i<40000;i++){
-		for(int j=0;j<40000;j++){
-			if(tab[0][i] == tab[0][j] && tab[1][i] == tab[1][j] && tab[2][i] == tab[2][j])hist[]
-		}
+	int i=0;
+
+	char *p = string;
+	while (*p) {
+    if( isdigit(*p) || ( (*p=='-'||*p=='+') && isdigit(*(p+1)) )){
+        // Found a number
+        d->Histogramme[i] = strtol(p, &p, 10); // Read number
+        printf("%d\n", d->Histogramme[i]); // and print it.
+    } 
+	else{
+        p++;
+    }
+	i++;
 	}
 	
-	*/
-
 }
-
-/*void recherche_couleur_dominante(char chemin[]){
-
-	FILE *ptr_fichiertxt;
-	ptr_fichiertxt = fopen(chemin,"r");
-
-}*/
 
 int main(void){
 	printf("debut programme\n");
 	//lancer_indexation(0); // 0 pour une première indexation et 1 pour une mise à jour;
-	//comparer_images("../data/TEST_IMAGES/","53.txt",2);
+	//rechercher_image("../data/TEST_IMAGES/","01.txt",2);
 
-	//descripteur d,d2;
-	//int taille_max;
-	//generer_descripteur(&d,"../data/TEST_IMAGES/","01.txt",&taille_max,2);
+	descripteur d,d2;
+	int taille_max;
+	generer_descripteur(&d,"../data/TEST_IMAGES/","01.txt",&taille_max,2);
 
-	//char string[1000] = "";
-	//string[999] = '\0';
-	//descripteur_to_string(d,string,taille_max);
-	//printf("%s\n",string);
+	char string[] ="[ 64 #id 2 1 ] 1969 0 0 0 64 0 0 0 0 0 0 0 0 0 0 0 176 0 0 0 2391 5523 0 0 0 288 0 0 0 0 0 0 0 0 0 0 5 1221 0 0 0 13382 8066 0 0 0 247 1 0 0 0 0 0 0 0 0 0 159 2184 0 0 1 3828 495 ";
 
-	//string_to_descripteur(string,&d2);
-	
+	string_to_descripteur_image(string,&d2);
 	//printf("%s\n",d2.identifiant);
+	int x = 0;
+	//toInt(" 64 ",&x);
+	//printf("taille est %d\n",x);
+	//indexer_par_couleur_dominante();
 
-	indexer_par_couleur_dominante();
-
+	afficher_descripteur(d,64);
 	
 
 	printf("fin programme\n");

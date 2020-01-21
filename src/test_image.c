@@ -340,6 +340,8 @@ void generer_descripteur(descripteur *d,char CHEMIN2[],char titre_fichier[],int 
 					remplirMatrice(&lecteur_image,nbLignes,nbColonnes,Bleue);
 					//lecture du contenu de l'image et remplissage des matrices
 
+					//indexer_par_couleur_dominante(nbLignes,nbColonnes,Rouge,Verte,Bleue,titre_fichier);
+
 					//printf("matrices remplies reussi\n");
 
 					realiserHistogrammeRGB(nbLignes,nbColonnes,ImageRGB,Rouge,Verte,Bleue,n,d->Histogramme,*taille_max);
@@ -771,24 +773,81 @@ void string_to_descripteur(char string[],descripteur *d){
 	int tab[taille];
 }
 
+void indexer_par_couleur_dominante(/*int nbLignes,int nbColonnes,int Rouge[nbLignes][nbColonnes],int Verte[nbLignes][nbColonnes],int Bleue[nbLignes][nbColonnes]*/){
+
+	FILE *ptr_base_couleur;
+	ptr_base_couleur = fopen("../data/TEST_IMAGES/01.txt","r");
+	int tab[3]= {0},k = 0;
+	int x,y,z;
+	int nbLignes = 200,nbColonnes = 200;
+	int Rouge[nbLignes][nbColonnes],Verte[nbLignes][nbColonnes],Bleue[nbLignes][nbColonnes];
+	char c[6] = "",string[6] = "";
+	
+	int a=0;
+	fscanf(ptr_base_couleur,"%d%d%d",&x,&y,&z);
+
+	remplirMatrice(&ptr_base_couleur,nbLignes,nbColonnes,Rouge);
+	remplirMatrice(&ptr_base_couleur,nbLignes,nbColonnes,Verte);
+	remplirMatrice(&ptr_base_couleur,nbLignes,nbColonnes,Bleue);
+	strcpy(string,"");
+
+	for(int i=0;i<nbLignes;i++){
+		for(int j=0;j<nbColonnes;j++){
+			
+			tab[0] = Rouge[i][j];
+			tab[1] = Verte[i][j];
+			tab[2] = Bleue[i][j];
+			
+			sprintf(c,"%X%X%X",tab[0],tab[1],tab[2]);
+			//sprintf(string,"%X%X%X",tab[0],tab[1],tab[2]);
+			//strcpy(string,c);
+			toInt(c,&a);
+
+			//printf("%s\n",string);
+			printf("%s  %d\n",c,a);
+			//printf("%d %d %d\n",tab[0][k],tab[1][k],tab[2][k]);
+		}
+	}
+	//printf("%s\n",string);
+	int hist[40000] = {0};
+/*
+	for(int i=0;i<40000;i++){
+		for(int j=0;j<40000;j++){
+			if(tab[0][i] == tab[0][j] && tab[1][i] == tab[1][j] && tab[2][i] == tab[2][j])hist[]
+		}
+	}
+	
+	*/
+
+}
+
+/*void recherche_couleur_dominante(char chemin[]){
+
+	FILE *ptr_fichiertxt;
+	ptr_fichiertxt = fopen(chemin,"r");
+
+}*/
 
 int main(void){
 	printf("debut programme\n");
 	//lancer_indexation(0); // 0 pour une première indexation et 1 pour une mise à jour;
 	//comparer_images("../data/TEST_IMAGES/","53.txt",2);
 
-	descripteur d,d2;
-	int taille_max;
-	generer_descripteur(&d,"../data/TEST_IMAGES/","01.txt",&taille_max,2);
+	//descripteur d,d2;
+	//int taille_max;
+	//generer_descripteur(&d,"../data/TEST_IMAGES/","01.txt",&taille_max,2);
 
-	char string[1000] = "";
+	//char string[1000] = "";
 	//string[999] = '\0';
-	descripteur_to_string(d,string,taille_max);
-	printf("%s\n",string);
+	//descripteur_to_string(d,string,taille_max);
+	//printf("%s\n",string);
 
-	string_to_descripteur(string,&d2);
+	//string_to_descripteur(string,&d2);
 	
 	//printf("%s\n",d2.identifiant);
+
+	indexer_par_couleur_dominante();
+
 	
 
 	printf("fin programme\n");

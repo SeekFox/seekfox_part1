@@ -6,6 +6,7 @@ typedef int * bits;
 typedef struct descripteur
 {
 	char identifiant[10];
+	char couleur_dominante[10];
 	int *Histogramme;
 }descripteur;
 
@@ -32,6 +33,7 @@ int quantifierRGB(int composante_rouge,int composante_vert,int composante_bleue,
 		composante_bleue = composante_bleue/2;
 	}
 		
+	
 	if(dim == 6){
 		for(i = 0;i<dim;i++){
 			if(i<2)b[i] = rouge[7-i];
@@ -580,7 +582,20 @@ int main(void){
 */
 	//ouvrir_image("[ 64 #id 2 1 ]");
 	
-	comparer_images("../data/TEST_IMAGES/","01.txt",2);
+	//comparer_images("../data/TEST_IMAGES/","05.txt",2);
+
+	int x = 255,y = 125,z = 64;
+	int a = 0,b,c;
+	int tab[] = {255 , 125 , 64 , 125 , 64, 255};
+
+	for(int i=0;i<6;i++){
+		a = 0;
+		for(int j=0;j<6;j++){
+			if(tab[i] == tab[j])a++;
+		}
+	}
+	printf("%d\n",a);
+	//printf("%X %X %X",tab[0],tab[1],tab[2]);
 
 	printf("\nfin du programme\n");
 	return 0;

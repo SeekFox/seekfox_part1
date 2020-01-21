@@ -72,6 +72,7 @@ void ajouterFichierRecherche (RECHERCHE * r, FICHIER * f) {     // Ajoute un fic
 //==================================================================================================================================
 
 void afficherResultats(RECHERCHE *r){
+    printf("\n");
     FICHIER * courant = r->premier;
     int i=1;
     while(courant!=NULL) {
@@ -191,28 +192,39 @@ RECHERCHE * rechercheParFichierImage (char * adresse) {
     return resultats;
 }*/
 
-RECHERCHE * rechercheParFichierSon (char * adresse) {
+RECHERCHE * rechercheParFichierSon (char * fichier) {
     // IMPORTANT : pour les fichiers audio, les résultats de la recherche sont triés par nombre de fenêtres de corpus contenant le jingle et non par similitude 
 
     // Etape 1 : on crée un descripteur du fichier requête après avoir vérifié son existence 
     FILE * requete = NULL;
+    
+    //sprintf(adresse,"/requete/%s",adresse);
+    char adresse[64];
+    sprintf(adresse,"requete/%s",fichier);
+    //printf(">>>>%s\n",adresse);
+
     requete = fopen(adresse, "r");
-    DescripteurAudio * descRequete = NULL;
+
+    DescripteurAudio descRequete;
+
     if (requete==NULL) {
         // Affichage de l'erreur (A ADAPTER) 
         printf("ERREUR - Le fichier à rechercher n'existe pas ou n'a pas pu être ouvert.");
         return NULL;
     } else {
+
         // Création du descripteur audio 
         int tailleFenetre = getAudioN();        // Taille d'une fenêtre, pour le descripteur
         int nbIntervalles = getAudioM();        // Nombre d'intervalles, pour le descripteur
         int numExt;
-        if (strcmp(getExtensionOfFile(adresse),".wav")==0) numExt=1;     // Numéro correspondant au type du fichier, pour le descripteur
-        else if (strcmp(getExtensionOfFile(adresse),".bin")==0) numExt=2;
+        if (strcmp(getExtensionOfFile(fichier),".wav")==0) numExt=1;     // Numéro correspondant au type du fichier, pour le descripteur
+        else if (strcmp(getExtensionOfFile(fichier),".bin")==0) numExt=2;
         else numExt=0;
-        *descRequete = creerDescripteurAudio(requete, tailleFenetre, nbIntervalles, numExt);
+        descRequete = creerDescripteurAudio(requete, tailleFenetre, nbIntervalles, numExt);
+
         fclose(requete);
     }
+    printf("FIn if/else \n");
 
     // Etape 2 : on compare ce descripteur à tous les descripteurs sons indexés 
     FILE * fichiersIndexes = NULL;
@@ -236,7 +248,7 @@ RECHERCHE * rechercheParFichierSon (char * adresse) {
         
         if((strcmp(getExtensionOfFile(adresse),".wav")==0) || (strcmp(getExtensionOfFile(adresse),".bin")==0)) {      // Cas où le descripteur récupéré est celui d'un fichier son (on ne traite que ces cas)
             DescripteurAudio desc = stringToDescripteurAudio(descCourant);     // On convertit le descripteur (jusque là au format string) en structure descripteur
-            PILE sim = comparerDescripteursAudio(desc, *descRequete);        // On calcule la similarité entre le fichier recherché et le fichier courant
+            PILE sim = comparerDescripteursAudio(desc, (descRequete));        // On calcule la similarité entre le fichier recherché et le fichier courant
             if(taillePILE(sim)>=1) {        // Cas où le descripteur récupéré contient au moins une fois le jingle recherché
                 FICHIER * fcomp = creerCelluleFichier(fichCourant, taillePILE(sim));
                 ajouterFichierRecherche(resultats, fcomp);      // On ajoute à la liste triée des fichiers compatibles avec la recherche

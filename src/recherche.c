@@ -72,6 +72,7 @@ void ajouterFichierRecherche (RECHERCHE * r, FICHIER * f) {     // Ajoute un fic
 //==================================================================================================================================
 
 void afficherResultats(RECHERCHE *r){
+    printf("Affichage des resultats\n");
     printf("\n");
     FICHIER * courant = r->premier;
     int i=1;
@@ -224,28 +225,28 @@ RECHERCHE * rechercheParFichierSon (char * fichier) {
 
         fclose(requete);
     }
-    printf("FIn if/else \n");
 
     // Etape 2 : on compare ce descripteur à tous les descripteurs sons indexés 
     FILE * fichiersIndexes = NULL;
     FILE * descripteurs = NULL;
-    fopen("data/descripteurs/fichiersIndexes.txt", "r");
-    fopen("data/descripteurs/descripteurs.txt", "r");
+
+    fichiersIndexes = fopen("data/descripteurs/fichiersIndexes.txt", "r");
+    descripteurs = fopen("data/descripteurs/descripteurs.txt", "r");
 
     if (fichiersIndexes==NULL || descripteurs==NULL) {      // Vérification de l'ouverture des fichiers
         // Affichage de l'erreur (A ADAPTER) 
-        printf("ERREUR - Problème d'accès à la base des descripteurs.");
+        displayError("Problème d'accès à la base des descripteurs.");
         return NULL;
     }
 
     char * fichCourant = malloc(200*sizeof(char));      // Stockage de l'adresse du fichier courant
-    char * descCourant = malloc(2000*sizeof(char));     // Stockage du descripteur associé
+    char * descCourant = malloc(200000*sizeof(char));     // Stockage du descripteur associé
     
     RECHERCHE * resultats = creerRechercheVide();     // File qui contiendra les résultats de la recherche
     
     while(fgets(fichCourant, 200, fichiersIndexes)!=NULL) {     // On passe chaque ligne du fichier listant les fichiers indexés en revue
-        fgets(descCourant, 2000, descripteurs);     // Pour chacune de ces lignes (donc pour chacun de ces fichiers), on récupère le descripteur associé
-        
+        fgets(descCourant, 200000, descripteurs);     // Pour chacune de ces lignes (donc pour chacun de ces fichiers), on récupère le descripteur associé
+        printf(">>%s  \n",fichCourant);
         if((strcmp(getExtensionOfFile(adresse),".wav")==0) || (strcmp(getExtensionOfFile(adresse),".bin")==0)) {      // Cas où le descripteur récupéré est celui d'un fichier son (on ne traite que ces cas)
             DescripteurAudio desc = stringToDescripteurAudio(descCourant);     // On convertit le descripteur (jusque là au format string) en structure descripteur
             PILE sim = comparerDescripteursAudio(desc, (descRequete));        // On calcule la similarité entre le fichier recherché et le fichier courant

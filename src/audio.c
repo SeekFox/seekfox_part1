@@ -94,7 +94,7 @@ int getSubdivisionValue(double val, int nbSubdivisions){	//Les sous-divisions so
 }
 
 DescripteurAudio creerDescripteurAudio(FILE* p_file, int tailleFenetre, int nbSubdivisions, int fileType){	
-	printf(">%d %d %d\n",tailleFenetre,nbSubdivisions,fileType);
+
 	DescripteurAudio newDescripteur;
 	
 	//unsigned int fileSize;
@@ -134,7 +134,7 @@ DescripteurAudio creerDescripteurAudio(FILE* p_file, int tailleFenetre, int nbSu
 	newDescripteur.nbFenetres = FenetresCount;
 	newDescripteur.nbSubdivisions = nbSubdivisions;
 	newDescripteur.tailleFenetre = tailleFenetre;
-	printf("Avant la fin\n");
+
 	return newDescripteur;
 }
 

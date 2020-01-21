@@ -321,6 +321,6 @@ PILE comparerDescripteursAudio(DescripteurAudio jingle, DescripteurAudio fichier
 		if(fileHist != NULL)
 			fileHist = fileHist->nextFenetre;
 	}
-
+	affiche_PILE(listeDesTimingsDesJingle);
 	return listeDesTimingsDesJingle;
 }

@@ -334,7 +334,7 @@ char * getExtensionOfFile(char * file){
   char * ext = "";
   ext = (char *)malloc(sizeof(char)*4);
   strcpy(ext, strrchr(file,'.'));
-  printf("\t\t>%s< >> >%s<\n",file,ext);
+  //printf("\t\t>%s< >> >%s<\n",file,ext);
   return ext;
 }
 

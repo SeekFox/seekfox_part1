@@ -246,11 +246,13 @@ RECHERCHE * rechercheParFichierSon (char * fichier) {
     
     while(fgets(fichCourant, 200, fichiersIndexes)!=NULL) {     // On passe chaque ligne du fichier listant les fichiers indexés en revue
         fgets(descCourant, 200000, descripteurs);     // Pour chacune de ces lignes (donc pour chacun de ces fichiers), on récupère le descripteur associé
-        printf(">>%s  \n",fichCourant);
+        
         if((strcmp(getExtensionOfFile(adresse),".wav")==0) || (strcmp(getExtensionOfFile(adresse),".bin")==0)) {      // Cas où le descripteur récupéré est celui d'un fichier son (on ne traite que ces cas)
+            printf(">>%s  \n",fichCourant);
             DescripteurAudio desc = stringToDescripteurAudio(descCourant);     // On convertit le descripteur (jusque là au format string) en structure descripteur
             PILE sim = comparerDescripteursAudio(desc, (descRequete));        // On calcule la similarité entre le fichier recherché et le fichier courant
             if(taillePILE(sim)>=1) {        // Cas où le descripteur récupéré contient au moins une fois le jingle recherché
+                printf("c bon ssa\n");
                 FICHIER * fcomp = creerCelluleFichier(fichCourant, taillePILE(sim));
                 ajouterFichierRecherche(resultats, fcomp);      // On ajoute à la liste triée des fichiers compatibles avec la recherche
             }

@@ -92,41 +92,47 @@ RECHERCHE * rechercheParFichierTexte (char * adresse) {
     // Etape 1 : on crée un descripteur du fichier requête après avoir vérifié son existence 
     FILE * requete = NULL;
     requete = fopen(adresse, "r");
-    DESCRIPTEUR * descRequete = NULL;
+    DESC descRequete;
     if (requete==NULL) {
-        // WIP : affichage de l'erreur 
-        printf("ERREUR - Le fichier à rechercher n'existe pas ou n'a pas pu être ouvert.");
+        // Affichage de l'erreur 
+        displayError("Le fichier à rechercher n'existe pas ou n'a pas pu être ouvert.");
         return NULL;
     } else {
-        // WIP : création du descripteur 
-        descRequete = creerDescripteurTexte(requete);
+        // Création du descripteur 
+        descRequete = creerDescripteur_txt(requete);
         fclose(requete);
     }
 
     // Etape 2 : on compare ce descripteur à tous les descripteurs textes indexés 
     FILE * fichiersIndexes = NULL;
     FILE * descripteurs = NULL;
-    fopen("data/descripteurs/fichiersIndexes.txt", "r");
-    fopen("data/descripteurs/descripteurs.txt", "r");
+    fichiersIndexes = fopen("data/descripteurs/fichiersIndexes.txt", "r");
+    descripteurs = fopen("data/descripteurs/descripteurs.txt", "r");
 
     if (fichiersIndexes==NULL || descripteurs==NULL) {      // Vérification de l'ouverture des fichiers
-        // WIP : affichage de l'erreur 
-        printf("ERREUR - Problème d'accès à la base des descripteurs.");
+        // Affichage de l'erreur
+        displayError("Problème d'accès à la base des descripteurs.");
         return NULL;
     }
 
     char * fichCourant = malloc(200*sizeof(char));      // Stockage de l'adresse du fichier courant
-    char * descCourant = malloc(2000*sizeof(char));     // Stockage du descripteur associé
+    char * descCourant = malloc(20000*sizeof(char));     // Stockage du descripteur associé
     
     RECHERCHE * resultats = creerRechercheVide();     // File qui contiendra les résultats de la recherche
-    float seuil = recupSeuilRecherche();        // WIP : récupérer le seuil de similarité à partir duquel on considère un fichier suffisamment similaire pour être affiché
+    float seuil = 70;       //recupSeuilRecherche();        // WIP : récupérer le seuil de similarité à partir duquel on considère un fichier suffisamment similaire pour être affiché (j'ai mis 70 par défaut)
     
     while(fgets(fichCourant, 200, fichiersIndexes)!=NULL) {     // On passe chaque ligne du fichier listant les fichiers indexés en revue
-        fgets(descCourant, 2000, descripteurs);     // Pour chacune de ces lignes (donc pour chacun de ces fichiers), on récupère le descripteur associé
+        fgets(descCourant, 20000, descripteurs);     // Pour chacune de ces lignes (donc pour chacun de ces fichiers), on récupère le descripteur associé
         
-        if(extensionFichier(fichCourant)=="xml") {      // Cas où le descripteur récupéré est celui d'un fichier texte (on ne traite que ces cas)
-            DESCRIPTEUR * desc = convertirStringDescTexte(descCourant);     // On convertit le descripteur (jusque là au format string) en structure descripteur
-            float sim = comparaisonDescTexte(desc, descRequete);        // On calcule la similarité entre le fichier recherché et le fichier courant
+        if(strcmp(getExtensionOfFile(fichCourant), ".xml")==0) {      // Cas où le descripteur récupéré est celui d'un fichier texte (on ne traite que ces cas)
+            // Conversion de la chaine de char en FIFO de char (c'est plus fun je suppose)
+            FIFO fifodesc;
+            Init_File(fifodesc);
+            for(int i=0; i<strlen(descCourant); i++) {
+                fifodesc = Enfiler(*fifodesc, descCourant[i]);
+            }    
+            DESC desc = conversionStringDescripteur(fifodesc);     // On convertit le descripteur (jusque là au format string) en structure descripteur
+            float sim = comparerDescripteurs(desc, descRequete);        // On calcule la similarité entre le fichier recherché et le fichier courant
             if(sim>=seuil) {        // Cas où le descripteur récupéré a une similarité suffisante avec la recherche
                 FICHIER * fcomp = creerCelluleFichier(fichCourant, sim);
                 ajouterFichierRecherche(resultats, fcomp);      // On ajoute à la liste triée des fichiers compatibles avec la recherche
@@ -134,6 +140,7 @@ RECHERCHE * rechercheParFichierTexte (char * adresse) {
         }
     }
 
+    free(descCourant);
     fclose(fichiersIndexes);
     fclose(descripteurs);
 
@@ -219,19 +226,14 @@ RECHERCHE * rechercheParFichierSon (char * fichier) {
 
     // Etape 1 : on crée un descripteur du fichier requête après avoir vérifié son existence 
     FILE * requete = NULL;
-    
-    //sprintf(adresse,"/requete/%s",adresse);
     char adresse[64];
-    sprintf(adresse,"requete/%s",fichier);
-    //printf(">>>>%s\n",adresse);
+    sprintf(adresse, "requete/%s", fichier);
 
     requete = fopen(adresse, "r");
-
     DescripteurAudio descRequete;
-
     if (requete==NULL) {
-        // Affichage de l'erreur (A ADAPTER) 
-        printf("ERREUR - Le fichier à rechercher n'existe pas ou n'a pas pu être ouvert.");
+        /* Affichage de l'erreur */
+        displayError("Le fichier à rechercher n'existe pas ou n'a pas pu être ouvert.");
         return NULL;
     } else {
 
@@ -243,7 +245,6 @@ RECHERCHE * rechercheParFichierSon (char * fichier) {
         else if (strcmp(getExtensionOfFile(fichier),".bin")==0) numExt=2;
         else numExt=0;
         descRequete = creerDescripteurAudio(requete, tailleFenetre, nbIntervalles, numExt);
-
         fclose(requete);
     }
 
@@ -256,7 +257,7 @@ RECHERCHE * rechercheParFichierSon (char * fichier) {
     descripteurs = fopen("data/descripteurs/descripteurs.txt", "r");
 
     if (fichiersIndexes==NULL || descripteurs==NULL) {      // Vérification de l'ouverture des fichiers
-        // Affichage de l'erreur (A ADAPTER) 
+        // Affichage de l'erreur
         displayError("Problème d'accès à la base des descripteurs.");
         return NULL;
     }
@@ -281,6 +282,8 @@ RECHERCHE * rechercheParFichierSon (char * fichier) {
             }
         }
     }
+
+    free(descCourant);
 
     fclose(fichiersIndexes);
     fclose(descripteurs);

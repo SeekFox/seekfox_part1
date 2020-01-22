@@ -3,7 +3,7 @@
 #include <math.h>
 #include <string.h>
 #include <ctype.h>
-#include "header_image.h"
+#include "../include/header_image.h"
 
 
 int quantifierRGB(int composante_rouge,int composante_vert,int composante_bleue,int n){

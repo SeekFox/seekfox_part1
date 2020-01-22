@@ -216,6 +216,7 @@ char* descripteurAudioToString(DescripteurAudio descToString){	//nbSubdivisions;
 
 DescripteurAudio stringToDescripteurAudio(char* stringToParse){
 	DescripteurAudio newDescripteur;
+
 	Histogramme newHistogram = initHistogramme();
 	PILE newPile;
 	unsigned long newFenetreName;

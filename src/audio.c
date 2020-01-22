@@ -280,6 +280,8 @@ float getSimilarityValue(PILE* pile1, PILE* pile2, int tailleFenetre){
 
 PILE comparerDescripteursAudio(DescripteurAudio jingle, DescripteurAudio fichierAudio){
 	if(jingle.nbFenetres > fichierAudio.nbFenetres){
+		printf("segfault1?\n");
+		//printf("f %lu %lu\n",jingle.nbFenetres,fichierAudio.nbFenetres);
 		return NULL;
 	}
 	int jingleEstComprisDansLeFichier = 0;
@@ -287,6 +289,8 @@ PILE comparerDescripteursAudio(DescripteurAudio jingle, DescripteurAudio fichier
 	PILE listeDesTimingsDesJingle = init_PILE();
 
 	if(jingle.tailleFenetre != fichierAudio.tailleFenetre || jingle.nbSubdivisions != fichierAudio.nbSubdivisions)
+		printf("segfault2?\n");
+		//printf("2 %u %u %u %u\n",jingle.tailleFenetre,fichierAudio.tailleFenetre,jingle.nbSubdivisions,fichierAudio.nbSubdivisions);
 		return NULL;
 
 	Histogramme jingleHist = jingle.data;		//Juste pour éviter de taper jingle.data a chaque fois	

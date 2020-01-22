@@ -22,7 +22,8 @@ FICHIER * initCelluleFichier () {           // Initialise une cellule vide
 FICHIER * creerCelluleFichier (char * nom, float sim) {         // Crée une cellule à partir de l'adresse d'un fichier et d'un taux de similarité
     FICHIER * f = initCelluleFichier();
     f->adresse = malloc(strlen(nom)*sizeof(char));
-    f->adresse = nom;
+    strcpy(f->adresse,nom);
+    (f->adresse)[0] = ' ';
     f->similarite = sim;
     f->precedent = initCelluleFichier();
     f->precedent = NULL;
@@ -76,7 +77,7 @@ void afficherResultats(RECHERCHE *r){
     FICHIER * courant = r->premier;
     int i=1;
     while(courant!=NULL) {
-        printf("%d - %s -> %.2f%c \n", i, courant->adresse, courant->similarite,'%');
+        printf("\t%d -%-20s -> %.2f%c \n", i, courant->adresse, courant->similarite,'%');
         courant = courant->suivant;
         i++;
     }
@@ -245,11 +246,14 @@ RECHERCHE * rechercheParFichierSon (char * fichier) {
     RECHERCHE * resultats = creerRechercheVide();     // File qui contiendra les résultats de la recherche
     
     while(fgets(fichCourant, 200, fichiersIndexes)!=NULL) {     // On passe chaque ligne du fichier listant les fichiers indexés en revue
+        fichCourant[strcspn(fichCourant,"\r\n")] = 0; //Suppression du \n
+        sprintf(fichCourant,"%s",strrchr(getNameOfFile(fichCourant),'/'));
         fgets(descCourant, 200000, descripteurs);     // Pour chacune de ces lignes (donc pour chacun de ces fichiers), on récupère le descripteur associé
         
         if((strcmp(getExtensionOfFile(adresse),".wav")==0) || (strcmp(getExtensionOfFile(adresse),".bin")==0)) {      // Cas où le descripteur récupéré est celui d'un fichier son (on ne traite que ces cas)
-            //printf(">>%s  \n",fichCourant);
+            printf(">>%s  \n",fichCourant);
             DescripteurAudio desc = stringToDescripteurAudio(descCourant);     // On convertit le descripteur (jusque là au format string) en structure descripteur
+            printf("avant\n");
             sim = comparerDescripteursAudio(descRequete,desc);        // On calcule la similarité entre le fichier recherché et le fichier courant
             if(taillePILE(sim)>=1) {        // Cas où le descripteur récupéré contient au moins une fois le jingle recherché
                 FICHIER * fcomp = creerCelluleFichier(fichCourant, taillePILE(sim));

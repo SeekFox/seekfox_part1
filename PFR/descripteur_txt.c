@@ -6,6 +6,7 @@
 
 
 
+
 DESC creerDescripteur_txt(FILE *fichier_txt){
 	DESC descripteur;
 	descripteur.nb_lettres = 0;

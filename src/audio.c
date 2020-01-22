@@ -300,7 +300,7 @@ PILE comparerDescripteursAudio(DescripteurAudio jingle, DescripteurAudio fichier
 			jingleEstComprisDansLeFichier = 1;
 			
 			while((jingleHist != NULL) && (fileHist!=NULL) && (jingleEstComprisDansLeFichier == 1)){			// On a la premiere fenetre, on vérifie que toutes les fenetres ressemblent une a une (probablement pas une bonne idée)
-				printf(">1> %d\n",(int)(fileHist==NULL));
+
 				if(getSimilarityValue(&jingleHist->subdivision, &fileHist->subdivision, jingle.tailleFenetre) > SIMLIARITY_MAX_VALUE){		// Si le truc est trop différent, on dit que c'est pas bon
 					jingleEstComprisDansLeFichier = 0;
 					break;
@@ -309,9 +309,8 @@ PILE comparerDescripteursAudio(DescripteurAudio jingle, DescripteurAudio fichier
 					fileHist = fileHist->nextFenetre;
 				}
 			}
-			printf(">2> %d\n",(int)(fileHist==NULL));
+
 			if(jingleEstComprisDansLeFichier == 1 && fileHist != NULL){	//Si ici on s'est arrété parce que le jingle est fini, et pas parce que y'a eut une différence ou la fin du fichier audio
-				printf("On va ajouter des choses dans la pile\n");
 				nameToSeconds = (int)((fileHist->name - jingle.nbFenetres) *jingle.tailleFenetre* SECONDE_PAR_VALEUR);
 				//printf("On est sur le : %d\n", fileHist->name * tailleFenetre * SECONDE_PAR_VALEUR);
 				listeDesTimingsDesJingle = emPILEVal(listeDesTimingsDesJingle, nameToSeconds);	//C'est que le jingle est bien compris dedans
@@ -322,6 +321,5 @@ PILE comparerDescripteursAudio(DescripteurAudio jingle, DescripteurAudio fichier
 		if(fileHist != NULL)
 			fileHist = fileHist->nextFenetre;
 	}
-	affiche_PILE(listeDesTimingsDesJingle);
 	return listeDesTimingsDesJingle;
 }

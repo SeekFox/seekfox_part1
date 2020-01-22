@@ -72,12 +72,11 @@ void ajouterFichierRecherche (RECHERCHE * r, FICHIER * f) {     // Ajoute un fic
 //==================================================================================================================================
 
 void afficherResultats(RECHERCHE *r){
-    printf("Affichage des resultats\n");
-    printf("\n");
+    //printf("Affichage des resultats\n");
     FICHIER * courant = r->premier;
     int i=1;
     while(courant!=NULL) {
-        printf("%d - %s -> %f\n", i, courant->adresse, courant->similarite);
+        printf("%d - %s -> %.2f%c \n", i, courant->adresse, courant->similarite,'%');
         courant = courant->suivant;
         i++;
     }
@@ -229,6 +228,7 @@ RECHERCHE * rechercheParFichierSon (char * fichier) {
     // Etape 2 : on compare ce descripteur à tous les descripteurs sons indexés 
     FILE * fichiersIndexes = NULL;
     FILE * descripteurs = NULL;
+    PILE sim = init_PILE();
 
     fichiersIndexes = fopen("data/descripteurs/fichiersIndexes.txt", "r");
     descripteurs = fopen("data/descripteurs/descripteurs.txt", "r");
@@ -248,11 +248,10 @@ RECHERCHE * rechercheParFichierSon (char * fichier) {
         fgets(descCourant, 200000, descripteurs);     // Pour chacune de ces lignes (donc pour chacun de ces fichiers), on récupère le descripteur associé
         
         if((strcmp(getExtensionOfFile(adresse),".wav")==0) || (strcmp(getExtensionOfFile(adresse),".bin")==0)) {      // Cas où le descripteur récupéré est celui d'un fichier son (on ne traite que ces cas)
-            printf(">>%s  \n",fichCourant);
+            //printf(">>%s  \n",fichCourant);
             DescripteurAudio desc = stringToDescripteurAudio(descCourant);     // On convertit le descripteur (jusque là au format string) en structure descripteur
-            PILE sim = comparerDescripteursAudio(desc, (descRequete));        // On calcule la similarité entre le fichier recherché et le fichier courant
+            sim = comparerDescripteursAudio(descRequete,desc);        // On calcule la similarité entre le fichier recherché et le fichier courant
             if(taillePILE(sim)>=1) {        // Cas où le descripteur récupéré contient au moins une fois le jingle recherché
-                printf("c bon ssa\n");
                 FICHIER * fcomp = creerCelluleFichier(fichCourant, taillePILE(sim));
                 ajouterFichierRecherche(resultats, fcomp);      // On ajoute à la liste triée des fichiers compatibles avec la recherche
             }

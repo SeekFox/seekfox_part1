@@ -6,6 +6,7 @@
 #include "../include/audio.h"
 #include "../include/config.h"
 #include "../include/interact.h"
+#include "../include/header_image.h"
 
 //==================================================================================================================================
 // FONCTIONS DE MANIPULATION DES STRUCTURES 
@@ -139,59 +140,79 @@ RECHERCHE * rechercheParFichierTexte (char * adresse) {
     return resultats;
 }
 */
-/*
-RECHERCHE * rechercheParFichierImage (char * adresse) {
+RECHERCHE * rechercheParFichierImage (char * fichier) {
 
-    // Etape 1 : on crée un descripteur du fichier requête après avoir vérifié son existence 
+    /* Etape 1 : on crée un descripteur du fichier requête après avoir vérifié son existence */
     FILE * requete = NULL;
+    char adresse[64];
+    sprintf(adresse, "requete/%s", fichier);
     requete = fopen(adresse, "r");
-    DESCRIPTEUR * descRequete = NULL;
+    descripteur descRequete;
     if (requete==NULL) {
-        // WIP : affichage de l'erreur 
-        printf("ERREUR - Le fichier à rechercher n'existe pas ou n'a pas pu être ouvert.");
+        /* Affichage de l'erreur */
+        displayError("Le fichier à rechercher n'existe pas ou n'a pas pu être ouvert.");
         return NULL;
     } else {
-        // WIP : création du descripteur 
-        descRequete = creerDescripteurImage(requete);
-        fclose(requete);
+        /* Création du descripteur */
+        fclose(requete);                // fclose placé au début car generer_descripteur ne prend pas de FILE* en paramètre
+        int taille_max = 20000;         // Taille max du descripteur
+        generer_descripteur(&descRequete, adresse, fichier,&taille_max, getNbBits());     // Quantification sur 2 bits
     }
 
-    // Etape 2 : on compare ce descripteur à tous les descripteurs images indexés 
+    /* Etape 2 : on compare ce descripteur à tous les descripteurs images indexés */
     FILE * fichiersIndexes = NULL;
     FILE * descripteurs = NULL;
-    fopen("data/descripteurs/fichiersIndexes.txt", "r");
-    fopen("data/descripteurs/descripteurs.txt", "r");
+    fichiersIndexes = fopen("data/descripteurs/fichiersIndexes.txt", "r");
+    descripteurs = fopen("data/descripteurs/descripteurs.txt", "r");
 
     if (fichiersIndexes==NULL || descripteurs==NULL) {      // Vérification de l'ouverture des fichiers
-        // WIP : affichage de l'erreur 
-        printf("ERREUR - Problème d'accès à la base des descripteurs.");
+        /* Affichage de l'erreur */
+        displayError("ERREUR - Problème d'accès à la base des descripteurs.");
         return NULL;
     }
 
     char * fichCourant = malloc(200*sizeof(char));      // Stockage de l'adresse du fichier courant
-    char * descCourant = malloc(2000*sizeof(char));     // Stockage du descripteur associé
+    char * descCourant = malloc(20000*sizeof(char));     // Stockage du descripteur associé
     
     RECHERCHE * resultats = creerRechercheVide();     // File qui contiendra les résultats de la recherche
-    float seuil = recupSeuilRecherche();        // WIP : récupérer le seuil de similarité à partir duquel on considère un fichier suffisamment similaire pour être affiché
+    //float seuil = recupSeuilRecherche();        // WIP : récupérer le seuil de similarité à partir duquel on considère un fichier suffisamment similaire pour être affiché
     
+    // Explications de ce qui suit : il n'y a pas de fonction pour comparer 2 descripteurs image, etla fonction recherche a été faite 
+    // par Oualid, donc pour m'adapter à cette fonction je transfère tous les descripteurs image indexés dans le fichier ouvert ci-dessous.
+    // C'est ce fichier qui est utilisé dans la fonction de oualid comme base de descripteurs.
+    // (D'ailleurs, je sais pas à quoi correspond le dernier paramètre, donc j'ai mis 10)
+    FILE * descImages = NULL;
+    descImages = fopen("../data/base_descripteur_image", "w+");
+    if(descImages==NULL) {
+        displayError("Problème dans la recherche image.");
+        return NULL;
+    }
+
     while(fgets(fichCourant, 200, fichiersIndexes)!=NULL) {     // On passe chaque ligne du fichier listant les fichiers indexés en revue
-        fgets(descCourant, 2000, descripteurs);     // Pour chacune de ces lignes (donc pour chacun de ces fichiers), on récupère le descripteur associé
+        fgets(descCourant, 20000, descripteurs);     // Pour chacune de ces lignes (donc pour chacun de ces fichiers), on récupère le descripteur associé
         
-        if(extensionFichier(fichCourant)=="jpg" || extensionFichier(fichCourant)=="bmp") {      // Cas où le descripteur récupéré est celui d'un fichier image (on ne traite que ces cas)
-            DESCRIPTEUR * desc = convertirStringDescImage(descCourant);     // On convertit le descripteur (jusque là au format string) en structure descripteur
+        if(strcmp(getExtensionOfFile(fichCourant), ".jpg")==0 || strcmp(getExtensionOfFile(fichCourant), ".bmp")==0) {      // Cas où l'adresse récupérée est celle d'un fichier image (on ne traite que ces cas)
+            fprintf(descImages, "%s", descCourant);        
+            /*descripteur * desc = toDescripteur(descCourant);     // On convertit son descripteur (jusque là au format string) en structure descripteur
             float sim = comparaisonDescImage(desc, descRequete);        // On calcule la similarité entre le fichier recherché et le fichier courant
             if(sim>=seuil) {        // Cas où le descripteur récupéré a une similarité suffisante avec la recherche
                 FICHIER * fcomp = creerCelluleFichier(fichCourant, sim);
                 ajouterFichierRecherche(resultats, fcomp);      // On ajoute à la liste triée des fichiers compatibles avec la recherche
-            }
+            }*/
         }
     }
+
+    fclose(descImages);
+    rechercher_image(adresse, fichier, 10);
+
+    free(descCourant);
 
     fclose(fichiersIndexes);
     fclose(descripteurs);
 
     return resultats;
-}*/
+}
+
 
 RECHERCHE * rechercheParFichierSon (char * fichier) {
     // IMPORTANT : pour les fichiers audio, les résultats de la recherche sont triés par nombre de fenêtres de corpus contenant le jingle et non par similitude 
@@ -252,9 +273,7 @@ RECHERCHE * rechercheParFichierSon (char * fichier) {
         
         if((strcmp(getExtensionOfFile(adresse),".wav")==0) || (strcmp(getExtensionOfFile(adresse),".bin")==0)) {      // Cas où le descripteur récupéré est celui d'un fichier son (on ne traite que ces cas)
             printf(">>%s  \n",fichCourant);
-            //printf("%s\n",descCourant);
             DescripteurAudio desc = stringToDescripteurAudio(descCourant);     // On convertit le descripteur (jusque là au format string) en structure descripteur
-            printf("avant\n");
             sim = comparerDescripteursAudio(descRequete,desc);        // On calcule la similarité entre le fichier recherché et le fichier courant
             if(taillePILE(sim)>=1) {        // Cas où le descripteur récupéré contient au moins une fois le jingle recherché
                 FICHIER * fcomp = creerCelluleFichier(fichCourant, taillePILE(sim));

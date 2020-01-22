@@ -14,6 +14,7 @@
 #include <dirent.h>
 #include "../include/indexation.h"
 #include "../include/audio.h"
+#include "../include/header_image.h"
 
 #ifndef __INTERACT__
     #include "../include/interact.h"
@@ -254,7 +255,7 @@ void empilementDesDescripteurs (PILEDESC * pileDesc, PILEDESC * adrFichiers) {  
         }
         if (strcmp(ext, ".jpg")==0 || strcmp(ext, ".bmp")==0) {       // Cas d'une image
             //printf("C'est une image.\n");
-            //DescripteurImage di = creerDescripteurImage(adrDoc);
+            //descripteur di = creerDescripteurImage(adrDoc);
             //char * desc = convertionDescripteurImageString(di);
             char * desc = "Image";
             DESC * strDesc = creerDesc(desc);

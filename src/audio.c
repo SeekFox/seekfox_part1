@@ -38,6 +38,7 @@ Histogramme addFenetre(Histogramme oldHistogram){
 Histogramme appendFenetre(Histogramme oldHistogram, unsigned long nameOfNewFenetre, PILE pileOfNewFenetre){	//Pas optimisé, mais flemme de faire 
 	Histogramme index = oldHistogram;																		//mieux j'ai pas trop le temps là
 	Histogramme newFenetre;
+
 	newFenetre = (Histogramme)malloc(sizeof(Fenetre));
 	newFenetre->name = nameOfNewFenetre;
 	newFenetre->subdivision = pileOfNewFenetre;
@@ -281,8 +282,6 @@ float getSimilarityValue(PILE* pile1, PILE* pile2, int tailleFenetre){
 
 PILE comparerDescripteursAudio(DescripteurAudio jingle, DescripteurAudio fichierAudio){
 	if(jingle.nbFenetres > fichierAudio.nbFenetres){
-		printf("segfault1?\n");
-		//printf("f %lu %lu\n",jingle.nbFenetres,fichierAudio.nbFenetres);
 		return NULL;
 	}
 	int jingleEstComprisDansLeFichier = 0;
@@ -290,8 +289,6 @@ PILE comparerDescripteursAudio(DescripteurAudio jingle, DescripteurAudio fichier
 	PILE listeDesTimingsDesJingle = init_PILE();
 
 	if(jingle.tailleFenetre != fichierAudio.tailleFenetre || jingle.nbSubdivisions != fichierAudio.nbSubdivisions)
-		printf("segfault2?\n");
-		//printf("2 %u %u %u %u\n",jingle.tailleFenetre,fichierAudio.tailleFenetre,jingle.nbSubdivisions,fichierAudio.nbSubdivisions);
 		return NULL;
 
 	Histogramme jingleHist = jingle.data;		//Juste pour éviter de taper jingle.data a chaque fois	
@@ -305,7 +302,7 @@ PILE comparerDescripteursAudio(DescripteurAudio jingle, DescripteurAudio fichier
 			jingleEstComprisDansLeFichier = 1;
 			
 			while((jingleHist != NULL) && (fileHist!=NULL) && (jingleEstComprisDansLeFichier == 1)){			// On a la premiere fenetre, on vérifie que toutes les fenetres ressemblent une a une (probablement pas une bonne idée)
-
+				
 				if(getSimilarityValue(&jingleHist->subdivision, &fileHist->subdivision, jingle.tailleFenetre) > SIMLIARITY_MAX_VALUE){		// Si le truc est trop différent, on dit que c'est pas bon
 					jingleEstComprisDansLeFichier = 0;
 					break;
@@ -326,5 +323,6 @@ PILE comparerDescripteursAudio(DescripteurAudio jingle, DescripteurAudio fichier
 		if(fileHist != NULL)
 			fileHist = fileHist->nextFenetre;
 	}
+
 	return listeDesTimingsDesJingle;
 }

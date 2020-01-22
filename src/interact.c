@@ -66,6 +66,7 @@ void displayMenu(int *isAdmin, enum FSM * state, char * file){
 
     case R_IMAGE:
       printf("Recherche par IMAGE\n");
+      afficherResultats(rechercheParFichierImage(file));
       //TODO : Recherche par Image
       (*state) = TITLE;
       break;
@@ -332,7 +333,7 @@ int convertStringChoiceToInt(char * str, int max){
 
 char * getExtensionOfFile(char * file){
   char * ext = "";
-  ext = (char *)malloc(sizeof(char)*4);
+  ext = (char *)malloc(sizeof(char)*5);
   strcpy(ext, strrchr(file,'.'));
   //printf("\t\t>%s< >> >%s<\n",file,ext);
   return ext;
@@ -340,7 +341,7 @@ char * getExtensionOfFile(char * file){
 
 char * getNameOfFile(char * file){
   char * s = NULL;
-  s = (char *)malloc(( strlen(file) ) * sizeof(char));
+  s = (char *)malloc(( strlen(file)+1) * sizeof(char));
   strcpy(s,"");
 
   if( strchr(file,'.') != NULL){

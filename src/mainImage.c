@@ -4,7 +4,7 @@
 #include <string.h>
 #include <ctype.h>
 #include "header_image.h"
-
+/*
 
 int main(void){
 	printf("debut programme\n");
@@ -29,4 +29,4 @@ int main(void){
 
 	printf("fin programme\n");
 	return 0;
-}
+}*/

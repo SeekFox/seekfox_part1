@@ -148,7 +148,7 @@ RECHERCHE * rechercheParFichierTexte (char * adresse) {
 }
 */
 RECHERCHE * rechercheParFichierImage (char * fichier) {
-
+    
     /* Etape 1 : on crée un descripteur du fichier requête après avoir vérifié son existence */
     FILE * requete = NULL;
     char adresse[64];
@@ -162,10 +162,11 @@ RECHERCHE * rechercheParFichierImage (char * fichier) {
     } else {
         /* Création du descripteur */
         fclose(requete);                // fclose placé au début car generer_descripteur ne prend pas de FILE* en paramètre
-        int taille_max = 20000;         // Taille max du descripteur
-        generer_descripteur(&descRequete, adresse, fichier,&taille_max, getNbBits());     // Quantification sur 2 bits
+        int taille_max = 0;         // Taille max du descripteur
+        generer_descripteur(&descRequete, "requete/", fichier,&taille_max, getNbBits());     // Quantification sur 2 bits
     }
-
+    
+    
     /* Etape 2 : on compare ce descripteur à tous les descripteurs images indexés */
     FILE * fichiersIndexes = NULL;
     FILE * descripteurs = NULL;
@@ -177,6 +178,7 @@ RECHERCHE * rechercheParFichierImage (char * fichier) {
         displayError("ERREUR - Problème d'accès à la base des descripteurs.");
         return NULL;
     }
+    
 
     char * fichCourant = malloc(200*sizeof(char));      // Stockage de l'adresse du fichier courant
     char * descCourant = malloc(20000*sizeof(char));     // Stockage du descripteur associé
@@ -189,17 +191,18 @@ RECHERCHE * rechercheParFichierImage (char * fichier) {
     // C'est ce fichier qui est utilisé dans la fonction de oualid comme base de descripteurs.
     // (D'ailleurs, je sais pas à quoi correspond le dernier paramètre, donc j'ai mis 10)
     FILE * descImages = NULL;
-    descImages = fopen("../data/base_descripteur_image", "w+");
+    descImages = fopen("data/base_descripteur_image", "w+");
     if(descImages==NULL) {
         displayError("Problème dans la recherche image.");
         return NULL;
     }
-
+    
     while(fgets(fichCourant, 200, fichiersIndexes)!=NULL) {     // On passe chaque ligne du fichier listant les fichiers indexés en revue
         fgets(descCourant, 20000, descripteurs);     // Pour chacune de ces lignes (donc pour chacun de ces fichiers), on récupère le descripteur associé
-        
-        if(strcmp(getExtensionOfFile(fichCourant), ".jpg")==0 || strcmp(getExtensionOfFile(fichCourant), ".bmp")==0) {      // Cas où l'adresse récupérée est celle d'un fichier image (on ne traite que ces cas)
-            fprintf(descImages, "%s", descCourant);        
+
+        if(strcmp(getExtensionOfFile(fichCourant), ".jpg\n")==0 || strcmp(getExtensionOfFile(fichCourant), ".bmp\n")==0) {      // Cas où l'adresse récupérée est celle d'un fichier image (on ne traite que ces cas)
+            fprintf(descImages, "%s", descCourant); 
+                  
             /*descripteur * desc = toDescripteur(descCourant);     // On convertit son descripteur (jusque là au format string) en structure descripteur
             float sim = comparaisonDescImage(desc, descRequete);        // On calcule la similarité entre le fichier recherché et le fichier courant
             if(sim>=seuil) {        // Cas où le descripteur récupéré a une similarité suffisante avec la recherche
@@ -210,8 +213,9 @@ RECHERCHE * rechercheParFichierImage (char * fichier) {
     }
 
     fclose(descImages);
-    rechercher_image(adresse, fichier, 10);
-
+    
+    rechercher_image("requete/", fichier, 10);
+    printf("Kikou1\n");
     free(descCourant);
 
     fclose(fichiersIndexes);

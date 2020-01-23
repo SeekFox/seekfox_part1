@@ -16,11 +16,15 @@ void main(void){
 	if (fichier == NULL)
 		printf("impossible de localiser le fichier \n");
 	else 
-		Descri = creerDescripteur_txt(fichier);
+		Descri = creerDescripteur_txt(fichier);		
 	fclose(fichier);
+	printf("%d>>\n", Descri.nb_lettres);
 	printf("TEST toString \n");
-	char* String = descToString(Descri);
-	printf("%s",String);
+	char* test="";
+	test = descToString(Descri);
+
+	strcpy(test, descToString(Descri));
+	printf("%s",test);
 	/*printf("TEST COMPARAISON \n");
 	if(descripteursIdentiques(Descri, Descri))
 		printf("le descripteur test est bien identique à lui meme");

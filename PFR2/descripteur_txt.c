@@ -5,15 +5,15 @@
 #include "FIFO.h"
 
 
-DESC creerDescripteur_txt(FILE* fichier_txt) {
-	DESC descripteur;
+DESCTXT creerDescripteur_txt(FILE* fichier_txt) {
+	DESCTXT descripteur;
 	FIFO_M FILE_MC;
 	char tempo[TAILLE_MAX];
 	int j=0, i=0;
 	char chaine[TAILLE_MAX] = "";
 	descripteur.nb_lettres = 0;
 	descripteur.nb_mots = 0;
-	descripteur.mot_cle = NULL;
+	descripteur.fmot_cle = NULL;
 	do {
 		fgets(chaine, TAILLE_MAX, fichier_txt);
 	} while (chaine != "");
@@ -36,15 +36,16 @@ DESC creerDescripteur_txt(FILE* fichier_txt) {
 			descripteur.nb_mots++;
 		}
 		
-			descripteur.mot_cle = &FILE_MC;
-		}
+			descripteur.fmot_cle = &FILE_MC;
+			return descripteur;
+	}
 
 
-float comparerDescripteurs(DESC d1, DESC d2){
+float comparerDescripteurs(DESCTXT d1, DESCTXT d2){
 	FIFO fd1, fd2;
 	float pourcentage, total;
-	fd1 = descToString(d1);
-	fd2 = descToString(d2);
+	fd1 = descToFIFO(d1);
+	fd2 = descToFIFO(d2);
 	if (!FIFO_diff(&fd1, &fd2))
 		printf("Les 2 descripteurs sont identiques");
 	Cell* temp1 = fd1.debut_file;
@@ -80,20 +81,38 @@ int motExiste(FIFO_M *file, char test[]) {
 	return( motexiste);
 }
 
-char[] descToString(DESC d){
-	char f=tab[TAILLE_MAX];
-	Cell_M* memoire = file->debut;
+
+FIFO descToFIFO(DESCTXT d) {
+	FIFO F; 
+	F = Enfiler(&F, d.nb_lettres);
+	F = Enfiler(&F, d.nb_mots);
+	Cell_M* memoire = d.fmot_cle->debut;
+	while (d.fmot_cle->debut != NULL) {
+		F = Enfiler(&F, (d.fmot_cle->debut->mot_cle.mot));
+		F = Enfiler(&F, (d.fmot_cle->debut->mot_cle.occurence));
+		d.fmot_cle->debut = d.fmot_cle->debut->ptr_suiv;
+	}
+	d.fmot_cle->debut = memoire;
+	return(f);
+}
+
+char descToString(DESCTXT d){
+	char tab[TAILLE_MAX];
+	int c = 0;
+	Cell_M* memoire = d.fmot_cle->debut;
 	tab[0] = d.nb_lettres;
 	tab[1] = ' ';
 	tab[2] = d.nb_mots;
 	tab[3] = ' ';
-	while (d.mot_cle->debut != NULL) {
+	while (d.fmot_cle->debut != NULL) {
 		d.
 	}
+
+	d.fmot_cle->debut = memoire;
 	return(tab);
 }
 
-int descripteursIdentiques(DESC d1, DESC d2){
+int descripteursIdentiques(DESCTXT d1, DESCTXT d2){
 	return(comparerDescripteurs(d1, d2)==100);
 }
 
@@ -107,8 +126,8 @@ void afficheTxt(FILE *fichier_txt) {
 }
 
 void MInit_File(FIFO_M f) {
-	f.debut_file = NULL;
-	f.fin_file = NULL;
+	f.debut = NULL;
+	f.fin = NULL;
 }
 
 int MFile_estVide(FIFO_M f) {
@@ -118,7 +137,7 @@ int MFile_estVide(FIFO_M f) {
 FIFO_M MEnfiler(FIFO_M* f, char e[]) {
 	Cell_M* temp;
 	temp = (Cell_M*)malloc(sizeof(Cell_M));
-	memcpy((*temp).mot_cle, e, strlen(e));
+	memcpy(temp->mot_cle.mot, e, strlen(e));
 
 	(*temp).ptr_suiv = f->fin;
 	if (f->debut == NULL)

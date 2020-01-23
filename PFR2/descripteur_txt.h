@@ -25,17 +25,18 @@ typedef struct FIFOMotCle {
 typedef struct Descripteur_txt{
 	int nb_mots;
 	int nb_lettres;
-	FIFO_M *mot_cle;
-}DESC;
+	FIFO_M *fmot_cle;
+}DESCTXT;
 
 
 
-DESC creerDescripteur_txt(FILE *fichier_txt);
-float comparerDescripteurs(DESC d1, DESC d2);
-FIFO descToString(DESC d);
-int descripteursIdentiques(DESC d1, DESC d2);
+DESCTXT creerDescripteur_txt(FILE *fichier_txt);
+float comparerDescripteurs(DESCTXT d1, DESCTXT d2);
+char descToString(DESCTXT d);
+int descripteursIdentiques(DESCTXT d1, DESCTXT d2);
 void afficheTxt(FILE *fichier_txt);
 int motExiste(FIFO_M* file, char* test);
+FIFO descToFIFO(DESCTXT d);
 
 void MInit_File(FIFO_M f);
 int MFile_estVide(FIFO_M f);

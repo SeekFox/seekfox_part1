@@ -100,14 +100,14 @@ void afficherResultats(RECHERCHE *r,int typeRecherche){
     if(typeRecherche == R_SON){
         printf("\t%d -%-20s -> %.0f occurence%s -> ", i, courant->adresse, courant->similarite,(courant->similarite>1?"s":""));
         for(int j = 0; j < courant->similarite; j++){
-            printf("%ds ", courant->tps[j]);
+            printf("%ds \n", courant->tps[j]);
         }
         printf("\0");
     }
     else{
         while(courant!=NULL) {
             printf("\t%d -%-20s -> %.2f%c", i, courant->adresse, courant->similarite);
-            printf("%c",'%');
+            printf("%c\n",'%');
             courant = courant->suivant;
             i++;
         }
@@ -302,11 +302,10 @@ RECHERCHE * rechercheParFichierSon (char * fichier) {
     
     while(fgets(fichCourant, 200, fichiersIndexes)!=NULL) {     // On passe chaque ligne du fichier listant les fichiers indexés en revue
         fichCourant[strcspn(fichCourant,"\r\n")] = 0; //Suppression du \n
-        sprintf(fichCourant,"%s",strrchr(getNameOfFile(fichCourant),'/'));
-        fgets(descCourant, 200000, descripteurs);     // Pour chacune de ces lignes (donc pour chacun de ces fichiers), on récupère le descripteur associé
         
-        if((strcmp(getExtensionOfFile(adresse),".wav")==0) || (strcmp(getExtensionOfFile(adresse),".bin")==0)) {      // Cas où le descripteur récupéré est celui d'un fichier son (on ne traite que ces cas)
-            printf(">>%s  \n",fichCourant);
+        fgets(descCourant, 200000, descripteurs);     // Pour chacune de ces lignes (donc pour chacun de ces fichiers), on récupère le descripteur associé
+        if((strcmp(getExtensionOfFile(fichCourant),".wav")==0) || (strcmp(getExtensionOfFile(fichCourant),".bin")==0)) {      // Cas où le descripteur récupéré est celui d'un fichier son (on ne traite que ces cas)
+            sprintf(fichCourant,"%s",strrchr(getNameOfFile(fichCourant),'/'));
             DescripteurAudio desc = stringToDescripteurAudio(descCourant);     // On convertit le descripteur (jusque là au format string) en structure descripteur
             sim = comparerDescripteursAudio(descRequete,desc);        // On calcule la similarité entre le fichier recherché et le fichier courant
             int tps;            // Durée du passage le plus long en commun

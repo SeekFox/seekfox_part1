@@ -65,32 +65,33 @@ void displayMenu(int *isAdmin, enum FSM * state, char * file){
       break;
 
     case R_IMAGE:
-      printf("Recherche par IMAGE\n");
+      printTitle("Recherche par IMAGE");
       afficherResultats(rechercheParFichierImage(file),R_IMAGE);
       //TODO : Recherche par Image
       (*state) = TITLE;
       break;
 
     case R_TEXTE:
-      printf("Recherche par TEXTE\n");
+      printTitle("Recherche par TEXTE");
       //TODO : Recherche par TEXTE
       (*state) = TITLE;
       break;
 
     case R_SON:
-      printf("Recherche par SON\n");
+      printTitle("Recherche par SON");
+      printf("%s\n",file);
       afficherResultats(rechercheParFichierSon(file),R_SON);
       (*state) = TITLE;
       break;
 
     case R_KEYWORD:
-      printf("Recherche par MOT CLES\n");
+      printTitle("Recherche par MOT CLES\n");
       //TODO : Recherche par MOT CLES
       (*state) = TITLE;
       break;
 
     case R_COLOR:
-      printf("Recherche par COULEUR DOMINANTE\n");
+      printTitle("Recherche par COULEUR DOMINANTE\n");
       //TODO : Recherche par COULEUR DOMINANTE
       (*state) = TITLE;
       break;

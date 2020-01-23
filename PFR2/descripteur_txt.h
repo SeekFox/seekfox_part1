@@ -26,14 +26,14 @@ typedef struct Descripteur_txt{
 	int nb_mots;
 	int nb_lettres;
 	FIFO_M *mot_cle;
-}DESC;
+}DESCTXT;
 
 
 
 DESC creerDescripteur_txt(FILE *fichier_txt);
-float comparerDescripteurs(DESC d1, DESC d2);
-FIFO descToString(DESC d);
-int descripteursIdentiques(DESC d1, DESC d2);
+float comparerDescripteurs(DESCTXT d1, DESCTXT d2);
+FIFO descToString(DESCTXT d);
+int descripteursIdentiques(DESCTXT d1, DESCTXT d2);
 void afficheTxt(FILE *fichier_txt);
 int motExiste(FIFO_M* file, char* test);
 

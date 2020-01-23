@@ -5,8 +5,8 @@
 #include "FIFO.h"
 
 
-DESC creerDescripteur_txt(FILE* fichier_txt) {
-	DESC descripteur;
+DESCTXT creerDescripteur_txt(FILE* fichier_txt) {
+	DESCTXT descripteur;
 	FIFO_M FILE_MC;
 	char tempo[TAILLE_MAX];
 	int j=0, i=0;
@@ -40,7 +40,7 @@ DESC creerDescripteur_txt(FILE* fichier_txt) {
 		}
 
 
-float comparerDescripteurs(DESC d1, DESC d2){
+float comparerDescripteurs(DESCTXT d1, DESCTXT d2){
 	FIFO fd1, fd2;
 	float pourcentage, total;
 	fd1 = descToString(d1);
@@ -80,7 +80,7 @@ int motExiste(FIFO_M *file, char test[]) {
 	return( motexiste);
 }
 
-char[] descToString(DESC d){
+char[] descToString(DESCTXT d){
 	char f=tab[TAILLE_MAX];
 	Cell_M* memoire = file->debut;
 	tab[0] = d.nb_lettres;
@@ -93,7 +93,7 @@ char[] descToString(DESC d){
 	return(tab);
 }
 
-int descripteursIdentiques(DESC d1, DESC d2){
+int descripteursIdentiques(DESCTXT d1, DESCTXT d2){
 	return(comparerDescripteurs(d1, d2)==100);
 }
 

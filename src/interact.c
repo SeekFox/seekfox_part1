@@ -79,9 +79,7 @@ void displayMenu(int *isAdmin, enum FSM * state, char * file){
 
     case R_SON:
       printf("Recherche par SON\n");
-      //printf(">>>%s\n",file);
       afficherResultats(rechercheParFichierSon(file),R_SON);
-      //TODO : Recherche par SON
       (*state) = TITLE;
       break;
 

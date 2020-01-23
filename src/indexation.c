@@ -15,6 +15,7 @@
 #include "../include/indexation.h"
 #include "../include/audio.h"
 #include "../include/header_image.h"
+#include "../include/descripteur_txt.h"
 
 #ifndef __INTERACT__
     #include "../include/interact.h"
@@ -223,22 +224,22 @@ void empilementDesDescripteurs (PILEDESC * pileDesc, PILEDESC * adrFichiers) {  
     while ((fichierLu=readdir(repDocs))!=NULL) {        // On parcourt tous les fichiers du dossier
         
         char * nomDoc = fichierLu->d_name;      // On récupère le nom du fichier i
-        //printf("Fichier trouvé : %s \n", nomDoc);
         char * adrDoc = malloc((30+strlen(nomDoc))*sizeof(char));
         sprintf(adrDoc, "base_de_documents/%s", nomDoc);    // Adresse complète du fichier
-        //printf("Son adresse : %s \n", adrDoc);
         char * ext = getExtensionOfFile(nomDoc);      // On récupère le type du fichier i
-        //printf("Son type : %s \n", ext);
         
-        if (strcmp(ext, ".xml")==0) {        // Cas d'un fichier texte
-            //printf("C'est du texte.\n");
-            //DescripteurTexte dt = creerDescripteurTexte(adrDoc);
-            char * desc = "Texte";
+        /*if (strcmp(ext, ".xml")==0) {        // Cas d'un fichier texte
+            // DescripteurTexte dt = creerDescripteurTexte(adrDoc);
+            FILE * f = NULL;
+            f = fopen(adrDoc, "r+");
+            DESCTXT dt = creerDescripteur_txt(f);
+            char * desc = descToString(dt);          
+            //char * desc = "Texte";
             DESC * strDesc = creerDesc(desc);
             ajouterDescPile(pileDesc, strDesc);
             DESC * adr = creerDesc(adrDoc);
             ajouterDescPile(adrFichiers, adr);
-        }
+        }*/
         if (strcmp(ext, ".bin")==0) {                               // Cas d'un fichier audio
         //if (strcmp(ext, ".wav")==0 || strcmp(ext, ".bin")==0) {       
             //printf("C'est du son.\n");
@@ -255,9 +256,13 @@ void empilementDesDescripteurs (PILEDESC * pileDesc, PILEDESC * adrFichiers) {  
         }
         if (strcmp(ext, ".jpg")==0 || strcmp(ext, ".bmp")==0) {       // Cas d'une image
             //printf("C'est une image.\n");
+            descripteur di;
+            int taille_max=0;
+            generer_descripteur(&di, "base_de_documents/", nomDoc, &taille_max, getNbBits());
+            char * desc = malloc(1500*sizeof(char));
+            descripteur_image_to_string(di, desc, taille_max);
             //descripteur di = creerDescripteurImage(adrDoc);
             //char * desc = convertionDescripteurImageString(di);
-            char * desc = "Image";
             DESC * strDesc = creerDesc(desc);
             ajouterDescPile(pileDesc, strDesc);
             DESC * adr = creerDesc(adrDoc);

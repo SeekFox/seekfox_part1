@@ -166,6 +166,7 @@ void setLogicielImage(Config *c, char * str);
  */
 void setLogicielAudio(Config *c, char * str);
 
+
 /**
  * @brief Recupere les infos du fichier config 
  * 

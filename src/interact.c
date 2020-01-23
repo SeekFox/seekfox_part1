@@ -66,7 +66,7 @@ void displayMenu(int *isAdmin, enum FSM * state, char * file){
 
     case R_IMAGE:
       printf("Recherche par IMAGE\n");
-      afficherResultats(rechercheParFichierImage(file),(*state));
+      afficherResultats(rechercheParFichierImage(file),R_IMAGE);
       //TODO : Recherche par Image
       (*state) = TITLE;
       break;
@@ -79,9 +79,7 @@ void displayMenu(int *isAdmin, enum FSM * state, char * file){
 
     case R_SON:
       printf("Recherche par SON\n");
-      //printf(">>>%s\n",file);
-      afficherResultats(rechercheParFichierSon(file),(*state));
-      //TODO : Recherche par SON
+      afficherResultats(rechercheParFichierSon(file),R_SON);
       (*state) = TITLE;
       break;
 
@@ -360,7 +358,7 @@ void displayInformations(){
   printTitle("SEEKFOX TEAM");
   printf(" %-22.22s  %s\n","Gael Camba","CTO");
   printf(" %-22.22s  %s\n","Oualid El Abdaoui","Employe du mois");
-  printf(" %-22.22s  %s\n","Etienne Combelles","");
+  printf(" %-22.22s  %s\n","Etienne Combelles","Tresorier");
   printf(" %-22.22s  %s\n","Raphael Bizet","Stagiaire");
   printf(" %-22.22s  %s\n","Clement Truillet","Community Manager");
   printf("\n");

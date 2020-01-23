@@ -189,7 +189,7 @@ void displayMenuAdmin(int *isAdmin){
 
       case 2:
         system("echo Vous etes dans le repertoire ${PWD##*/}");
-        printf("\nEntrez le chemin vers le fichier a indexer\n\t>");
+        printf("\nEntrez le chemin vers le fichier du descripteur\n\t>");
         color("36");
         scanf("%64s",fichier);
         color("37");

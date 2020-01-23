@@ -163,7 +163,8 @@ RECHERCHE * rechercheParFichierImage (char * fichier) {
         /* Création du descripteur */
         fclose(requete);                // fclose placé au début car generer_descripteur ne prend pas de FILE* en paramètre
         int taille_max = 20000;         // Taille max du descripteur
-        generer_descripteur(&descRequete, adresse, fichier,&taille_max, getNbBits());     // Quantification sur 2 bits
+        printf(">>%s\n",adresse);
+        generer_descripteur(&descRequete,adresse,&taille_max, getNbBits());     // Quantification sur 2 bits
     }
 
     /* Etape 2 : on compare ce descripteur à tous les descripteurs images indexés */
@@ -188,6 +189,7 @@ RECHERCHE * rechercheParFichierImage (char * fichier) {
     // par Oualid, donc pour m'adapter à cette fonction je transfère tous les descripteurs image indexés dans le fichier ouvert ci-dessous.
     // C'est ce fichier qui est utilisé dans la fonction de oualid comme base de descripteurs.
     // (D'ailleurs, je sais pas à quoi correspond le dernier paramètre, donc j'ai mis 10)
+    //      Merci etienne, je suis heureux de l'apprendre
     FILE * descImages = NULL;
     descImages = fopen("../data/base_descripteur_image", "w+");
     if(descImages==NULL) {
@@ -210,7 +212,8 @@ RECHERCHE * rechercheParFichierImage (char * fichier) {
     }
 
     fclose(descImages);
-    rechercher_image(adresse, fichier, 10);
+    printf(">>>>%s-%s\n",adresse, fichier);
+    rechercher_image(adresse, getNbBits());
 
     free(descCourant);
 

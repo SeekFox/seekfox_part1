@@ -37,17 +37,21 @@ Histogramme addFenetre(Histogramme oldHistogram){
 
 Histogramme appendFenetre(Histogramme oldHistogram, unsigned long nameOfNewFenetre, PILE pileOfNewFenetre){	//Pas optimisé, mais flemme de faire 
 	Histogramme index = oldHistogram;																		//mieux j'ai pas trop le temps là
-	Histogramme newFenetre;
+	Histogramme newFenetre = initHistogramme();
 
-	newFenetre = (Histogramme)malloc(sizeof(Fenetre));
-	newFenetre->name = nameOfNewFenetre;
-	newFenetre->subdivision = pileOfNewFenetre;
-	if(index == NULL)	
+	newFenetre = (Histogramme)malloc(sizeof(Fenetre));	//On créé une nouvelle fenêtre
+	newFenetre->name = nameOfNewFenetre;				//On remplit avec le nom 
+	newFenetre->subdivision = pileOfNewFenetre;			//On y cale la nouvelle pile
+	newFenetre->nextFenetre = NULL;						//La prochaine fenetre est null parce qu'on est a la fin
+
+	if(index == NULL)							//Si y'a rien de base, on renvoie juste ce qu'on a créé
 		return newFenetre;
 
-	while(index->nextFenetre != NULL)	//On va a l'avant dernier élement pour pouvoir le rajouter
-		index = index->nextFenetre;
+	while(index->nextFenetre != NULL){	//On va a l'avant dernier élement pour pouvoir le rajouter
+		index = index->nextFenetre;		
+	}
 	index->nextFenetre = newFenetre;
+
 	return oldHistogram;		
 }
 
@@ -98,15 +102,12 @@ DescripteurAudio creerDescripteurAudio(FILE* p_file, int tailleFenetre, int nbSu
 
 	DescripteurAudio newDescripteur;
 	
-	//unsigned int fileSize;
 	double newFenetre[tailleFenetre];					//Nouvelle fenêtre de travail
-	//int sizeSubdivision = tailleFenetre/nbSubdivisions;	//Taille d'une subdivision
 	int newHistogramLine[nbSubdivisions+1];			//Nouvelle ligne de l'histogramme final
 	int subPosition;
 	unsigned long int FenetresCount = 0;
 	int nbElementsLus = 0;
 
-	//fileSize = getAudioFileSize(p_file, fileType);
 	resetFileCursor(p_file, fileType);	
 	Histogramme newHistogram = initHistogramme();
 		
@@ -160,9 +161,30 @@ void displayDescripteurAudio(DescripteurAudio display){
 	}
 }
 
-//TODO : Transformer un descripteur en string
+char* fenetreToString(Fenetre workingFenetre, int* size){ //Attention, cela détruit la fenetre
+	PILE workingPile = workingFenetre.subdivision;
 
-//TODO : Transformer un string en descripteur
+	unsigned int taillePile = taillePILE(workingPile);
+	char* newString = (char*)malloc(sizeof(char) * taillePile*7);//On laisse 5 chiffres + 1 séparateur par élement de la pile+1 de marge au cas où //TODO : protéger contre les gros nombres
+	char temp[6] = "";
+	int dataToSave = 0;
+	unsigned int currentSize = 0;
+	sprintf(newString,"%7lu:", workingFenetre.name);
+	currentSize = 8;
+	if(newString == NULL)printf("PUTAIN");
+
+	while(!PILE_estVide(workingPile)){
+		workingPile = dePILE(workingPile,&dataToSave);
+		sprintf(temp, "%4d,", dataToSave);
+		for(int i = 0; i < 5; i++){
+			newString[currentSize] = temp[i];
+			currentSize++;
+		}
+	}
+	newString[currentSize-1] = '|';
+	*size = currentSize; 
+	return newString;
+}
 
 char* fenetreToString(Fenetre workingFenetre, int* size){ //Attention, cela détruit la fenetre
 	PILE workingPile = workingFenetre.subdivision;
@@ -204,7 +226,7 @@ char* descripteurAudioToString(DescripteurAudio descToString){	//nbSubdivisions;
 		newFenetreString = fenetreToString(fenetreATraiter, &newFenetreSize);		
 		index = currentSize;	//L'ancienne position de currentSize, donc l'endroit où commencer a écrire;
 		currentSize+=newFenetreSize;												//On rajoute la place qu'il faut
-		newString = (char*)realloc(newString,sizeof(char)*(currentSize+1));
+		newString = (char*)realloc(newString,sizeof(char)*(currentSize+3));
 		for(int i = 0; i<newFenetreSize; i++){				
 			newString[index+i] = newFenetreString[i];
 		}
@@ -230,6 +252,7 @@ DescripteurAudio stringToDescripteurAudio(char* stringToParse){
 	}
 	tempString[21] = '\0';	//On mets un \0 pour s'assurer que ce soit bien un string, pas sûr que ce soit nécessaire mais ça peut pas faire de mal
 	sscanf(tempString,"%4u;%7u;%7lu;", &newDescripteur.nbSubdivisions, &newDescripteur.tailleFenetre, &newDescripteur.nbFenetres);
+	
 	for(int fenetreCount = 0; fenetreCount < newDescripteur.nbFenetres; fenetreCount++){
 		newPile = init_PILE();	//Raz de la pile a stocker
 
@@ -237,16 +260,18 @@ DescripteurAudio stringToDescripteurAudio(char* stringToParse){
 			tempString[i] = stringToParse[index+i];
 		index+=8;			//On avance l'index de lecture
 		tempString[8] = '\0';
+		sscanf(tempString,"%7lu:",&newFenetreName);		//Chopper le nom de de la fenetre
 
-		sscanf(tempString,"%7lu:",&newFenetreName);		
 		for(int i = 0; i < newDescripteur.nbSubdivisions; i++){		//Get tous les élements de la pile (ils sont dans le sens inverse a cause de la pile)
-			for(int i = 0; i < 5; i++)		//Chopper un element de la pile
-				tempString[i] = stringToParse[index+i];
+			for(int j = 0; j < 5; j++)		//Chopper un element de la pile
+				tempString[j] = stringToParse[index+j];
 			index+=5;
 			tempString[5] = '\0';
 			sscanf(tempString, "%4d", &valueToStore);		//Lire la valeur et la stocker dans la pile
 			newPile = emPILEVal(newPile, valueToStore);
 		}
+		//printf("\n");
+
 		newPile = inversePILE(newPile);	//On remet la pile dans le bon ordre
 		newHistogram = appendFenetre(newHistogram, newFenetreName, newPile);
 	}
@@ -314,7 +339,6 @@ PILE comparerDescripteursAudio(DescripteurAudio jingle, DescripteurAudio fichier
 
 			if(jingleEstComprisDansLeFichier == 1 && fileHist != NULL){	//Si ici on s'est arrété parce que le jingle est fini, et pas parce que y'a eut une différence ou la fin du fichier audio
 				nameToSeconds = (int)((fileHist->name - jingle.nbFenetres) *jingle.tailleFenetre* SECONDE_PAR_VALEUR);
-				//printf("On est sur le : %d\n", fileHist->name * tailleFenetre * SECONDE_PAR_VALEUR);
 				listeDesTimingsDesJingle = emPILEVal(listeDesTimingsDesJingle, nameToSeconds);	//C'est que le jingle est bien compris dedans
 			}
 			

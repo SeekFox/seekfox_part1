@@ -66,7 +66,7 @@ void displayMenu(int *isAdmin, enum FSM * state, char * file){
 
     case R_IMAGE:
       printf("Recherche par IMAGE\n");
-      afficherResultats(rechercheParFichierImage(file));
+      afficherResultats(rechercheParFichierImage(file),(*state));
       //TODO : Recherche par Image
       (*state) = TITLE;
       break;
@@ -80,7 +80,7 @@ void displayMenu(int *isAdmin, enum FSM * state, char * file){
     case R_SON:
       printf("Recherche par SON\n");
       //printf(">>>%s\n",file);
-      afficherResultats(rechercheParFichierSon(file));
+      afficherResultats(rechercheParFichierSon(file),(*state));
       //TODO : Recherche par SON
       (*state) = TITLE;
       break;

@@ -13,7 +13,7 @@
 #include <string.h>
 #include "../include/audio.h"
 
-#define SIMLIARITY_MAX_VALUE 0.01
+#define SIMLIARITY_MAX_VALUE 0.003
 #define SECONDE_PAR_VALEUR 0.0000616795061349 
 
 	///////////////////////////////////
@@ -185,32 +185,6 @@ char* fenetreToString(Fenetre workingFenetre, int* size){ //Attention, cela dét
 	*size = currentSize; 
 	return newString;
 }
-
-char* fenetreToString(Fenetre workingFenetre, int* size){ //Attention, cela détruit la fenetre
-	PILE workingPile = workingFenetre.subdivision;
-
-	unsigned int taillePile = taillePILE(workingPile);
-	char* newString = (char*)malloc(sizeof(char) * taillePile*7);//On laisse 5 chiffres + 1 séparateur par élement de la pile+1 de marge au cas où //TODO : protéger contre les gros nombres
-	char temp[6] = "";
-	int dataToSave = 0;
-	unsigned int currentSize = 0;
-	sprintf(newString,"%7lu:", workingFenetre.name);
-	currentSize = 8;
-	if(newString == NULL)printf("PUTAIN");
-
-	while(!PILE_estVide(workingPile)){
-		workingPile = dePILE(workingPile,&dataToSave);
-		sprintf(temp, "%4d,", dataToSave);
-		for(int i = 0; i < 5; i++){
-			newString[currentSize] = temp[i];
-			currentSize++;
-		}
-	}
-	newString[currentSize-1] = '|';
-	*size = currentSize; 
-	return newString;
-}
-
 
 char* descripteurAudioToString(DescripteurAudio descToString){	//nbSubdivisions;tailleFenetre;nbFenetres
 	char* newString = (char*)malloc(sizeof(char)*21);

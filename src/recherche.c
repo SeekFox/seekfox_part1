@@ -73,12 +73,13 @@ void ajouterFichierRecherche (RECHERCHE * r, FICHIER * f) {     // Ajoute un fic
 
 //==================================================================================================================================
 
-void afficherResultats(RECHERCHE *r){
+void afficherResultats(RECHERCHE *r,enum FSM * state){
     //printf("Affichage des resultats\n");
     FICHIER * courant = r->premier;
     int i=1;
     while(courant!=NULL) {
-        printf("\t%d -%-20s -> %.2f%c \n", i, courant->adresse, courant->similarite,'%');
+        printf("\t%d -%-20s -> %.2f%c", i, courant->adresse, courant->similarite);
+        printf("%c",(*state==R_SON?'s':'%'));
         courant = courant->suivant;
         i++;
     }
@@ -279,8 +280,10 @@ RECHERCHE * rechercheParFichierSon (char * fichier) {
             printf(">>%s  \n",fichCourant);
             DescripteurAudio desc = stringToDescripteurAudio(descCourant);     // On convertit le descripteur (jusque là au format string) en structure descripteur
             sim = comparerDescripteursAudio(descRequete,desc);        // On calcule la similarité entre le fichier recherché et le fichier courant
+            int tps;            // Durée du passage le plus long en commun
             if(taillePILE(sim)>=1) {        // Cas où le descripteur récupéré contient au moins une fois le jingle recherché
-                FICHIER * fcomp = creerCelluleFichier(fichCourant, taillePILE(sim));
+                sim = dePILE(sim, &tps);
+                FICHIER * fcomp = creerCelluleFichier(fichCourant, tps);
                 ajouterFichierRecherche(resultats, fcomp);      // On ajoute à la liste triée des fichiers compatibles avec la recherche
             }
         }

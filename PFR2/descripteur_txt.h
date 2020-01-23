@@ -11,7 +11,7 @@
 
 typedef struct MotPourMotCle {
 	int occurence;
-	char mot[TAILLE_MAX];
+	char* mot;
 }MOT;
 
 typedef struct CellulePourMotCle {
@@ -39,8 +39,8 @@ void afficheTxt(FILE *fichier_txt);
 int motExiste(FIFO_M* file, char* test);
 FIFO descToFIFO(DESCTXT d);
 
-void MInit_File(FIFO_M f);
-int MFile_estVide(FIFO_M f);
-FIFO_M MEnfiler(FIFO_M* f, char* e);
+void MInit_File(FIFO_M* f);
+int MFile_estVide(FIFO_M* f);
+void MEnfiler(FIFO_M* f, char* e);
 
 #endif

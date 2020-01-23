@@ -23,7 +23,7 @@ void main(void){
 	char* test="";
 	test = descToString(Descri);
 
-	strcpy(test, descToString(Descri));
+	//strcpy(test, descToString(Descri));
 	printf("%s",test);
 	/*printf("TEST COMPARAISON \n");
 	if(descripteursIdentiques(Descri, Descri))

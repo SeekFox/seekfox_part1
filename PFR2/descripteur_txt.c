@@ -6,38 +6,48 @@
 
 // Fonction principale, qui crée un descripteur 
 DESCTXT creerDescripteur_txt(FILE* fichier_txt) {
-	
+
 	////////////////// INITIALISATION / DECLARATION DES VARIABLES /////////////////
 	DESCTXT descripteur;
-	FIFO_M* FILE_MC = (FIFO_M*)malloc(sizeof(FIFO_M));
-	(FILE_MC)->debut = (Cell_M*)malloc(sizeof(Cell_M));
-	char* tempo =(char*) malloc(sizeof(char));
-	int j=0, i=0;
+	//FIFO_M* FILE_MC = (FIFO_M*)malloc(sizeof(FIFO_M));
+	descripteur.fmot_cle = (FIFO_M*)malloc(sizeof(FIFO_M));
+	descripteur.fmot_cle->debut = (Cell_M*)malloc(sizeof(Cell_M));
+	char* tempo = (char*)malloc(sizeof(char));
+	int j = 0, i = 0;
 	char chaine[TAILLE_MAX] = "";
-	descripteur.fmot_cle = FILE_MC;
+	//	descripteur.fmot_cle = FILE_MC;
 	descripteur.nb_lettres = 0;
 	descripteur.nb_mots = 0;
 	(descripteur.fmot_cle->debut)->mot_cle.occurence = 0;
+	MInit_File(descripteur.fmot_cle);
+	if (MFile_estVide(descripteur.fmot_cle))
 
 	//////////////////////////// BOUCLE PRINCIPALE /////////////////////////////////
 	while (fgets(chaine, TAILLE_MAX, fichier_txt) != NULL) {	// Pour chaque ligne
+		printf("test entrée en boucle \n");
 		for (i = 0; i < strlen(chaine); i++) {					//pour chaque lettre de cette ligne
 			if (chaine[i] == '<') {								// supprimer les balises 
-				while (chaine[i] != '>' && chaine[i]!='\0')	
+				printf("Balise detectee \n");
+				while (chaine[i] != '>')
 					i++;										//en incrémentant le compteur sans les prendre en compte
 			}
-			
-			while (chaine[i] != ' ' && chaine[i]!='\0') {	// pour chaque mot
-				strcat(tempo, &chaine[i]);					// on récupere le mot dans un tableau séparé
-				descripteur.nb_lettres++;					
-				i++;
-			}
-			descripteur.nb_mots++;
-			if (!motExiste(FILE_MC, tempo)) {				// on exécute motExiste, qui incrémente le nombre d'occurence si le mot est déjà dans la File
-				*FILE_MC=MEnfiler(FILE_MC, tempo);					// si le mot récupéré n'est pas dans la file, on l'y rajoute
+			else {
+				while (chaine[i] != ' ' && chaine[i] != '\0') {	// pour chaque mot
+					strcat(tempo, &chaine[i]);					// on récupere le mot dans un tableau séparé
+					descripteur.nb_lettres++;
+					i++;
+				}
+				descripteur.nb_mots++;
+				printf("%d \n", descripteur.nb_mots);
+				//if (!motExiste(FILE_MC, tempo)) {				// on exécute motExiste, qui incrémente le nombre d'occurence si le mot est déjà dans la File
+				if (!motExiste(descripteur.fmot_cle, tempo)) {
+					printf("mot pas dedans \n");
+					MEnfiler(descripteur.fmot_cle, tempo);					// si le mot récupéré n'est pas dans la file, on l'y rajoute
+				}
 			}
 		}
 	}
+	printf("%s \n", descripteur.fmot_cle->debut->mot_cle.mot);
 	return(descripteur);
 }
 
@@ -89,18 +99,18 @@ FIFO descToFIFO(DESCTXT d) {
 int motExiste(FIFO_M *file, char* test) {
 	int motexiste=0;
 	Cell_M* memoire = file->debut;
-	if (!MFile_estVide(*file)) {
-		while (memoire != NULL  ) {
-			motexiste = strcmp((memoire->mot_cle).mot, test);
+	if (!MFile_estVide(file)) {
+		while (memoire != NULL && !motexiste) {
+			motexiste = strcoll((memoire->mot_cle).mot, test);
 			printf("%d\n", motexiste);
-			if (motexiste==0) {
+			if (motexiste == 0) {
 				memoire->mot_cle.occurence++;
-				break;
 			}
 			memoire = memoire->ptr_suiv;
 		}
 	}
-	return( motexiste);
+	return(motexiste);
+	
 }
 
 
@@ -148,25 +158,25 @@ void afficheTxt(FILE *fichier_txt) {
 
 
 // Initialisation d'une file de mots
-void MInit_File(FIFO_M f) {
-	f.debut= NULL;
-	f.fin = NULL;
+void MInit_File(FIFO_M* f) {
+	f->debut= NULL;
+	f->fin = NULL;
 }
 
 
 // File de mots vide
-int MFile_estVide(FIFO_M f) {
-	return(f.debut == NULL);
+int MFile_estVide(FIFO_M* f) {
+	return(f->debut == NULL);
 }
 
 
 // Enfiler des mots dans une file de mots. 
-FIFO_M MEnfiler(FIFO_M* f, char* e) {
-	Cell_M* temp;
-	temp = (Cell_M*)malloc(sizeof(Cell_M));
-	strcpy((temp->mot_cle.mot), e );
-	printf("test");
-	printf("%s", temp->mot_cle.mot);
+void MEnfiler(FIFO_M* f, char* e) {
+	Cell_M* temp = (Cell_M*)malloc(sizeof(Cell_M));
+	temp = f->debut ;
+	printf("test\n");
+	strcat((temp->mot_cle).mot, e );
+	printf("test2\n");
 	(*temp).ptr_suiv = f->fin;
 	if (f->debut == NULL)
 		f->debut = temp;
@@ -176,7 +186,7 @@ FIFO_M MEnfiler(FIFO_M* f, char* e) {
 			actuel = actuel->ptr_suiv;
 		actuel->ptr_suiv = temp;
 	}
-	return(*f);
+	//return(*f);
 }
 
 

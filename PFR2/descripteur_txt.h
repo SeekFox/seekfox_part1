@@ -32,7 +32,7 @@ typedef struct Descripteur_txt{
 
 DESCTXT creerDescripteur_txt(FILE *fichier_txt);
 float comparerDescripteurs(DESCTXT d1, DESCTXT d2);
-char descToString(DESCTXT d);
+char* descToString(DESCTXT d);
 int descripteursIdentiques(DESCTXT d1, DESCTXT d2);
 void afficheTxt(FILE *fichier_txt);
 int motExiste(FIFO_M* file, char* test);

@@ -292,7 +292,7 @@ void generer_descripteur(descripteur *d,char * fichier,int *taille_max,int n){
 	int nbLignes = 0,nbColonnes = 0,nbComposantes = 0;
 	FILE * lecteur_image;
 
-	printf("le chemin est %s\n",fichier);
+	//printf("le chemin est %s\n",fichier);
 
 
 	lecteur_image = fopen(fichier,"r"); // ouverture du fichier .txt en mode lecture
@@ -356,7 +356,7 @@ void generer_descripteur(descripteur *d,char * fichier,int *taille_max,int n){
 
 	}
 	generer_identifiant(n,fichier,d,*taille_max);
-
+	//strcpy(d->identifiant,"identifiant ");
 	//generation de l'identifiant du descripteur
 
 	fclose(lecteur_image);
@@ -445,15 +445,15 @@ void lancer_indexation(int indice_indexation){ // vaut 0 pour une première inde
 					if(feof(lecteur_fichier))break;
 				}
 
-				descripteur d,d3;
-				int taille_max;
+				descripteur d;
+				int taille_max = 0;
 				sprintf(titre_fichier,"../data/TEST_IMAGES/%s",titre_fichier);
 
 				generer_descripteur(&d,titre_fichier,&taille_max,n);	//création des descripteurs
 
-				//afficher_descripteur(d,taille_max);	//affichage des descripteurs(optionnel)
+				afficher_descripteur(d,taille_max);	//affichage des descripteurs(optionnel)
 
-				mise_a_jour_base(n,i,taille_max,titre_fichier,d); // ajout dans le fichier base descripteur_image
+				//mise_a_jour_base(n,i,taille_max,titre_fichier,d); // ajout dans le fichier base descripteur_image
 
 				free(d.Histogramme);
 			}

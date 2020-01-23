@@ -43,7 +43,7 @@ int fichier_deja_indexe(char titre_fichier[]);
 
 void generer_identifiant(int n,char titre_fichier[],descripteur *d,int taille_max);
 
-void generer_descripteur(descripteur *d,char  * titre_fichier,int *taille_max,int n);
+void generer_descripteur(descripteur *d,char CHEMIN2[],char titre_fichier[],int *taille_max,int n);
 
 void afficher_descripteur(descripteur d,int taille_max);
 
@@ -59,7 +59,7 @@ void ajouter_au_resultats(Resultat r[],int resultat,int *j,char identifiant[]);
 
 void initialiser_resultat(Resultat r[]);
 
-void rechercher_image(char * titre_fichier,int n);
+void rechercher_image(char chemin[],char titre_fichier[],int n);
 
 void descripteur_image_to_string(descripteur d,char string[],int taille_max);
 

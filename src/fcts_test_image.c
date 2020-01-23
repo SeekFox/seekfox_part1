@@ -287,15 +287,18 @@ c : le titre du fichier transformé en int
 	
 /*-------------------------------------------------------------------------------------*/
 
-void generer_descripteur(descripteur *d,char * fichier,int *taille_max,int n){
+void generer_descripteur(descripteur *d,char CHEMIN2[],char titre_fichier[],int *taille_max,int n){
 
 	int nbLignes = 0,nbColonnes = 0,nbComposantes = 0;
+
+	char chemin_aux[100] = "";
+	strcpy(chemin_aux,CHEMIN2);
 	FILE * lecteur_image;
 
-	printf("le chemin est %s\n",fichier);
+	//printf("le chemin est %s\n et le fichier est %s\n",CHEMIN2,titre_fichier);
+	strcat(chemin_aux,titre_fichier);
 
-
-	lecteur_image = fopen(fichier,"r"); // ouverture du fichier .txt en mode lecture
+	lecteur_image = fopen(chemin_aux,"r"); // ouverture du fichier .txt en mode lecture
 	
 
 	fscanf(lecteur_image," %d%d%d",&nbLignes,&nbColonnes,&nbComposantes); 
@@ -355,12 +358,11 @@ void generer_descripteur(descripteur *d,char * fichier,int *taille_max,int n){
 		//realisation de l'histogramme avec passage en parametre du tableau Histogramme
 
 	}
-	generer_identifiant(n,fichier,d,*taille_max);
+	generer_identifiant(n,titre_fichier,d,*taille_max);
 
 	//generation de l'identifiant du descripteur
 
 	fclose(lecteur_image);
-	printf("fin \n");
 }
 
 /*
@@ -388,7 +390,7 @@ fonction qui sert à afficher un descripteur passé en paramètre avec sa taille
 
 void lancer_indexation(int indice_indexation){ // vaut 0 pour une première indexation et 1 pour une mise à jour;
 	
-	//----------------------------partie commande unix pour lister les noms des fichiers------------------------------
+/*----------------------------partie commande unix pour lister les noms des fichiers------------------------------*/
 	char path[16] = "../data/";
 	char commande[100] = "";
 	
@@ -401,7 +403,7 @@ void lancer_indexation(int indice_indexation){ // vaut 0 pour une première inde
 
 	printf("commande reussie\n");
 
-	//------------------------------ouverture des fichiers à indexer--------------------------------------------------
+/*------------------------------ouverture des fichiers à indexer--------------------------------------------------*/
 	int n = 0,nbFichiers = 0;
 	
 	FILE * compteur_fichiers;
@@ -418,7 +420,7 @@ void lancer_indexation(int indice_indexation){ // vaut 0 pour une première inde
 	//printf("%d\n",nbFichiers); // affichage du nombre de fichiers
 
 	fclose(compteur_fichiers);
-	//---------------------------------------------------------------------------------------------------------------
+/*---------------------------------------------------------------------------------------------------------------*/
 
 	FILE * lecteur_fichier;
 	
@@ -428,7 +430,7 @@ void lancer_indexation(int indice_indexation){ // vaut 0 pour une première inde
 			
 			for(int i=1;i<=nbFichiers;i++){ // boucle for qui dépend du nombre de fichiers un while(!feof()) marchera tres bien aussi
 
-				char titre_fichier[64];
+				char titre_fichier[6];
 
 				if(indice_indexation == 0)fscanf(lecteur_fichier,"%s",titre_fichier);
 				else
@@ -444,12 +446,13 @@ void lancer_indexation(int indice_indexation){ // vaut 0 pour une première inde
 
 					if(feof(lecteur_fichier))break;
 				}
+				
+				char CHEMIN2[100]="../data/TEST_IMAGES/"; // chemin d'ouverture des fichiers
 
 				descripteur d,d3;
 				int taille_max;
-				sprintf(titre_fichier,"../data/TEST_IMAGES/%s",titre_fichier);
 
-				generer_descripteur(&d,titre_fichier,&taille_max,n);	//création des descripteurs
+				generer_descripteur(&d,CHEMIN2,titre_fichier,&taille_max,n);	//création des descripteurs
 
 				//afficher_descripteur(d,taille_max);	//affichage des descripteurs(optionnel)
 
@@ -625,8 +628,8 @@ void initialiser_resultat(Resultat r[]){
 // initialisation du tableau qui comporte les résultats de la recherche
 
 
-void rechercher_image(char * fichier,int n){
-	printf("debut recherche\n");
+void rechercher_image(char chemin[],char titre_fichier[],int n){
+
 	int taille_max = 0,taille_aux,n_aux,j = 0,valeur = 0;
 	float resultat = 0;
 	descripteur d;
@@ -641,14 +644,17 @@ void rechercher_image(char * fichier,int n){
 	c[9] = '\0';
 	identifiant[19] = '\0';
 	toString(n,N);
-	generer_descripteur(&d,fichier,&taille_max,n);
+	
+	generer_descripteur(&d,chemin,titre_fichier,&taille_max,n);
 	
 	char string[1500] = "";
 	FILE *comparateur;
-	comparateur = fopen("data/base_descripteur_image","r");
+	comparateur = fopen("../data/base_descripteur_image","r");
 
+	
 	while(!feof(comparateur)){
 		strcpy(identifiant,"");
+
 
 		for(int i=0;i<6;i++){
 			
@@ -673,7 +679,6 @@ void rechercher_image(char * fichier,int n){
 		
 		if(taille_aux == taille_max){
 			//printf("taille max is %d\n",taille_max);
-			
 			for(int i=0;i<taille_max;i++){
 				
 				fscanf(comparateur,"%s",valeur_histogramme);
@@ -689,7 +694,6 @@ void rechercher_image(char * fichier,int n){
 			//strcpy(resultat_comparaison[0].identifiant,identifiant);
 			//printf("%s\n",resultat_comparaison[0].identifiant);
 
-			printf("sdfg\n");
 			ajouter_au_resultats(resultat_comparaison,resultat,&j,identifiant);
 			resultat = 0;
 		}else{
@@ -714,8 +718,8 @@ void descripteur_image_to_string(descripteur d,char string[],int taille_max){
 	chaine[6] = '\0';
 
 	strcpy(string,d.identifiant);
-
-	for(int i=0;i<taille_max;i++){
+	
+	for(int i=0;i<taille_max;i++){		//taille_max
 		toString(d.Histogramme[i],chaine);
 		strcat(string," ");
 		strcat(string,chaine);

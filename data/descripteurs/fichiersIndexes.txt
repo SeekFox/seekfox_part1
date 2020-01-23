@@ -1,2 +1,6 @@
+base_de_documents/01.jpg
+base_de_documents/02.jpg
+base_de_documents/03.jpg
+base_de_documents/04.bmp
 base_de_documents/corpus_fi.bin
 base_de_documents/jingle_fi.bin

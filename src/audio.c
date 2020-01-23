@@ -122,7 +122,7 @@ DescripteurAudio creerDescripteurAudio(FILE* p_file, int tailleFenetre, int nbSu
 
 		for(int i = 0; i < nbElementsLus; i++){									//Remplir les sousdivisions de cette fenetre
 			subPosition = getSubdivisionValue(newFenetre[i], nbSubdivisions);
-			newHistogramLine[subPosition]++;			//TODO(ish) : Possibilité d'améliorer la performance stockant directement
+			newHistogramLine[subPosition]++;			
 		}
 
 		for(int i = 0; i < nbSubdivisions; i++){										//Pile possiblement stockée a l'envers, on vois plus tard si ça pose soucis	
@@ -165,7 +165,7 @@ char* fenetreToString(Fenetre workingFenetre, int* size){ //Attention, cela dét
 	PILE workingPile = workingFenetre.subdivision;
 
 	unsigned int taillePile = taillePILE(workingPile);
-	char* newString = (char*)malloc(sizeof(char) * taillePile*7);//On laisse 5 chiffres + 1 séparateur par élement de la pile+1 de marge au cas où //TODO : protéger contre les gros nombres
+	char* newString = (char*)malloc(sizeof(char) * taillePile*7);//On laisse 5 chiffres + 1 séparateur par élement de la pile+1 de marge au cas où
 	char temp[6] = "";
 	int dataToSave = 0;
 	unsigned int currentSize = 0;

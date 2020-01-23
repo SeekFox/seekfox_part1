@@ -358,7 +358,7 @@ void displayInformations(){
   printTitle("SEEKFOX TEAM");
   printf(" %-22.22s  %s\n","Gael Camba","CTO");
   printf(" %-22.22s  %s\n","Oualid El Abdaoui","Employe du mois");
-  printf(" %-22.22s  %s\n","Etienne Combelles","");
+  printf(" %-22.22s  %s\n","Etienne Combelles","Tresorier");
   printf(" %-22.22s  %s\n","Raphael Bizet","Stagiaire");
   printf(" %-22.22s  %s\n","Clement Truillet","Community Manager");
   printf("\n");

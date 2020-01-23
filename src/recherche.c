@@ -194,7 +194,7 @@ RECHERCHE * rechercheParFichierImage (char * fichier) {
         fclose(requete);                // fclose placé au début car generer_descripteur ne prend pas de FILE* en paramètre
         int taille_max = 20000;         // Taille max du descripteur
         printf(">>%s\n",adresse);
-        generer_descripteur(&descRequete,adresse,&taille_max, getNbBits());     // Quantification sur 2 bits
+        //generer_descripteur(&descRequete,adresse,&taille_max, getNbBits());     // Quantification sur 2 bits
     }
 
     /* Etape 2 : on compare ce descripteur à tous les descripteurs images indexés */
@@ -243,7 +243,7 @@ RECHERCHE * rechercheParFichierImage (char * fichier) {
 
     fclose(descImages);
     printf(">>>>%s-%s\n",adresse, fichier);
-    rechercher_image(adresse, getNbBits());
+    //rechercher_image(adresse, getNbBits());
 
     free(descCourant);
 

@@ -9,7 +9,6 @@ void main(void){
 	FIFO file;
 	int nb_mot,nb_lettres;
 	char[1000] String ;
-	char chaine[TAILLE_MAX]="";
 	DESC descri; 
 	printf("TEST DESCRIPTEURv\n");
 	fichier = fopen("test.txt", "r");

@@ -7,15 +7,16 @@
 
 DESC creerDescripteur_txt(FILE* fichier_txt) {
 	DESC descripteur;
-	FIFO FILE_MC;
-	char[TAILLE_MAX] tempo;
+	FIFO_M FILE_MC;
+	char tempo[TAILLE_MAX];
 	int j=0, i=0;
+	char chaine[TAILLE_MAX] = "";
 	descripteur.nb_lettres = 0;
 	descripteur.nb_mots = 0;
 	descripteur.mot_cle = NULL;
 	do {
 		fgets(chaine, TAILLE_MAX, fichier_txt);
-	} while (chaine != "")
+	} while (chaine != "");
 		for (i = 0; i < strlen(chaine); i++) {
 			if (chaine[i] = '<') {
 				while (chaine[i] != '>')
@@ -27,8 +28,8 @@ DESC creerDescripteur_txt(FILE* fichier_txt) {
 				i++;
 				j++;
 			}
-			if (!motExiste(&FILE_MC, tempo))
-				Enfiler(&FILE_MC, tempo);
+			if (!motExiste(&FILE_MC, &tempo))
+				Enfiler(&FILE_MC, &tempo);
 			else 
 
 			j = 0;
@@ -60,14 +61,14 @@ float comparerDescripteurs(DESC d1, DESC d2){
 }
 
 
-int motExiste(FIFO_M *file, char[] test) {
+int motExiste(FIFO_M *file, char* test) {
 	int motexiste=0;
-	int mem;
-	mem = file->debut;
+	Cell_M* memoire;
+	memoire = file->debut;
 	Cell_M* temp = file;
 	if (!MFile_estVide(file) {
 		while (file != NULL ) {
-			motexiste = strcoll(file->debut->mot_cle), test);
+			motexiste = strcoll(file->debut->mot_cle), *test);
 			file->debut = file->debut->ptr_suiv;
 			if (motexiste) {
 
@@ -111,10 +112,10 @@ int MFile_estVide(FIFO_M f) {
 	return(f.debut_file == NULL);
 }
 
-FIFO_M MEnfiler(FIFO_M* f, char[] e) {
+FIFO_M MEnfiler(FIFO_M* f, char* e) {
 	Cell_M* temp;
 	temp = (Cell_M*)malloc(sizeof(Cell_M));
-	memcpy((*temp).mot_cle, e, strlen(e));
+	memcpy((*temp).mot_cle, *e, strlen(e));
 
 	(*temp).ptr_suiv = f->fin_file;
 	if (f->debut_file == NULL)

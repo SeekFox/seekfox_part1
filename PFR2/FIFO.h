@@ -1,3 +1,6 @@
+#ifndef FIFO_H
+#define FIFO_H
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -17,3 +20,5 @@ int File_estVide(FIFO f);
 FIFO Enfiler(FIFO *f, char e);
 FIFO Defiler(FIFO *f, char *adr);
 int FIFO_diff(FIFO *f1, FIFO *f2);
+
+#endif

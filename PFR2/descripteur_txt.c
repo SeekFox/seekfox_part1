@@ -9,7 +9,7 @@ DESC creerDescripteur_txt(FILE* fichier_txt) {
 	DESC descripteur;
 	FIFO FILE_MC;
 	char[TAILLE_MAX] tempo;
-	int j=0, i;
+	int j=0, i=0;
 	descripteur.nb_lettres = 0;
 	descripteur.nb_mots = 0;
 	descripteur.mot_cle = NULL;
@@ -24,6 +24,7 @@ DESC creerDescripteur_txt(FILE* fichier_txt) {
 			while (chaine[i] != ' ') {
 				tempo[j] = chaine[i];
 				descripteur.nb_lettres++;
+				i++;
 				j++;
 			}
 			if (!motExiste(&FILE_MC, tempo))

@@ -1,3 +1,6 @@
+#ifndef TEXTE_H
+#define TEXTE_H
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "FIFO.h"
@@ -36,3 +39,5 @@ int motIdentiques(MOT mot1, MOT mot2);
 void MInit_File(FIFO_M f);
 int MFile_estVide(FIFO_M f);
 FIFO MEnfiler(FIFO_M* f, char e);
+
+#endif

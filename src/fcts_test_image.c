@@ -404,7 +404,7 @@ void lancer_indexation(int indice_indexation){ // vaut 0 pour une première inde
 	printf("commande reussie\n");
 
 /*------------------------------ouverture des fichiers à indexer--------------------------------------------------*/
-	int n = 0,nbFichiers = 0;
+	int nbFichiers = 0;
 	
 	FILE * compteur_fichiers;
 
@@ -449,14 +449,14 @@ void lancer_indexation(int indice_indexation){ // vaut 0 pour une première inde
 				
 				char CHEMIN2[100]="../data/TEST_IMAGES/"; // chemin d'ouverture des fichiers
 
-				descripteur d,d3;
+				descripteur d;
 				int taille_max;
 
 				generer_descripteur(&d,CHEMIN2,titre_fichier,&taille_max,n);	//création des descripteurs
 
-				//afficher_descripteur(d,taille_max);	//affichage des descripteurs(optionnel)
+				afficher_descripteur(d,taille_max);	//affichage des descripteurs(optionnel)
 
-				mise_a_jour_base(n,i,taille_max,titre_fichier,d); // ajout dans le fichier base descripteur_image
+				//mise_a_jour_base(n,i,taille_max,titre_fichier,d); // ajout dans le fichier base descripteur_image
 
 				free(d.Histogramme);
 			}
@@ -730,10 +730,9 @@ void descripteur_image_to_string(descripteur d,char string[],int taille_max){
 void string_to_descripteur_image(char string[],descripteur *d){
 
 	int taille_max = 0;
-	int longueur_chaine = 0,aux = 0,j=0;
+	//int longueur_chaine = strlen(string);
 	char c[4]="";
 	c[3] = '\0';
-	longueur_chaine = strlen(string);
 
 	for(int i = 0;i<20;i++){
 		if(i<15)d->identifiant[i] = string[i];

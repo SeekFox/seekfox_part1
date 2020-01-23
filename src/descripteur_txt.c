@@ -1,8 +1,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "descripteur_txt.h"
-#include "FIFO.h"
+#include "../include/descripteur_txt.h"
+#include "../include/FIFO.h"
 
 
 DESCTXT creerDescripteur_txt(FILE* fichier_txt) {

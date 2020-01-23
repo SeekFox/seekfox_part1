@@ -291,13 +291,9 @@ void generer_descripteur(descripteur *d,char CHEMIN2[],char titre_fichier[],int 
 
 	int nbLignes = 0,nbColonnes = 0,nbComposantes = 0;
 
-<<<<<<< HEAD
-	//printf("le chemin est %s\n",fichier);
-=======
 	char chemin_aux[100] = "";
 	strcpy(chemin_aux,CHEMIN2);
 	FILE * lecteur_image;
->>>>>>> bbe1f64cc79290d927c3c0fd12732aaac9a36aeb
 
 	//printf("le chemin est %s\n et le fichier est %s\n",CHEMIN2,titre_fichier);
 	strcat(chemin_aux,titre_fichier);
@@ -362,13 +358,8 @@ void generer_descripteur(descripteur *d,char CHEMIN2[],char titre_fichier[],int 
 		//realisation de l'histogramme avec passage en parametre du tableau Histogramme
 
 	}
-<<<<<<< HEAD
-	generer_identifiant(n,fichier,d,*taille_max);
-	//strcpy(d->identifiant,"identifiant ");
-=======
 	generer_identifiant(n,titre_fichier,d,*taille_max);
 
->>>>>>> bbe1f64cc79290d927c3c0fd12732aaac9a36aeb
 	//generation de l'identifiant du descripteur
 
 	fclose(lecteur_image);
@@ -459,12 +450,7 @@ void lancer_indexation(int indice_indexation){ // vaut 0 pour une première inde
 				char CHEMIN2[100]="../data/TEST_IMAGES/"; // chemin d'ouverture des fichiers
 
 				descripteur d;
-<<<<<<< HEAD
-				int taille_max = 0;
-				sprintf(titre_fichier,"../data/TEST_IMAGES/%s",titre_fichier);
-=======
 				int taille_max;
->>>>>>> bbe1f64cc79290d927c3c0fd12732aaac9a36aeb
 
 				generer_descripteur(&d,CHEMIN2,titre_fichier,&taille_max,n);	//création des descripteurs
 

@@ -20,12 +20,32 @@ FICHIER * initCelluleFichier () {           // Initialise une cellule vide
     return f;
 }
 
+FICHIER * creerCelluleFichierSon (char * nom, PILE sim) {         // Crée une cellule à partir de l'adresse d'un fichier et d'un taux de similarité
+    FICHIER * f = initCelluleFichier();
+    f->adresse = malloc(strlen(nom)*sizeof(char));
+    strcpy(f->adresse,nom);
+    (f->adresse)[0] = ' ';
+    f->similarite = taillePILE(sim);
+    f->precedent = initCelluleFichier();
+    f->tps = malloc(taillePILE(sim)*sizeof(int));
+    int tps;
+    for(int i=0; i<taillePILE(sim); i++) {
+        sim = dePILE(sim, &tps);
+        f->tps[i]=tps;
+    }
+    f->precedent = NULL;
+    f->suivant = initCelluleFichier();
+    f->suivant = NULL;
+    return f;
+}
+
 FICHIER * creerCelluleFichier (char * nom, float sim) {         // Crée une cellule à partir de l'adresse d'un fichier et d'un taux de similarité
     FICHIER * f = initCelluleFichier();
     f->adresse = malloc(strlen(nom)*sizeof(char));
     strcpy(f->adresse,nom);
     (f->adresse)[0] = ' ';
     f->similarite = sim;
+    f->tps = NULL;
     f->precedent = initCelluleFichier();
     f->precedent = NULL;
     f->suivant = initCelluleFichier();
@@ -73,15 +93,24 @@ void ajouterFichierRecherche (RECHERCHE * r, FICHIER * f) {     // Ajoute un fic
 
 //==================================================================================================================================
 
-void afficherResultats(RECHERCHE *r,enum FSM * state){
+void afficherResultats(RECHERCHE *r,int typeRecherche){
     //printf("Affichage des resultats\n");
     FICHIER * courant = r->premier;
     int i=1;
-    while(courant!=NULL) {
-        printf("\t%d -%-20s -> %.2f%c", i, courant->adresse, courant->similarite);
-        printf("%c",(*state==R_SON?'s':'%'));
-        courant = courant->suivant;
-        i++;
+    if(typeRecherche == R_SON){
+        printf("\t%d -%-20s -> %.0f occurence%s -> ", i, courant->adresse, courant->similarite,(courant->similarite>1?"s":""));
+        for(int j = 0; j < courant->similarite; j++){
+            printf("%ds ", courant->tps[j]);
+        }
+        printf("\0");
+    }
+    else{
+        while(courant!=NULL) {
+            printf("\t%d -%-20s -> %.2f%c", i, courant->adresse, courant->similarite);
+            printf("%c",'%');
+            courant = courant->suivant;
+            i++;
+        }
     }
 }
 
@@ -282,8 +311,8 @@ RECHERCHE * rechercheParFichierSon (char * fichier) {
             sim = comparerDescripteursAudio(descRequete,desc);        // On calcule la similarité entre le fichier recherché et le fichier courant
             int tps;            // Durée du passage le plus long en commun
             if(taillePILE(sim)>=1) {        // Cas où le descripteur récupéré contient au moins une fois le jingle recherché
-                sim = dePILE(sim, &tps);
-                FICHIER * fcomp = creerCelluleFichier(fichCourant, tps);
+                //sim = dePILE(sim, &tps);
+                FICHIER * fcomp = creerCelluleFichierSon(fichCourant, sim);
                 ajouterFichierRecherche(resultats, fcomp);      // On ajoute à la liste triée des fichiers compatibles avec la recherche
             }
         }

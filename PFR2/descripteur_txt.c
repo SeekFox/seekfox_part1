@@ -7,32 +7,37 @@
 
 DESCTXT creerDescripteur_txt(FILE* fichier_txt) {
 	DESCTXT descripteur;
-	FIFO_M FILE_MC;
+	FIFO_M* FILE_MC = (FIFO_M*)malloc(sizeof(FIFO_M));
+	(FILE_MC)->debut = (Cell_M*)malloc(sizeof(Cell_M));
 	char tempo[TAILLE_MAX];
 	int j=0, i=0;
 	char chaine[TAILLE_MAX] = "";
+	descripteur.fmot_cle = FILE_MC;
 	descripteur.nb_lettres = 0;
 	descripteur.nb_mots = 0;
-	descripteur.fmot_cle = NULL;
-	do {
-		fgets(chaine, TAILLE_MAX, fichier_txt);
-	} while (chaine != "");
-	for (i = 0; i < strlen(chaine); i++) {
-		if (chaine[i] = '<') {
-			while (chaine[i] != '>')
+	(descripteur.fmot_cle->debut)->mot_cle.occurence = 0;
+
+
+	while (fgets(chaine, TAILLE_MAX, fichier_txt) != NULL) {
+		for (i = 0; i < strlen(chaine); i++) {
+			if (chaine[i] == '<') {
+				while (chaine[i] != '>' && chaine[i]!='\0')
 					i++;
+			}
+			
+			while (chaine[i] != ' ' && chaine[i]!='\0') {
+				tempo[j] = chaine[i];
+				descripteur.nb_lettres++;
+				i++;
+				j++;
+			}
+			descripteur.nb_mots++;
+			if (!motExiste(FILE_MC, tempo)) {
+				MEnfiler(FILE_MC, tempo);
+			}
 		}
-		while (chaine[i] != ' ') {
-			tempo[j] = chaine[i];
-			descripteur.nb_lettres++;
-			i++;
-			j++;
-		}
-		descripteur.nb_mots++;
-		if (!motExiste(&FILE_MC, tempo))
-			MEnfiler(&FILE_MC, tempo);
 	}
-	descripteur.fmot_cle = &FILE_MC;
+	
 	return(descripteur);
 }
 
@@ -63,53 +68,61 @@ FIFO descToFIFO(DESCTXT d) {
 	Cell_M* memoire = d.fmot_cle->debut;
 	f = Enfiler(&f, d.nb_lettres);
 	f = Enfiler(&f, d.nb_mots);
-	while (d.fmot_cle->debut != NULL) {
-		f = Enfiler(&f, d.fmot_cle->debut->mot_cle.mot);
+	while (memoire != NULL) {
+		for (int j = 0; j < strlen(memoire->mot_cle.mot); j++) {
+			f = Enfiler(&f, memoire->mot_cle.mot[j]);
+		}
 		f = Enfiler(&f, '\n');
-		f = Enfiler(&f, d.fmot_cle->debut->mot_cle.occurence);
+		f = Enfiler(&f, (char) (memoire->mot_cle.occurence));
 		f = Enfiler(&f, '\n');
-		d.fmot_cle->debut = d.fmot_cle->debut->ptr_suiv;
+		memoire = memoire->ptr_suiv;
 	}
-	d.fmot_cle->debut = memoire;
 	return(f);
 }
 
 int motExiste(FIFO_M *file, char test[]) {
 	int motexiste=0;
-	Cell_M* memoire;
-	memoire = file->debut;
-	Cell_M* temp = file->debut;
+	Cell_M* memoire = file->debut;
 	if (!MFile_estVide(*file)) {
-		while (file != NULL ) {
-			motexiste = strcoll(file->debut->mot_cle.mot, test);
-			file->debut = file->debut->ptr_suiv;
+		while (memoire != NULL  ) {
+			motexiste = strcoll(memoire->mot_cle.mot, test);
 			if (motexiste) {
-				file->debut->mot_cle.occurence++;
-				file->debut=memoire;
+				memoire->mot_cle.occurence++;
+				break;
 			}
+			memoire = memoire->ptr_suiv;
 		}
 	}
 	return( motexiste);
 }
 
 char* descToString(DESCTXT d){
-	char* tab = malloc(TAILLE_MAX * sizeof(char));
-	int compt = 4;
+	char * tab = (char* )malloc(TAILLE_MAX * sizeof(char));
+	char* stock = (char*)malloc(TAILLE_MAX * sizeof(char));
+	//printf("<%d %d\n", strlen(tab), TAILLE_MAX);
+//	int compt = 4;
 	Cell_M* memoire = d.fmot_cle->debut;
-	tab[0] = d.nb_lettres;
+	tab[0] = (char) d.nb_lettres;
 	tab[1] = ' ';
-	tab[2] = d.nb_mots;
-	tab[3] = ' ';
-	while (d.fmot_cle->debut != NULL) {
-		tab = strcat(tab, d.fmot_cle->debut->mot_cle.mot);
-		compt++;
+	tab[2] = (char) d.nb_mots;
+	tab[3] = '\n';
+	while (memoire != NULL) {
+		printf(">%d\n",memoire->ptr_suiv==NULL);
+		tab = strcat(tab, (memoire->mot_cle).mot);
+		tab = strcat(tab, ":");
+		sprintf(stock,"%d", memoire->mot_cle.occurence);
+		tab = strcat(tab, stock);
+		/*compt++;
 		tab[compt] = ':';
 		compt++;
-		tab[compt] = d.fmot_cle->debut->mot_cle.occurence;
-		d.fmot_cle->debut = d.fmot_cle->debut->ptr_suiv;
-		compt++;
+		tab[compt] = memoire->mot_cle.occurence;*/
+		memoire = memoire->ptr_suiv;
+		//compt++;
+	
 	}
-	tab[compt] = '\0';
+	printf(">>%d %s\n", strlen(tab),tab);
+	//tab=strcat(tab, '\0');
+	printf("dfgr\n");
 	return(tab);
 }
 

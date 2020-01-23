@@ -7,7 +7,7 @@
 #include <string.h>
 
 
-#define TAILLE_MAX 1000
+#define TAILLE_MAX 1000000
 
 typedef struct MotPourMotCle {
 	int occurence;
@@ -22,6 +22,7 @@ typedef struct CellulePourMotCle {
 typedef struct FIFOMotCle {
 	Cell_M* debut, * fin;
 }FIFO_M;
+
 typedef struct Descripteur_txt{
 	int nb_mots;
 	int nb_lettres;

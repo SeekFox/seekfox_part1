@@ -714,8 +714,8 @@ void descripteur_image_to_string(descripteur d,char string[],int taille_max){
 	chaine[6] = '\0';
 
 	strcpy(string,d.identifiant);
-
-	for(int i=0;i<taille_max;i++){
+	
+	for(int i=0;i<taille_max;i++){		//taille_max
 		toString(d.Histogramme[i],chaine);
 		strcat(string," ");
 		strcat(string,chaine);

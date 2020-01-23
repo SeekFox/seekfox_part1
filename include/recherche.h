@@ -1,6 +1,6 @@
 #ifndef RECHERCHE_H
 #define RECHERCHE_H
-
+#include "pile_dynamiqueAudio.h"
 /* Principe : pour un fichier donné en recherche, on parcours tous les descripteurs du même type et on met les adresses de ceux 
 qui ont un taux de similitude suffisant dans une pile/file où il sont triés par similarité décroissante */
 
@@ -8,6 +8,7 @@ qui ont un taux de similitude suffisant dans une pile/file où il sont triés pa
 typedef struct fichier {            
     char * adresse;                 // Adresse
     float similarite;               // Taux de similarité
+    int * tps;                      // Utilisé par le son uniquement, position en secondes des jingles identiques
     struct fichier * precedent;     // Fichier précédent (plus similaire)
     struct fichier * suivant;       // Fichier suivant (moins similaire)
 } FICHIER;
@@ -21,9 +22,12 @@ typedef struct recherche {
 
 /* FONCTIONS DE MANIPULATION DES STRUCTURES */
 FICHIER * initCelluleFichier ();                                // Crée une cellule fichier vide
-FICHIER * creerCelluleFichier (char *, float);                  // Crée une cellule fichier contenant l'adresse d'un fichier et un taux de similarité
+FICHIER * creerCelluleFichierSon (char *,PILE);
+FICHIER * creerCelluleFichier (char *,float);                  // Crée une cellule fichier contenant l'adresse d'un fichier et un taux de similarité
 RECHERCHE * creerRechercheVide ();                              // Crée une file triée recherche vide
 void ajouterFichierRecherche (RECHERCHE *, FICHIER *);          // Ajoute une cellule fichier dans la file en la triant (par ordre décroissant)
+
+void afficherResultats(RECHERCHE *r, int typeRecherche);
 
 /* FONCTIONS DE RECHERCHE PAR FICHIER */
 // /!\ IMPORTANT : ces fonctions ont besoin de toutes les fonctions de manipulation/création de descripteur pour pouvoir fonctionner

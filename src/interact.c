@@ -29,6 +29,9 @@
   #include <../include/indexation.h>
 #endif
 
+#ifndef RECHERCHE_H
+  #include "../include/recherche.h"
+#endif
 
 void displayMenu(int *isAdmin, enum FSM * state, char * file){
   int nextState = (*state);
@@ -63,6 +66,7 @@ void displayMenu(int *isAdmin, enum FSM * state, char * file){
 
     case R_IMAGE:
       printf("Recherche par IMAGE\n");
+      afficherResultats(rechercheParFichierImage(file),R_IMAGE);
       //TODO : Recherche par Image
       (*state) = TITLE;
       break;
@@ -75,6 +79,8 @@ void displayMenu(int *isAdmin, enum FSM * state, char * file){
 
     case R_SON:
       printf("Recherche par SON\n");
+      //printf(">>>%s\n",file);
+      afficherResultats(rechercheParFichierSon(file),R_SON);
       //TODO : Recherche par SON
       (*state) = TITLE;
       break;
@@ -138,9 +144,9 @@ void displayMenuResearch(char * file, enum FSM * state){
         fscanf(listFile,"%s\n",line);
       }
 
-      printf("\n\t >>%s<<\n",line);
+      printf("Choix du fichier \"%s\"\n\n",line);
       strcpy(ext, strrchr(line,'.'));
-      printf("\n\t >>%s<<>>%s<<\n",getNameOfFile(line),ext);
+      //printf("\n\t >>%s<<>>%s<<\n",getNameOfFile(line),ext);
       
       (*state) = ( ( strcmp(ext,".bmp")==0 || strcmp(ext,".jpg")==0 ) ? R_IMAGE : (strcmp(ext,".xml")==0 ? R_TEXTE : (strcmp(ext,".wav")==0 || strcmp(ext,".bin")==0 ) ? R_SON : (*state)));
       strcpy(file,line);
@@ -183,7 +189,7 @@ void displayMenuAdmin(int *isAdmin){
 
       case 2:
         system("echo Vous etes dans le repertoire ${PWD##*/}");
-        printf("\nEntrez le chemin vers le fichier a indexer\n\t>");
+        printf("\nEntrez le chemin vers le fichier du descripteur\n\t>");
         color("36");
         scanf("%64s",fichier);
         color("37");
@@ -327,7 +333,7 @@ int convertStringChoiceToInt(char * str, int max){
 
 char * getExtensionOfFile(char * file){
   char * ext = "";
-  ext = (char *)malloc(sizeof(char)*4);
+  ext = (char *)malloc(sizeof(char)*5);
   strcpy(ext, strrchr(file,'.'));
   //printf("\t\t>%s< >> >%s<\n",file,ext);
   return ext;
@@ -335,7 +341,7 @@ char * getExtensionOfFile(char * file){
 
 char * getNameOfFile(char * file){
   char * s = NULL;
-  s = (char *)malloc(( strlen(file) ) * sizeof(char));
+  s = (char *)malloc(( strlen(file)+1) * sizeof(char));
   strcpy(s,"");
 
   if( strchr(file,'.') != NULL){
@@ -353,7 +359,7 @@ char * getNameOfFile(char * file){
 void displayInformations(){
   printTitle("SEEKFOX TEAM");
   printf(" %-22.22s  %s\n","Gael Camba","CTO");
-  printf(" %-22.22s  %s\n","Oualid El Abdaoui","");
+  printf(" %-22.22s  %s\n","Oualid El Abdaoui","Employe du mois");
   printf(" %-22.22s  %s\n","Etienne Combelles","");
   printf(" %-22.22s  %s\n","Raphael Bizet","Stagiaire");
   printf(" %-22.22s  %s\n","Clement Truillet","Community Manager");

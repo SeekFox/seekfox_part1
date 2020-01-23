@@ -650,7 +650,6 @@ void rechercher_image(char * fichier,int n){
 	while(!feof(comparateur)){
 		strcpy(identifiant,"");
 
-		
 		for(int i=0;i<6;i++){
 			
 			fscanf(comparateur,"%s",c);

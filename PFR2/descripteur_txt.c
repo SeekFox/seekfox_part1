@@ -28,8 +28,8 @@ DESC creerDescripteur_txt(FILE* fichier_txt) {
 				i++;
 				j++;
 			}
-			if (!motExiste(&FILE_MC, &tempo))
-				Enfiler(&FILE_MC, &tempo);
+			if (!motExiste(&FILE_MC, tempo))
+				MEnfiler(&FILE_MC, tempo);
 			else 
 
 			j = 0;
@@ -46,8 +46,9 @@ float comparerDescripteurs(DESC d1, DESC d2){
 	fd1 = descToString(d1);
 	fd2 = descToString(d2);
 	if (!FIFO_diff(&fd1, &fd2))
-		pritnf("Les 2 descripteurs sont identiques");
-	Cell* temp1 = fd1->debut_file, temp2 = fd2->debut_file;
+		printf("Les 2 descripteurs sont identiques");
+	Cell* temp1 = fd1.debut_file;
+	Cell* temp2 = fd2.debut_file;
 	while (temp1 != NULL) {
 		if (temp1->e == temp2->e) {
 			pourcentage++;
@@ -61,33 +62,35 @@ float comparerDescripteurs(DESC d1, DESC d2){
 }
 
 
-int motExiste(FIFO_M *file, char* test) {
+int motExiste(FIFO_M *file, char test[]) {
 	int motexiste=0;
 	Cell_M* memoire;
 	memoire = file->debut;
-	Cell_M* temp = file;
-	if (!MFile_estVide(file) {
+	Cell_M* temp = file->debut;
+	if (!MFile_estVide(*file)) {
 		while (file != NULL ) {
-			motexiste = strcoll(file->debut->mot_cle), *test);
+			motexiste = strcoll(file->debut->mot_cle.mot, test);
 			file->debut = file->debut->ptr_suiv;
 			if (motexiste) {
-
-				file->debut->mem;
+				file->debut->mot_cle.occurence++;
+				file->debut=memoire;
 			}
 		}
 	}
 	return( motexiste);
 }
 
-FIFO descToString(DESC d){
-	FIFO f;
-	Enfiler(&f, (char) d.nb_lettres);
-	Enfiler(&f, (char) d.nb_mots);
-	while (d.mot_cle->debut_file != NULL) {
-		Enfiler(&f, d.mot_cle->debut_file->e);
-		d.mot_cle = d.mot_cle->debut_file->ptr_suiv;
+char[] descToString(DESC d){
+	char f=tab[TAILLE_MAX];
+	Cell_M* memoire = file->debut;
+	tab[0] = d.nb_lettres;
+	tab[1] = ' ';
+	tab[2] = d.nb_mots;
+	tab[3] = ' ';
+	while (d.mot_cle->debut != NULL) {
+		d.
 	}
-	return(*f);
+	return(tab);
 }
 
 int descripteursIdentiques(DESC d1, DESC d2){
@@ -109,19 +112,19 @@ void MInit_File(FIFO_M f) {
 }
 
 int MFile_estVide(FIFO_M f) {
-	return(f.debut_file == NULL);
+	return(f.debut == NULL);
 }
 
-FIFO_M MEnfiler(FIFO_M* f, char* e) {
+FIFO_M MEnfiler(FIFO_M* f, char e[]) {
 	Cell_M* temp;
 	temp = (Cell_M*)malloc(sizeof(Cell_M));
-	memcpy((*temp).mot_cle, *e, strlen(e));
+	memcpy((*temp).mot_cle, e, strlen(e));
 
-	(*temp).ptr_suiv = f->fin_file;
-	if (f->debut_file == NULL)
-		f->debut_file = temp;
+	(*temp).ptr_suiv = f->fin;
+	if (f->debut == NULL)
+		f->debut = temp;
 	else {
-		Cell_M* actuel = f->debut_file;
+		Cell_M* actuel = f->debut;
 		while (actuel->ptr_suiv != NULL)
 			actuel = actuel->ptr_suiv;
 		actuel->ptr_suiv = temp;

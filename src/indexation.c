@@ -176,7 +176,7 @@ void supprLignesIndex (int * lignasuppr) {        // Supprime la ligne n du fich
 char * moveFileInBDB(char * adrDoc){
     char * adrDocOnBDB = (char*)malloc(24*sizeof(char) + strlen(adrDoc));
     if(strncmp("base_de_documents",adrDoc,strlen("base_de_documents") )!=0){
-        sprintf(adrDocOnBDB,"base_de_documents/%s", adrDoc);
+        sprintf(adrDocOnBDB,"base_de_documents/%s", strrchr(adrDoc,'/'));
         rename(adrDoc,adrDocOnBDB);
         return adrDocOnBDB;
     }

@@ -1,3 +1,14 @@
+/**
+ * @file recherche.c
+ * @author Etienne Combelles
+ * @brief 
+ * @version 0.1
+ * @date 24/01/2020
+ * 
+ * @copyright Copyright (c) 2020
+ * 
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -105,7 +116,7 @@ void afficherResultats(RECHERCHE *r,int typeRecherche){
     }
     else{
         while(courant!=NULL) {
-            printf("\t%d -%-20s -> %.2f%c", i, courant->adresse, courant->similarite);
+            printf("\t%d -%-20s -> %.2f", i, courant->adresse, courant->similarite);
             printf("%c\n",'%');
             courant = courant->suivant;
             i++;
@@ -334,12 +345,13 @@ RECHERCHE * rechercheParFichierSon (char * fichier) {
             sprintf(fichCourant,"%s",strrchr(getNameOfFile(fichCourant),'/'));
             DescripteurAudio desc = stringToDescripteurAudio(descCourant);     // On convertit le descripteur (jusque là au format string) en structure descripteur
             sim = comparerDescripteursAudio(descRequete,desc);        // On calcule la similarité entre le fichier recherché et le fichier courant
-            int tps;            // Durée du passage le plus long en commun
+            //int tps;            // Durée du passage le plus long en commun
             if(taillePILE(sim)>=1) {        // Cas où le descripteur récupéré contient au moins une fois le jingle recherché
                 //sim = dePILE(sim, &tps);
                 FICHIER * fcomp = creerCelluleFichierSon(fichCourant, sim);
                 ajouterFichierRecherche(resultats, fcomp);      // On ajoute à la liste triée des fichiers compatibles avec la recherche
             }
+            
         }
     }
 

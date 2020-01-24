@@ -331,6 +331,7 @@ int convertStringChoiceToInt(char * str, int max){
 }
 
 char * getExtensionOfFile(char * file){
+  if(strcmp(file,"NA")==0){ return ""; }
   char * ext = "";
   ext = (char *)malloc(sizeof(char)*5);
   strcpy(ext, strrchr(file,'.'));

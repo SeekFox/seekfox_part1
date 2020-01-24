@@ -48,8 +48,7 @@ struct config_s{
     //General
     char passwordAdmin[32];
     char logiciel_texte[16];
-    char logiciel_image[16];
-    char logiciel_audio[16];
+    char logicielOuvertureFichier[16];
 
     //Texte
     int tailleMin;
@@ -97,12 +96,9 @@ char * getLogicielTexte(){
     return (config->logiciel_texte);
 }
 
-char * getLogicielImage(){
-    return (config->logiciel_image);
-}
 
-char * getLogicielAudio(){
-   return (config->logiciel_audio); 
+char * getLogicielOuvertureFichier(){
+   return (config->logicielOuvertureFichier); 
 }
 
 //Setter
@@ -138,14 +134,9 @@ void setLogicielTexte(Config *c, char * str){
     strcpy((*c)->logiciel_texte,str);
 }
 
-void setLogicielImage(Config *c, char * str){
-    strcpy((*c)->logiciel_image,str);
+void setLogicielOuvertureFichier(Config *c, char * str){
+    strcpy((*c)->logicielOuvertureFichier,str);
 }
-
-void setLogicielAudio(Config *c, char * str){
-    strcpy((*c)->logiciel_audio,str);
-}
-
 
 Config loadConfig(){
     Config c = (Config)malloc(sizeof(struct config_s));
@@ -192,11 +183,7 @@ Config loadConfig(){
                     break;
 
                 case 8:
-                    setLogicielImage(&c,line);
-                    break;
-
-                case 9:
-                    setLogicielAudio(&c,line);
+                    setLogicielOuvertureFichier(&c,line);
                     break;
                 
                 default:
@@ -216,6 +203,12 @@ Config loadConfig(){
 
 void displayConfig(){
     printTitle("CONFIGURATIONS");
+
+    printf("GENERAL \n");
+    printf("\tLogiciel de visualisation de fichier ");
+    color("1");
+    printf("%s\n",getLogicielOuvertureFichier(config));
+    color("0");
 
     printf("TEXTE \n");
     printf("\tTaille minimun d'un mot              ");
@@ -240,10 +233,6 @@ void displayConfig(){
     color("1");
     printf("%d\n",getNbBits(config));
     color("0");
-    printf("\tLogiciel de visualisation            ");
-    color("1");
-    printf("%s\n",getLogicielImage(config));
-    color("0");
 
     printf("AUDIO \n");
     printf("\tTaille de la fenetre d'analyse       ");
@@ -253,10 +242,6 @@ void displayConfig(){
     printf("\tNombre d'intervalles                 ");
     color("1");
     printf("%d\n",getAudioM(config));
-    color("0");
-    printf("\tLogiciel de visualisation            ");
-    color("1");
-    printf("%s\n",getLogicielAudio(config));
     color("0");
     printf("\n");
 }   
@@ -425,9 +410,7 @@ void majConfigFile(){
         fprintf(fichier,"%d\n",getAudioN());
         fprintf(fichier,"%d\n",getAudioM());
         fprintf(fichier,"%s\n",getLogicielTexte());
-        fprintf(fichier,"%s\n",getLogicielImage());
-        fprintf(fichier,"%s\n",getLogicielAudio());
-
+        fprintf(fichier,"%s\n",getLogicielOuvertureFichier());
 
     }else{
         displayError("Fichier de config inexistant");

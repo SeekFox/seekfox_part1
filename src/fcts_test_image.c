@@ -650,7 +650,10 @@ void rechercher_image(char chemin[],char titre_fichier[],int n){
 	char string[1500] = "";
 	FILE *comparateur;
 	comparateur = fopen("../data/base_descripteur_image","r");
-
+	if(comparateur == NULL){
+		printf("erreur chemin base_descripteru_image\n");
+		exit(1);
+	}
 	
 	while(!feof(comparateur)){
 		strcpy(identifiant,"");

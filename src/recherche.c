@@ -329,6 +329,7 @@ RECHERCHE * rechercheParFichierSon (char * fichier) {
         fichCourant[strcspn(fichCourant,"\r\n")] = 0; //Suppression du \n
         
         fgets(descCourant, 200000, descripteurs);     // Pour chacune de ces lignes (donc pour chacun de ces fichiers), on récupère le descripteur associé
+        
         if((strcmp(getExtensionOfFile(fichCourant),".wav")==0) || (strcmp(getExtensionOfFile(fichCourant),".bin")==0)) {      // Cas où le descripteur récupéré est celui d'un fichier son (on ne traite que ces cas)
             sprintf(fichCourant,"%s",strrchr(getNameOfFile(fichCourant),'/'));
             DescripteurAudio desc = stringToDescripteurAudio(descCourant);     // On convertit le descripteur (jusque là au format string) en structure descripteur
@@ -361,13 +362,9 @@ int main (int argc, char * argv[]) {
     FICHIER * f3 = creerCelluleFichier("Trajan", 70);
     FICHIER * f4 = creerCelluleFichier("Gallien", 8);
     FICHIER * f5 = creerCelluleFichier("Constantin", 30);
-<<<<<<< HEAD
-
-=======
     FICHIER * f6 = creerCelluleFichier("Septime Sévère", 33);
 
     ajouterFichierRecherche(r, f6);
->>>>>>> dev
     ajouterFichierRecherche(r, f4);
     ajouterFichierRecherche(r, f1);
     ajouterFichierRecherche(r, f2);

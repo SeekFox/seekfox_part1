@@ -280,7 +280,7 @@ float getSimilarityValue(PILE* pile1, PILE* pile2, int tailleFenetre){
 }
 
 PILE comparerDescripteursAudio(DescripteurAudio jingle, DescripteurAudio fichierAudio){
-	if(jingle.nbFenetres > fichierAudio.nbFenetres){
+	if(jingle.nbFenetres >= fichierAudio.nbFenetres){
 		return NULL;
 	}
 	int jingleEstComprisDansLeFichier = 0;

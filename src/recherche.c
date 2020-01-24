@@ -20,12 +20,32 @@ FICHIER * initCelluleFichier () {           // Initialise une cellule vide
     return f;
 }
 
+FICHIER * creerCelluleFichierSon (char * nom, PILE sim) {         // Crée une cellule à partir de l'adresse d'un fichier et d'un taux de similarité
+    FICHIER * f = initCelluleFichier();
+    f->adresse = malloc(strlen(nom)*sizeof(char));
+    strcpy(f->adresse,nom);
+    (f->adresse)[0] = ' ';
+    f->similarite = taillePILE(sim);
+    f->precedent = initCelluleFichier();
+    f->tps = malloc(taillePILE(sim)*sizeof(int));
+    int tps;
+    for(int i=0; i<taillePILE(sim); i++) {
+        sim = dePILE(sim, &tps);
+        f->tps[i]=tps;
+    }
+    f->precedent = NULL;
+    f->suivant = initCelluleFichier();
+    f->suivant = NULL;
+    return f;
+}
+
 FICHIER * creerCelluleFichier (char * nom, float sim) {         // Crée une cellule à partir de l'adresse d'un fichier et d'un taux de similarité
     FICHIER * f = initCelluleFichier();
     f->adresse = malloc(strlen(nom)*sizeof(char));
     strcpy(f->adresse,nom);
     (f->adresse)[0] = ' ';
     f->similarite = sim;
+    f->tps = NULL;
     f->precedent = initCelluleFichier();
     f->precedent = NULL;
     f->suivant = initCelluleFichier();
@@ -73,14 +93,24 @@ void ajouterFichierRecherche (RECHERCHE * r, FICHIER * f) {     // Ajoute un fic
 
 //==================================================================================================================================
 
-void afficherResultats(RECHERCHE *r){
+void afficherResultats(RECHERCHE *r,int typeRecherche){
     //printf("Affichage des resultats\n");
     FICHIER * courant = r->premier;
     int i=1;
-    while(courant!=NULL) {
-        printf("\t%d -%-20s -> %.2f%c \n", i, courant->adresse, courant->similarite,'%');
-        courant = courant->suivant;
-        i++;
+    if(typeRecherche == R_SON){
+        printf("\t%d -%-20s -> %.0f occurence%s -> ", i, courant->adresse, courant->similarite,(courant->similarite>1?"s":""));
+        for(int j = 0; j < courant->similarite; j++){
+            printf("%ds \n", courant->tps[j]);
+        }
+        printf("\0");
+    }
+    else{
+        while(courant!=NULL) {
+            printf("\t%d -%-20s -> %.2f%c", i, courant->adresse, courant->similarite);
+            printf("%c\n",'%');
+            courant = courant->suivant;
+            i++;
+        }
     }
 }
 
@@ -190,6 +220,7 @@ RECHERCHE * rechercheParFichierImage (char * fichier) {
     // par Oualid, donc pour m'adapter à cette fonction je transfère tous les descripteurs image indexés dans le fichier ouvert ci-dessous.
     // C'est ce fichier qui est utilisé dans la fonction de oualid comme base de descripteurs.
     // (D'ailleurs, je sais pas à quoi correspond le dernier paramètre, donc j'ai mis 10)
+    //      Merci etienne, je suis heureux de l'apprendre
     FILE * descImages = NULL;
     descImages = fopen("data/base_descripteur_image", "w+");
     if(descImages==NULL) {
@@ -273,15 +304,16 @@ RECHERCHE * rechercheParFichierSon (char * fichier) {
     
     while(fgets(fichCourant, 200, fichiersIndexes)!=NULL) {     // On passe chaque ligne du fichier listant les fichiers indexés en revue
         fichCourant[strcspn(fichCourant,"\r\n")] = 0; //Suppression du \n
-        sprintf(fichCourant,"%s",strrchr(getNameOfFile(fichCourant),'/'));
-        fgets(descCourant, 200000, descripteurs);     // Pour chacune de ces lignes (donc pour chacun de ces fichiers), on récupère le descripteur associé
         
-        if((strcmp(getExtensionOfFile(adresse),".wav")==0) || (strcmp(getExtensionOfFile(adresse),".bin")==0)) {      // Cas où le descripteur récupéré est celui d'un fichier son (on ne traite que ces cas)
-            printf(">>%s  \n",fichCourant);
+        fgets(descCourant, 200000, descripteurs);     // Pour chacune de ces lignes (donc pour chacun de ces fichiers), on récupère le descripteur associé
+        if((strcmp(getExtensionOfFile(fichCourant),".wav")==0) || (strcmp(getExtensionOfFile(fichCourant),".bin")==0)) {      // Cas où le descripteur récupéré est celui d'un fichier son (on ne traite que ces cas)
+            sprintf(fichCourant,"%s",strrchr(getNameOfFile(fichCourant),'/'));
             DescripteurAudio desc = stringToDescripteurAudio(descCourant);     // On convertit le descripteur (jusque là au format string) en structure descripteur
             sim = comparerDescripteursAudio(descRequete,desc);        // On calcule la similarité entre le fichier recherché et le fichier courant
+            int tps;            // Durée du passage le plus long en commun
             if(taillePILE(sim)>=1) {        // Cas où le descripteur récupéré contient au moins une fois le jingle recherché
-                FICHIER * fcomp = creerCelluleFichier(fichCourant, taillePILE(sim));
+                //sim = dePILE(sim, &tps);
+                FICHIER * fcomp = creerCelluleFichierSon(fichCourant, sim);
                 ajouterFichierRecherche(resultats, fcomp);      // On ajoute à la liste triée des fichiers compatibles avec la recherche
             }
         }
@@ -306,9 +338,13 @@ int main (int argc, char * argv[]) {
     FICHIER * f3 = creerCelluleFichier("Trajan", 70);
     FICHIER * f4 = creerCelluleFichier("Gallien", 8);
     FICHIER * f5 = creerCelluleFichier("Constantin", 30);
+<<<<<<< HEAD
+
+=======
     FICHIER * f6 = creerCelluleFichier("Septime Sévère", 33);
 
     ajouterFichierRecherche(r, f6);
+>>>>>>> dev
     ajouterFichierRecherche(r, f4);
     ajouterFichierRecherche(r, f1);
     ajouterFichierRecherche(r, f2);

@@ -65,34 +65,33 @@ void displayMenu(int *isAdmin, enum FSM * state, char * file){
       break;
 
     case R_IMAGE:
-      printf("Recherche par IMAGE\n");
-      afficherResultats(rechercheParFichierImage(file));
+      printTitle("Recherche par IMAGE");
+      afficherResultats(rechercheParFichierImage(file),R_IMAGE);
       //TODO : Recherche par Image
       (*state) = TITLE;
       break;
 
     case R_TEXTE:
-      printf("Recherche par TEXTE\n");
+      printTitle("Recherche par TEXTE");
       //TODO : Recherche par TEXTE
       (*state) = TITLE;
       break;
 
     case R_SON:
-      printf("Recherche par SON\n");
-      //printf(">>>%s\n",file);
-      afficherResultats(rechercheParFichierSon(file));
-      //TODO : Recherche par SON
+      printTitle("Recherche par SON");
+      printf("%s\n",file);
+      afficherResultats(rechercheParFichierSon(file),R_SON);
       (*state) = TITLE;
       break;
 
     case R_KEYWORD:
-      printf("Recherche par MOT CLES\n");
+      printTitle("Recherche par MOT CLES\n");
       //TODO : Recherche par MOT CLES
       (*state) = TITLE;
       break;
 
     case R_COLOR:
-      printf("Recherche par COULEUR DOMINANTE\n");
+      printTitle("Recherche par COULEUR DOMINANTE\n");
       //TODO : Recherche par COULEUR DOMINANTE
       (*state) = TITLE;
       break;
@@ -189,7 +188,7 @@ void displayMenuAdmin(int *isAdmin){
 
       case 2:
         system("echo Vous etes dans le repertoire ${PWD##*/}");
-        printf("\nEntrez le chemin vers le fichier a indexer\n\t>");
+        printf("\nEntrez le chemin vers le fichier du descripteur\n\t>");
         color("36");
         scanf("%64s",fichier);
         color("37");
@@ -360,7 +359,7 @@ void displayInformations(){
   printTitle("SEEKFOX TEAM");
   printf(" %-22.22s  %s\n","Gael Camba","CTO");
   printf(" %-22.22s  %s\n","Oualid El Abdaoui","Employe du mois");
-  printf(" %-22.22s  %s\n","Etienne Combelles","");
+  printf(" %-22.22s  %s\n","Etienne Combelles","Tresorier");
   printf(" %-22.22s  %s\n","Raphael Bizet","Stagiaire");
   printf(" %-22.22s  %s\n","Clement Truillet","Community Manager");
   printf("\n");

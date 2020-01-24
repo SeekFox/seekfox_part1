@@ -598,7 +598,7 @@ void afficher_les_resultats(Resultat r[]){
 		}
 		
 	}
-	ouvrir_image(meilleur_resultat.identifiant);
+	//ouvrir_image(meilleur_resultat.identifiant);
 }
 /*
 fonction qui sert à afficher les resultats de la recherche stockés dans le tableau passé en paramètre
@@ -646,13 +646,13 @@ void rechercher_image(char chemin[],char titre_fichier[],int n){
 	toString(n,N);
 	
 	generer_descripteur(&d,chemin,titre_fichier,&taille_max,n);
-	
+
 	char string[1500] = "";
 	FILE *comparateur;
-	comparateur = fopen("../data/base_descripteur_image","r");
+	comparateur = fopen("data/base_descripteur_image","r");
 	if(comparateur == NULL){
 		printf("erreur chemin base_descripteru_image\n");
-		exit(1);
+		return; //exit(1);
 	}
 	
 	while(!feof(comparateur)){
@@ -708,6 +708,7 @@ void rechercher_image(char chemin[],char titre_fichier[],int n){
 
 	tri_decroissant(resultat_comparaison,100);
 	afficher_les_resultats(resultat_comparaison);
+	free(d.Histogramme);
 
 }
 /*une fonction qui sert à rechercher l'image et afficher les résultats 

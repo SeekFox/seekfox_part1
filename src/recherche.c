@@ -271,9 +271,9 @@ RECHERCHE * rechercheParFichierImage (char * fichier) {
     while(fgets(fichCourant, 200, fichiersIndexes)!=NULL) {     // On passe chaque ligne du fichier listant les fichiers indexés en revue
         fgets(descCourant, 20000, descripteurs);     // Pour chacune de ces lignes (donc pour chacun de ces fichiers), on récupère le descripteur associé
 
-        if(strcmp(getExtensionOfFile(fichCourant), ".jpg\n")==0 || strcmp(getExtensionOfFile(fichCourant), ".bmp\n")==0) {      // Cas où l'adresse récupérée est celle d'un fichier image (on ne traite que ces cas)
-            printf("Fichier courant : %s\n", fichCourant);
-            printf("Son descripteur : %s\n", descCourant);
+        if(strcmp(getExtensionOfFile(fichCourant), ".jpg")==0 || strcmp(getExtensionOfFile(fichCourant), ".bmp")==0) {      // Cas où l'adresse récupérée est celle d'un fichier image (on ne traite que ces cas)
+            //printf("Fichier courant : %s\n", fichCourant);
+            //printf("Son descripteur : %s\n", descCourant);
             fprintf(descImages, "%s", descCourant); 
                   
             /*descripteur * desc = toDescripteur(descCourant);     // On convertit son descripteur (jusque là au format string) en structure descripteur
@@ -284,11 +284,10 @@ RECHERCHE * rechercheParFichierImage (char * fichier) {
             }*/
         }
     }
-
-    fclose(descImages)
-    printf("Fichier : %s\n");
-    rechercher_image("../requete/", fichier, 10);
-    printf("Kikou1\n");
+    fclose(descImages);
+    
+    //printf("Fichier : %s\n", fichier);
+    rechercher_image("requete/", fichier, 2);
     free(descCourant);
 
     fclose(fichiersIndexes);

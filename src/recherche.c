@@ -285,8 +285,7 @@ RECHERCHE * rechercheParFichierImage (char * fichier) {
         }
     }
 
-    fclose(descImages);
-    
+    fclose(descImages)
     printf("Fichier : %s\n");
     rechercher_image("../requete/", fichier, 10);
     printf("Kikou1\n");

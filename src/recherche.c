@@ -95,45 +95,51 @@ void ajouterFichierRecherche (RECHERCHE * r, FICHIER * f) {     // Ajoute un fic
 
 void afficherResultats(RECHERCHE *r,int typeRecherche){
     //printf("Affichage des resultats\n");
-    FICHIER * courant = r->premier;
-    int i=1;
-    if(typeRecherche == R_SON){
-        printf("\t%d -%-20s -> %.0f occurence%s -> ", i, courant->adresse, courant->similarite,(courant->similarite>1?"s":""));
-        for(int j = 0; j < courant->similarite; j++){
-            printf("%ds \n", courant->tps[j]);
+    if(r->premier!=NULL){
+        FICHIER * courant = r->premier;
+        int i=1;
+    
+        if(typeRecherche == R_SON){
+            if(courant!=NULL) {
+                printf("\t%d -%-20s -> %.0f occurence%s -> ", i, courant->adresse, courant->similarite,(courant->similarite>1?"s":""));
+                for(int j = 0; j < courant->similarite; j++){
+                    printf("%ds \n", courant->tps[j]);
+                }
+            }
+        } else{
+            while(courant!=NULL) {
+                printf("\t%d -%-20s -> %.2f", i, courant->adresse, courant->similarite);
+                printf("%c\n",'%');
+                courant = courant->suivant;
+                i++;
+            }
         }
-    }
-    else{
-        while(courant!=NULL) {
-            printf("\t%d -%-20s -> %.2f%c", i, courant->adresse, courant->similarite);
-            printf("%c\n",'%');
-            courant = courant->suivant;
-            i++;
-        }
-    }
 
-    char cmd[128];
+        char cmd[128];
 
-    switch (typeRecherche){
-        case R_SON:
-            r->premier->adresse[0] = '/';
-            sprintf(cmd,"%s base_de_documents%s.wav",getLogicielOuvertureFichier(),((r->premier)->adresse));
-            break;
+        switch (typeRecherche){
+            case R_SON:
+                r->premier->adresse[0] = '/';
+                sprintf(cmd,"%s base_de_documents%s.wav",getLogicielOuvertureFichier(),((r->premier)->adresse));
+                break;
 
-        case R_TEXTE:
-            sprintf(cmd,"%s base_de_documents%s",getLogicielOuvertureFichier(),((r->premier)->adresse));
-            break;
+            case R_TEXTE:
+                sprintf(cmd,"%s base_de_documents%s",getLogicielOuvertureFichier(),((r->premier)->adresse));
+                break;
             
-        case R_IMAGE:
-            sprintf(cmd,"%s base_de_documents%s",getLogicielOuvertureFichier(),((r->premier)->adresse));
-            break;
+            case R_IMAGE:
+                sprintf(cmd,"%s base_de_documents%s",getLogicielOuvertureFichier(),((r->premier)->adresse));
+                break;
 
-        default:
+            default:
 
-            break;
+                break;
+        }
+
+        printf("COMMANDE : %s\n",cmd);
+    } else {
+        printf("Aucun résultat trouvé...\n");
     }
-
-    printf("COMMANDE : %s\n",cmd);
     //msystem(cmd);
 }
 
@@ -255,6 +261,8 @@ RECHERCHE * rechercheParFichierImage (char * fichier) {
         fgets(descCourant, 20000, descripteurs);     // Pour chacune de ces lignes (donc pour chacun de ces fichiers), on récupère le descripteur associé
 
         if(strcmp(getExtensionOfFile(fichCourant), ".jpg\n")==0 || strcmp(getExtensionOfFile(fichCourant), ".bmp\n")==0) {      // Cas où l'adresse récupérée est celle d'un fichier image (on ne traite que ces cas)
+            printf("Fichier courant : %s\n", fichCourant);
+            printf("Son descripteur : %s\n", descCourant);
             fprintf(descImages, "%s", descCourant); 
                   
             /*descripteur * desc = toDescripteur(descCourant);     // On convertit son descripteur (jusque là au format string) en structure descripteur
@@ -268,7 +276,8 @@ RECHERCHE * rechercheParFichierImage (char * fichier) {
 
     fclose(descImages);
     
-    rechercher_image("requete/", fichier, 10);
+    printf("Fichier : %s\n");
+    rechercher_image("../requete/", fichier, 10);
     printf("Kikou1\n");
     free(descCourant);
 
@@ -334,7 +343,7 @@ RECHERCHE * rechercheParFichierSon (char * fichier) {
             sprintf(fichCourant,"%s",strrchr(getNameOfFile(fichCourant),'/'));
             DescripteurAudio desc = stringToDescripteurAudio(descCourant);     // On convertit le descripteur (jusque là au format string) en structure descripteur
             sim = comparerDescripteursAudio(descRequete,desc);        // On calcule la similarité entre le fichier recherché et le fichier courant
-            int tps;            // Durée du passage le plus long en commun
+            //int tps;            // Durée du passage le plus long en commun
             if(taillePILE(sim)>=1) {        // Cas où le descripteur récupéré contient au moins une fois le jingle recherché
                 //sim = dePILE(sim, &tps);
                 FICHIER * fcomp = creerCelluleFichierSon(fichCourant, sim);

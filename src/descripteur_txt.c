@@ -1,4 +1,4 @@
-#include <stdlib.h>
+/*#include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include "../include/descripteur_txt.h"
@@ -15,9 +15,9 @@ DESCTXT creerDescripteur_txt(FILE* fichier_txt) {
 	descripteur.nb_mots = 0;
 	descripteur.fmot_cle = NULL;
 
-    /*do {
-		fgets(chaine, TAILLE_MAX, fichier_txt);
-	} while (strcmp(chaine, "")!=0);*/
+    //do {
+	//	fgets(chaine, TAILLE_MAX, fichier_txt);
+	//} while (strcmp(chaine, "")!=0);
 
 	while(fgets(chaine, TAILLE_MAX, fichier_txt)!=NULL) {
         for (i = 0; i < strlen(chaine); i++) {
@@ -157,4 +157,4 @@ FIFO_M MEnfiler(FIFO_M* f, char e[]) {
 		actuel->ptr_suiv = temp;
 	}
 	return(*f);
-}
+}*/

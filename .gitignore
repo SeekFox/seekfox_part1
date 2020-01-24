@@ -52,7 +52,6 @@ Mkfile.old
 dkms.conf
 
 # Directories
-/requete
 /log
 /data/index.dat
 /.vscode

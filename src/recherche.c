@@ -287,7 +287,7 @@ RECHERCHE * rechercheParFichierImage (char * fichier) {
     fclose(descImages);
     
     //printf("Fichier : %s\n", fichier);
-    rechercher_image("requete/", fichier, 2);
+    rechercher_image("requete/", fichier, getNbBits());
     free(descCourant);
 
     fclose(fichiersIndexes);

@@ -5,3 +5,4 @@ base_de_documents/04.bmp
 base_de_documents/04.jpg
 base_de_documents/corpus_fi.bin
 base_de_documents/jingle_fi.bin
+base_de_documents/51.bmp

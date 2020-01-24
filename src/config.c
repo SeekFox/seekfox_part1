@@ -290,7 +290,7 @@ void changeTailleMin(){
     int n;
     printf("Entrez la nouvelle taille minimun d'un mot.\n");
     scanf("%d",&n);
-    CLEAR_STDIN
+    //CLEAR_STDIN
 
     if(n>=3){    //n superieur ou egale a 3
         config->tailleMin=n;
@@ -308,7 +308,7 @@ void changeVal(){
     int n;
     printf("Entrez la nouvelle valeur limite de mots.\n");
     scanf("%d",&n);
-    CLEAR_STDIN
+    //CLEAR_STDIN
 
     if(n>0){    //n positif
         config->val=n;
@@ -326,7 +326,7 @@ void changeSeuil(){
     int n;
     printf("Entrez la nouvelle valeur de seuil de taille de mot.\n");
     scanf("%d",&n);
-    CLEAR_STDIN
+    //CLEAR_STDIN
 
     if(n>0){    //n positif
         config->seuil=n;
@@ -344,7 +344,7 @@ void changeNbBits(){
     int n;
     printf("Entrez la nouvelle valeur de nombre de bits de quantification.\n");
     scanf("%d",&n);
-    CLEAR_STDIN
+    //CLEAR_STDIN
 
     if( n==2 || n==3 ){
         config->nbBits=n;
@@ -363,7 +363,7 @@ void changeAudioN(){
     int n;
     printf("Entrez la nouvelle taille de fenetre d'analyse.\n");
     scanf("%d",&n);
-    CLEAR_STDIN
+    //CLEAR_STDIN
 
     if(ceil(log2((double)n))==floor(log2((double)n)) && n>0){    //n est une puissance de 2
         config->audio_n=n;
@@ -381,7 +381,7 @@ void changeAudioM(){
     int m;
     printf("Entrez la nouveau nombre d'intervalles.\n");
     scanf("%d",&m);
-    CLEAR_STDIN
+    //CLEAR_STDIN
 
     if(m%2==0 && m>0){    //m multiple de 2
         config->audio_m=m;

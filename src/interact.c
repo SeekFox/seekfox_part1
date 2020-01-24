@@ -44,7 +44,7 @@ void displayMenu(int *isAdmin, enum FSM * state, char * file){
       printf("\n4\\- Quitter Seekfox\n");
     
       scanf("%d",&nextState);
-      CLEAR_STDIN
+      ////////CLEAR_STDIN
       (*state) = (nextState==1 ? RESEARCH : (nextState==2 ? CONNECT : (nextState==3 ? INFO : (nextState==4 ? END : TITLE))));
       break;
 
@@ -99,7 +99,7 @@ void displayMenu(int *isAdmin, enum FSM * state, char * file){
 
     case INFO:
       displayInformations();  
-      CLEAR_STDIN
+      ////////CLEAR_STDIN
       (*state) = TITLE;
       break;
 
@@ -161,7 +161,7 @@ void displayMenuResearch(char * file, enum FSM * state){
     //Fermeture du fichier
     fclose(listFile);
     
-    CLEAR_STDIN
+    ////////CLEAR_STDIN
   }else{
     displayError("Ouverture du ficher index.dat impossible.");
   }
@@ -179,7 +179,7 @@ void displayMenuAdmin(int *isAdmin){
     printf("4\\- Retour\n");
 
     scanf("%d",&choix);
-    CLEAR_STDIN
+    ////////CLEAR_STDIN
     printf("\n");
 
     switch (choix){
@@ -193,7 +193,7 @@ void displayMenuAdmin(int *isAdmin){
         color("36");
         scanf("%64s",fichier);
         color("37");
-        CLEAR_STDIN
+        ////////CLEAR_STDIN
         displayDescripteur(fichier);
         break;
 
@@ -226,7 +226,7 @@ void displayMenuAdminConfig(){
     printf("8\\- Retour\n");
 
     scanf("%d",&choix);
-    CLEAR_STDIN
+    ////////CLEAR_STDIN
 
     switch (choix){
       case 1:
@@ -275,7 +275,7 @@ void displayMenuAdminIndexation(){
   printf("4\\- Retour\n");
 
   scanf("%d",&choix);
-  CLEAR_STDIN
+  ////////CLEAR_STDIN
   printf("\n");
 
   switch (choix){
@@ -286,7 +286,7 @@ void displayMenuAdminIndexation(){
       color("36");
       scanf("%64s",fichier);
       color("37");
-      CLEAR_STDIN
+      ////////CLEAR_STDIN
       //printf("\t>> >%s<\n",fichier);
       //On lance l'indexation
       indexationUnique(fichier);

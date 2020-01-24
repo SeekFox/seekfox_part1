@@ -1,0 +1,318 @@
+Script started on Fri 24 Jan 2020 04:22:18 PM CET
+]0;root@Periclès: ~[01;32mroot@Periclès[00m:[01;54m~[00m# cd 1A\ SRI/S5/Projet/Partie\ I/seekfox_part1/
+]0;root@Periclès: ~/1A SRI/S5/Projet/Partie I/seekfox_part1[01;32mroot@Periclès[00m:[01;54m~/1A SRI/S5/Projet/Partie I/seekfox_part1[00m# make all
+Loading ...
+dos2unix: converting file bin/readRequete.sh to Unix format ...
+
+------------------RUN------------------
+[32m[1m  ____            _     __                    
+ / ___|  ___  ___| | __/ _| _____  __         
+ \___ \ / _ \/ _ \ |/ / |_ / _ \ \/ /   
+  ___) |  __/  __/   <|  _| (_) >  <          
+ |____/ \___|\___|_|\_\_|  \___/_/\_\
+
+[37m[0m
+1\- Recherche
+2\- Administration
+3\- Informations
+4\- Quitter Seekfox
+2
+Veuillez entrer le mot de passe administrateur : 
+
+[31m
+[ERREUR] mot de passe invalide
+[0m******
+
+[37m[1m
+=== ADMINISTRATION ===
+[30m[0m1\- Lancer l'indexation
+2\- Visualiser un descripteur
+3\- Options
+4\- Retour
+1
+
+1\- Indexation d'un fichier
+2\- Indexation totale
+3\- Afficher les fichiers indexes
+4\- Retour
+1
+
+Chargement...
+Vous etes dans le repertoire seekfox_part1
+
+Entrez le chemin vers le fichier a indexer
+	>[36mbase    data/TEST_RGB_NB/51.bmp
+[37m
+Indexation du fichier en cours...
+[32mL'indexation a ete effectuee !
+
+[37m
+1\- Lancer l'indexation
+2\- Visualiser un descripteur
+3\- Options
+4\- Retour
+4
+
+
+1\- Recherche
+2\- Administration
+3\- Informations
+4\- Quitter Seekfox
+1
+[37m[1m
+=== RECHERCHE ===
+[30m[0m  #/- Recherche par Couleur Dominante
+  0/- Recherche par mot-clef
+  1/- corpus_fi.bin
+  2/- jingle_fi.bin
+  3/- 42.bmp
+  4/- 51.bmp
+  5/- 01.jpg
+  6/- 01-LoremIpsum.xml
+5
+Choix du fichier "01.jpg"
+
+[37m[1m
+=== Recherche par IMAGE ===
+[30m[0m100.00%   [ 64 #id 2 1 ] 
+70.00%   [ 64 #id 2 2 ] 
+70.00%   [ 64 #id 2 3 ] 
+68.00%   [ 64 #id 2 4 ] 
+68.00%   [ 64 #id 2 4 ] 
+
+1\- Recherche
+2\- Administration
+3\- Informations
+4\- Quitter Seekfox
+1
+[37m[1m
+=== RECHERCHE ===
+[30m[0m  #/- Recherche par Couleur Dominante
+  0/- Recherche par mot-clef
+  1/- corpus_fi.bin
+  2/- jingle_fi.bin
+  3/- 42.bmp
+  4/- 51.bmp
+  5/- 01.jpg
+  6/- 01-LoremIpsum.xml
+4
+Choix du fichier "51.bmp"
+
+[37m[1m
+=== Recherche par IMAGE ===
+[30m[0m
+1\- Recherche
+2\- Administration
+3\- Informations
+4\- Quitter Seekfox
+4
+
+------------------END------------------
+
+]0;root@Periclès: ~/1A SRI/S5/Projet/Partie I/seekfox_part1[01;32mroot@Periclès[00m:[01;54m~/1A SRI/S5/Projet/Partie I/seekfox_part1[00m# exit
+exit
+
+Script done on Fri 24 Jan 2020 04:24:06 PM CET
+Script started on Fri 24 Jan 2020 04:14:48 PM CET
+root@Pericles: ~root@Pericles:~# cd 1A\ SRI/S5/Projet/Partie\ I/seekfox_part1/
+root@Pericles: ~/1A SRI/S5/Projet/Partie I/seekfox_part# make all
+Loading ...
+dos2unix: converting file bin/readRequete.sh to Unix format ...
+
+------------------RUN------------------
+  ____            _     __                    
+ / ___|  ___  ___| | __/ _| _____  __         
+ \___ \ / _ \/ _ \ |/ / |_ / _ \ \/ /   
+  ___) |  __/  __/   <|  _| (_) >  <          
+ |____/ \___|\___|_|\_\_|  \___/_/\_\
+
+
+1\- Recherche
+2\- Administration
+3\- Informations
+4\- Quitter Seekfox
+2
+Veuillez entrer le mot de passe administrateur : 
+*******
+
+[ERREUR] mot de passe invalide
+******
+
+
+=== ADMINISTRATION ===
+1\- Lancer l'indexation
+2\- Visualiser un descripteur
+3\- Options
+4\- Retour
+1
+
+1\- Indexation d'un fichier
+2\- Indexation totale
+3\- Afficher les fichiers indexes
+4\- Retour
+2
+
+Indexation des fichiers en cours...
+L'indexation totale a ete effectuee !
+1\- Lancer l'indexation
+2\- Visualiser un descripteur
+3\- Options
+4\- Retour
+3
+
+
+=== CONFIGURATIONS ===
+GENERAL 
+	Logiciel de visualisation de fichier    xdg-open
+TEXTE 
+	Taille minimun d'un mot                 5
+	Valeur limite de mots                   10
+	Seuil limite de taille de mot           5
+	Logiciel de visualisation               gedit
+IMAGE 
+	Nombre de bits de quantification        2
+AUDIO 
+	Taille de la fenetre d'analyse          4096
+  Nombre d'intervalles                    100
+
+1\- Changer le mot de passe
+2\- Modifier la taille minimun d'un mot
+3\- Modifier la valeur limite de mots
+4\- Modifier le seuil limite de taille de mot
+5\- Modifier le nombre de bits de quantification
+6\- Modifier le nombre de fenetres d'analyse
+7\- Modifier le nombre d'intervalles
+8\- Retour
+7
+Entrez la nouveau nombre d'intervalles.
+-10
+
+[ERREUR] Le nombre d'echantillons doit etre un multiple de 2 positif.
+
+=== CONFIGURATIONS ===
+GENERAL 
+	Logiciel de visualisation de fichier    xdg-open
+TEXTE 
+	Taille minimun d'un mot                 5
+	Valeur limite de mots                   10
+	Seuil limite de taille de mot           5
+	Logiciel de visualisation               gedit
+IMAGE 
+	Nombre de bits de quantification        2
+AUDIO 
+	Taille de la fenetre d'analyse          4096
+  Nombre d'intervalles                    100
+
+1\- Changer le mot de passe
+2\- Modifier la taille minimun d'un mot
+3\- Modifier la valeur limite de mots
+4\- Modifier le seuil limite de taille de mot
+5\- Modifier le nombre de bits de quantification
+6\- Modifier le nombre de fenetres d'analyse
+7\- Modifier le nombre d'intervalles
+8\- Retour
+8
+
+1\- Lancer l'indexation
+2\- Visualiser un descripteur
+3\- Options
+4\- Retour
+4
+
+
+1\- Recherche
+2\- Administration
+3\- Informations
+4\- Quitter Seekfox
+3
+
+=== SEEKFOX TEAM ===
+ Gael Camba              CTO
+ Oualid El Abdaoui       Employe du mois
+ Etienne Combelles       Tresorier
+ Raphael Bizet           Stagiaire
+ Clement Truillet        Community Manager
+
+www.seekfox.team - @seekfox
+
+1\- Recherche
+2\- Administration
+3\- Informations
+4\- Quitter Seekfox
+
+1
+
+=== RECHERCHE ===
+  0/- Retour
+  1/- corpus_fi.bin
+  2/- jingle_fi.bin
+  3/- 42.bmp
+  4/- 51.bmp
+  5/- 01.jpg
+  6/- 01-LoremIpsum.xml
+1
+Choix du fichier "corpus_fi.bin"
+
+
+=== Recherche par SON ===
+  corpus_fi.bin
+Aucun r�sultat trouv�...
+
+1\- Recherche
+2\- Administration
+3\- Informations
+4\- Quitter Seekfox
+1
+
+=== RECHERCHE ===
+  0/- Retour
+  1/- corpus_fi.bin
+  2/- jingle_fi.bin
+  3/- 42.bmp
+  4/- 51.bmp
+  5/- 01.jpg
+  6/- 01-LoremIpsum.xml
+2
+Choix du fichier "jingle_fi.bin"
+
+=== Recherche par SON ===
+jingle_fi.bin
+	1 - corpus_fi           -> 1 occurence -> 27s 
+COMMANDE : xdg-open base_de_documents/corpus_fi.wav
+
+1\- Recherche
+2\- Administration
+3\- Informations
+4\- Quitter Seekfox
+1
+
+=== RECHERCHE ===
+  0/- Retour
+  1/- corpus_fi.bin
+  2/- jingle_fi.bin
+  3/- 42.bmp
+  4/- 51.bmp
+  5/- 01.jpg
+  6/- 01-LoremIpsum.xml
+5
+Choix du fichier "01.jpg"
+
+=== Recherche par IMAGE ===
+100.00%   [ 64 #id 2 1 ] 
+70.00%   [ 64 #id 2 2 ] 
+70.00%   [ 64 #id 2 3 ] 
+68.00%   [ 64 #id 2 4 ] 
+68.00%   [ 64 #id 2 4 ] 
+
+1\- Recherche
+2\- Administration
+3\- Informations
+4\- Quitter Seekfox
+4
+
+------------------END------------------
+
+root@Pericles: ~/1A SRI/S5/Projet/Partie I/seekfox_part1# exit
+exit
+
+Script done on Fri 24 Jan 2020 04:16:42 PM CET

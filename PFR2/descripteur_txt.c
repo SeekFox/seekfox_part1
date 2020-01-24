@@ -4,8 +4,6 @@
 #include "descripteur_txt.h"
 #include "FIFO.h"
 
-int a = 0;
-
 // Fonction principale, qui crée un descripteur 
 DESCTXT creerDescripteur_txt(FILE* fichier_txt) {
 
@@ -112,29 +110,22 @@ FIFO descToFIFO(DESCTXT d) {
 
 // Un mot mis en paramètre existe-t-il déjà dans la file de mots, si oui on incrémente le nombre d'occurence de ce mot. 
 int motExiste(FIFO_M *file, char* test) {
-	printf("test\n");
-	int motexiste = 0;
-	int compt=0;
-	Cell_M* memoire = file->debut;
-	int tableau_memoire[TAILLE_MAX];
-	int stockage = 0;
-	stockage = strcmp((memoire->mot_cle).mot, test);
-	if (!MFile_estVide(file)) {
-		while (memoire != NULL && !motexiste) {
-			for(compt=0; compt<= a; compt++){
-				if (tableau_memoire[compt] == stockage) {
+	int motExiste(FIFO_M * file, char* test) {
+		int motexiste = 0;
+		Cell_M* memoire = file->debut;
+		if (!MFile_estVide(file)) {
+			while (memoire != NULL && !motexiste) {
+				motexiste = strcoll((memoire->mot_cle).mot, test);
+				printf("%d\n", motexiste);
+				if (motexiste == 0) {
 					memoire->mot_cle.occurence++;
-					motexiste = 1;
-				}	
+				}
+				memoire = memoire->ptr_suiv;
 			}
-			memoire = memoire->ptr_suiv;
 		}
+		return(motexiste);
+
 	}
-	if (!motexiste) {
-		tableau_memoire[a] = stockage;
-		a++;
-	}
-	return(motexiste);	
 }
 
 

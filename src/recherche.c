@@ -1,3 +1,14 @@
+/**
+ * @file recherche.c
+ * @author Etienne Combelles
+ * @brief 
+ * @version 0.1
+ * @date 24/01/2020
+ * 
+ * @copyright Copyright (c) 2020
+ * 
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -349,6 +360,7 @@ RECHERCHE * rechercheParFichierSon (char * fichier) {
                 FICHIER * fcomp = creerCelluleFichierSon(fichCourant, sim);
                 ajouterFichierRecherche(resultats, fcomp);      // On ajoute à la liste triée des fichiers compatibles avec la recherche
             }
+            
         }
     }
 

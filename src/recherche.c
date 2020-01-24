@@ -338,13 +338,9 @@ int main (int argc, char * argv[]) {
     FICHIER * f3 = creerCelluleFichier("Trajan", 70);
     FICHIER * f4 = creerCelluleFichier("Gallien", 8);
     FICHIER * f5 = creerCelluleFichier("Constantin", 30);
-<<<<<<< HEAD
-
-=======
     FICHIER * f6 = creerCelluleFichier("Septime Sévère", 33);
 
     ajouterFichierRecherche(r, f6);
->>>>>>> dev
     ajouterFichierRecherche(r, f4);
     ajouterFichierRecherche(r, f1);
     ajouterFichierRecherche(r, f2);

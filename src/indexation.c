@@ -285,7 +285,7 @@ void empilementDesDescripteurs (PILEDESC * pileDesc, PILEDESC * adrFichiers) {  
             DESC * strDesc = creerDesc(desc);
             ajouterDescPile(pileDesc, strDesc);
             DESC * adr = creerDesc(adrDoc);
-            ajouterDescPile(adrFichiers, adr);
+            ajouterDescPile(adrFichiers, adr);   
         }
         if (strcmp(ext, ".jpg")==0 || strcmp(ext, ".bmp")==0) {       // Cas d'une image
             //printf("C'est une image, c'est %s\n", nomDoc);

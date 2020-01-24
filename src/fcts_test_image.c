@@ -524,7 +524,7 @@ void ouvrir_image(char identifiant[]){
 	char titre_image[15] = "";
 	titre_image[14] = '\0';
 	commande[49] = '\0';
-	strcpy(commande,"eog ../data/TEST_RGB_NB/");
+	strcpy(commande,"xdg-open base_de_documents/");
 	
 	FILE *chercheur_image;
 	chercheur_image = fopen("../data/liste_base_image","r");

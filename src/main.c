@@ -42,7 +42,7 @@ int main(int argc, char * argv[]){
     system("./bin/readRequete.sh");
 
     config = loadConfig();
-    indexationTotale();
+    indexationAutomatique();
     //Execution
     printSeekFox();
 

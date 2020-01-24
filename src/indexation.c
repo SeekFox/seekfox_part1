@@ -176,7 +176,7 @@ void supprLignesIndex (int * lignasuppr) {        // Supprime la ligne n du fich
 char * moveFileInBDB(char * adrDoc){
     char * adrDocOnBDB = (char*)malloc(24*sizeof(char) + strlen(adrDoc));
     if(strncmp("base_de_documents",adrDoc,strlen("base_de_documents") )!=0){
-        sprintf(adrDocOnBDB,"base_de_documents/%s", strrchr(adrDoc,'/'));
+        sprintf(adrDocOnBDB,"base_de_documents%s", strrchr(adrDoc,'/'));
         rename(adrDoc,adrDocOnBDB);
         return adrDocOnBDB;
     }
@@ -196,9 +196,12 @@ void displayFichierIndexes(){
     }else{
         color("36");
         while(fgets(line, 64,fichier)!=NULL){
-            file = strtok(line,"/");
-            file = strtok(NULL,"/");
-            printf("  > %s",file);    
+            if(!strcmp(line,"NA\n")==0){
+                //printf("  >>> %s\n",file);  
+                file = strtok(line,"/");
+                file = strtok(NULL,"/");
+                printf("  > %s",file);   
+            } 
         }
         color("37");
     }    
@@ -219,7 +222,7 @@ void empilementDesDescripteurs (PILEDESC * pileDesc, PILEDESC * adrFichiers) {  
         perror("Erreur dans l'ouverture de la base de documents ");
         return;
     }
-
+    
     struct dirent * fichierLu = NULL;
     while ((fichierLu=readdir(repDocs))!=NULL) {        // On parcourt tous les fichiers du dossier
         
@@ -255,20 +258,24 @@ void empilementDesDescripteurs (PILEDESC * pileDesc, PILEDESC * adrFichiers) {  
             ajouterDescPile(adrFichiers, adr);
         }
         if (strcmp(ext, ".jpg")==0 || strcmp(ext, ".bmp")==0) {       // Cas d'une image
-            //printf("C'est une image.\n");
+            //printf("C'est une image, c'est %s\n", nomDoc);
             descripteur di;
             int taille_max=0;
             generer_descripteur(&di, "base_de_documents/", nomDoc, &taille_max, getNbBits());
             char * desc = malloc(1500*sizeof(char));
+            //printf("ça marche avant le tostring\n");
             descripteur_image_to_string(di, desc, taille_max);
+            //printf("ça marche apres le tostring\n");
             //descripteur di = creerDescripteurImage(adrDoc);
             //char * desc = convertionDescripteurImageString(di);
             DESC * strDesc = creerDesc(desc);
             ajouterDescPile(pileDesc, strDesc);
             DESC * adr = creerDesc(adrDoc);
             ajouterDescPile(adrFichiers, adr);
+            
         }
     }
+    
 
     closedir(repDocs);
 }
@@ -280,7 +287,7 @@ void indexationTotale () {          // Fait l'indexation totale de la base de do
     FILE * fichiersIndex = NULL;
     indexDesc = fopen("data/descripteurs/descripteurs.txt", "w+");
     fichiersIndex = fopen("data/descripteurs/fichiersIndexes.txt", "w+");
-
+    
     /* Vérification de l'ouverture correcte des fichiers */
     if (indexDesc==NULL || fichiersIndex==NULL) {
         displayError("Indexation : impossible d'accéder aux fichiers de descripteurs.");
@@ -291,7 +298,7 @@ void indexationTotale () {          // Fait l'indexation totale de la base de do
     PILEDESC * pDesc = creerPileDescVide();         // Pile de descripteurs
     PILEDESC * pAdr = creerPileDescVide();          // Pile d'adresses
     empilementDesDescripteurs(pDesc, pAdr);
-
+    
     /* Impression des descripteurs dans le fichier de descripteurs */
     DESC * courant = pDesc->premier;
     for (int i=0; i<pDesc->nbDesc; i++) {

@@ -12,9 +12,10 @@ DESCTXT creerDescripteur_txt(FILE* fichier_txt) {
 	//FIFO_M* FILE_MC = (FIFO_M*)malloc(sizeof(FIFO_M));
 	descripteur.fmot_cle = (FIFO_M*)malloc(sizeof(FIFO_M));
 	descripteur.fmot_cle->debut = (Cell_M*)malloc(sizeof(Cell_M));
-	char* tempo = (char*)malloc(sizeof(char));
+	//char* tempo = (char*)malloc(sizeof(char));
 	int j = 0, i = 0;
 	char chaine[TAILLE_MAX] = "";
+	char tempo[TAILLE_MAX] = "";
 	//	descripteur.fmot_cle = FILE_MC;
 	descripteur.nb_lettres = 0;
 	descripteur.nb_mots = 0;
@@ -28,17 +29,28 @@ DESCTXT creerDescripteur_txt(FILE* fichier_txt) {
 		for (i = 0; i < strlen(chaine); i++) {					//pour chaque lettre de cette ligne
 			if (chaine[i] == '<') {								// supprimer les balises 
 				printf("Balise detectee \n");
-				while (chaine[i] != '>')
+				while (chaine[i] != '>') {
 					i++;										//en incrémentant le compteur sans les prendre en compte
+					printf("elimination de la balise\n");
+					printf(" i : %d\n",i);
+					printf("car elimine : %c\n", chaine[i]);
+				}
+				i++;
 			}
 			else {
+				printf("carac interessant %c\n", chaine[i]);
 				while (chaine[i] != ' ' && chaine[i] != '\0') {	// pour chaque mot
-					strcat(tempo, &chaine[i]);					// on récupere le mot dans un tableau séparé
+					tempo[j] = chaine[i];	
+					printf("dans chaine %c \n", chaine[i]);		// on récupere le mot dans un tableau séparé
 					descripteur.nb_lettres++;
 					i++;
+					j++;
+					printf("tempo %s\n", tempo);
+					printf("i : %d \n", i);
 				}
+				j = 0;
 				descripteur.nb_mots++;
-				printf("%d \n", descripteur.nb_mots);
+				printf(" nb mots%d \n", descripteur.nb_mots);
 				//if (!motExiste(FILE_MC, tempo)) {				// on exécute motExiste, qui incrémente le nombre d'occurence si le mot est déjà dans la File
 				if (!motExiste(descripteur.fmot_cle, tempo)) {
 					printf("mot pas dedans \n");
@@ -172,12 +184,13 @@ int MFile_estVide(FIFO_M* f) {
 
 // Enfiler des mots dans une file de mots. 
 void MEnfiler(FIFO_M* f, char* e) {
-	Cell_M* temp = (Cell_M*)malloc(sizeof(Cell_M));
-	temp = f->debut ;
-	printf("test\n");
+	Cell_M* temp;
+	temp = (Cell_M*)malloc(sizeof(Cell_M));
+	printf("test %d\n",f->debut);
+	printf("%s \n", e);
 	strcat((temp->mot_cle).mot, e );
 	printf("test2\n");
-	(*temp).ptr_suiv = f->fin;
+	temp->ptr_suiv = f->fin;
 	if (f->debut == NULL)
 		f->debut = temp;
 	else {

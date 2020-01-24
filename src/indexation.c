@@ -207,6 +207,36 @@ void displayFichierIndexes(){
     }    
 }
 
+char * getCheminVersFichier (char * nomComplet) {
+    char * chemin = malloc(strlen(nomComplet)*sizeof(char));
+    int i=0;
+    int derslash=0;
+    while(nomComplet[i]!='\0') {
+        if(nomComplet[i]=='/') derslash=i;
+        i++;
+    }
+    for(i=0; i<derslash+1; i++) chemin[i]=nomComplet[i];
+    return chemin;
+}
+
+char * getNomFichier (char * nomComplet) {
+    char * nom = malloc(strlen(nomComplet)*sizeof(char));
+    int i=0;
+    int derslash=0;
+    while(nomComplet[i]!='\0') {
+        if(nomComplet[i]=='/') derslash=i;
+        i++;
+    }
+    i=derslash+1;
+    int j=0;
+    while (nomComplet[i]!='\0') {
+        nom[j]=nomComplet[i];
+        j++;
+        i++;
+    }
+    return nom;
+}
+
 /*==================================================================================================================================*/
 
 
@@ -352,12 +382,17 @@ void indexationUnique (char * adrDoc) {         // Indexe un unique document à 
 
     /* Création du descripteur associé au fichier puis indexation dans les deux fichiers */
     char * ext = getExtensionOfFile(adrDoc);
-    if (strcmp(ext, ".xml")==0) {
+    /*if (strcmp(ext, ".xml")==0) {
         // DescripteurTexte dt = creerDescripteurTexte(adrDoc);
-        char * strDt = "Texte";
+        DescripteurTexte dt = creerDescripteurTexte(adrDoc);
+        FILE * f = NULL;
+        f = fopen(adrDoc, "r+");
+        DESCTXT dt = creerDescripteur_txt(f);
+        char * strDt = descToString(dt);
+        //char * strDt = "Texte";
         fprintf(indexDesc, "%s\n", strDt);
         fprintf(fichiersIndex, "%s\n", adrDoc);
-    }
+    }*/
     if (strcmp(ext, ".bin")==0) {
     //if (strcmp(ext, ".wav")==0 || strcmp(ext, ".bin")==0) {
         DescripteurAudio ds = creerDescripteurAudio(fopen(adrDoc,"r"),getAudioN(),getAudioM(),((strcmp(ext, ".wav")==0)?WAV_FILE:BIN_FILE));
@@ -369,7 +404,15 @@ void indexationUnique (char * adrDoc) {         // Indexe un unique document à 
     }
     if (strcmp(ext, ".jpg")==0 || strcmp(ext, ".bmp")==0) {
         // DescripteurImage di = creerDescripteurImage(adrDoc);
-        char * strDi = "Image";
+        descripteur di;
+        int taille_max=0;
+        char * nomDoc = getNomFichier(adrDoc);
+        char * adr = getCheminVersFichier(adrDoc);
+        generer_descripteur(&di, adr, nomDoc, &taille_max, getNbBits());
+        char * strDi = malloc(1500*sizeof(char));
+        //printf("ça marche avant le tostring\n");
+        descripteur_image_to_string(di, strDi, taille_max);
+        //char * strDi = "Image";
         fprintf(indexDesc, "%s\n", strDi);
         fprintf(fichiersIndex, "%s\n", adrDoc);
     }

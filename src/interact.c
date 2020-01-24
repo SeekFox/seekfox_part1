@@ -66,7 +66,8 @@ void displayMenu(int *isAdmin, enum FSM * state, char * file){
 
     case R_IMAGE:
       printTitle("Recherche par IMAGE");
-      afficherResultats(rechercheParFichierImage(file),R_IMAGE);
+      rechercheParFichierImage(file);
+      //afficherResultats(rechercheParFichierImage(file),R_IMAGE);
       //TODO : Recherche par Image
       (*state) = TITLE;
       break;
@@ -331,6 +332,7 @@ int convertStringChoiceToInt(char * str, int max){
 }
 
 char * getExtensionOfFile(char * file){
+  file[strcspn(file,"\r\n")] = 0; //Suppression du \n
   if(strcmp(file,"NA")==0){ return ""; }
   char * ext = "";
   ext = (char *)malloc(sizeof(char)*5);

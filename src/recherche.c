@@ -132,6 +132,7 @@ void afficherResultats(RECHERCHE *r,int typeRecherche){
             case R_SON:
                 r->premier->adresse[0] = '/';
                 sprintf(cmd,"%s base_de_documents%s.wav",getLogicielOuvertureFichier(),((r->premier)->adresse));
+                system(cmd);
                 break;
 
             case R_TEXTE:
@@ -151,7 +152,7 @@ void afficherResultats(RECHERCHE *r,int typeRecherche){
     } else {
         printf("Aucun résultat trouvé...\n");
     }
-    //msystem(cmd);
+    
 }
 
 //==================================================================================================================================

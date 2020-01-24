@@ -86,13 +86,13 @@ void displayMenu(int *isAdmin, enum FSM * state, char * file){
       break;
 
     case R_KEYWORD:
-      printTitle("Recherche par MOT CLES\n");
+      //printTitle("Recherche par MOT CLES\n");
       //TODO : Recherche par MOT CLES
       (*state) = TITLE;
       break;
 
     case R_COLOR:
-      printTitle("Recherche par COULEUR DOMINANTE\n");
+      //printTitle("Recherche par COULEUR DOMINANTE\n");
       //TODO : Recherche par COULEUR DOMINANTE
       (*state) = TITLE;
       break;
@@ -123,8 +123,9 @@ void displayMenuResearch(char * file, enum FSM * state){
 
   //Si le fichier index.dat existe
   if(listFile!=NULL){
-    printf("  #/- Recherche par Couleur Dominante\n");
-    printf("  0/- Recherche par mot-clef\n");
+    //printf("  #/- Recherche par Couleur Dominante\n");
+    //printf("  0/- Recherche par mot-clef\n");
+    printf("  0/- Retour\n");
     //Lecture du fichier
     while (fgets(line, 128, listFile) != NULL){
       i++;

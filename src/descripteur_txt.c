@@ -21,28 +21,23 @@ DESCTXT creerDescripteur_txt(FILE* fichier_txt) {
 
 	while(fgets(chaine, TAILLE_MAX, fichier_txt)!=NULL) {
         for (i = 0; i < strlen(chaine); i++) {
-            printf("1\n");
-            fflush;
+            //printf("1\n");
 		    if (chaine[i] == '<') {
 			    while (chaine[i] != '>' && chaine[i] != '\0') i++;
 		    }
-            printf("2\n");
-            fflush;
+            //printf("2\n");
 		    while (chaine[i] != ' ' && chaine[i] != '\0') {
 			    tempo[j] = chaine[i];
 			    descripteur.nb_lettres++;
 			    i++;
 			    j++;
 		    }
-            printf("3\n");
-            fflush;
+            //printf("3\n");
 		    descripteur.nb_mots++;
 		    if (!motExiste(&FILE_MC, tempo)) MEnfiler(&FILE_MC, tempo);
-            printf("4\n");
-            fflush;
+            //printf("4\n");
         }
-        printf("Sorti!\n");
-        fflush;
+        //printf("Sorti!\n");
     }
 	descripteur.fmot_cle = &FILE_MC;
 	return(descripteur);

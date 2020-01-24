@@ -72,19 +72,11 @@ int getAudioM();
 char * getLogicielTexte();
 
 /**
- * @brief Get the Logiciel Image object
+ * @brief Get the Logiciel Ouverture Fichier object
  * 
  * @return char* 
  */
-char * getLogicielImage();
-
-/**
- * @brief Get the Logiciel Audio object
- * 
- * @return char* 
- */
-char * getLogicielAudio();
-
+char * getLogicielOuvertureFichier();
 //Setter
 /**
  * @brief Set the Password Admin object
@@ -151,21 +143,12 @@ void setAudioM(Config *c, int m);
 void setLogicielTexte(Config *c, char * str);
 
 /**
- * @brief Set the Logiciel Image object
+ * @brief Set the Logiciel Ouverture Fichier object
  * 
  * @param c 
  * @param str 
  */
-void setLogicielImage(Config *c, char * str);
-
-/**
- * @brief Set the Logiciel Audio object
- * 
- * @param c 
- * @param str 
- */
-void setLogicielAudio(Config *c, char * str);
-
+void setLogicielOuvertureFichier(Config *c, char * str);
 
 /**
  * @brief Recupere les infos du fichier config 

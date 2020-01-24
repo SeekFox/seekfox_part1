@@ -102,7 +102,6 @@ void afficherResultats(RECHERCHE *r,int typeRecherche){
         for(int j = 0; j < courant->similarite; j++){
             printf("%ds \n", courant->tps[j]);
         }
-        printf("\0");
     }
     else{
         while(courant!=NULL) {
@@ -112,6 +111,30 @@ void afficherResultats(RECHERCHE *r,int typeRecherche){
             i++;
         }
     }
+
+    char cmd[128];
+
+    switch (typeRecherche){
+        case R_SON:
+            r->premier->adresse[0] = '/';
+            sprintf(cmd,"%s base_de_documents%s.wav",getLogicielOuvertureFichier(),((r->premier)->adresse));
+            break;
+
+        case R_TEXTE:
+            sprintf(cmd,"%s base_de_documents%s",getLogicielOuvertureFichier(),((r->premier)->adresse));
+            break;
+            
+        case R_IMAGE:
+            sprintf(cmd,"%s base_de_documents%s",getLogicielOuvertureFichier(),((r->premier)->adresse));
+            break;
+
+        default:
+
+            break;
+    }
+
+    printf("COMMANDE : %s\n",cmd);
+    //msystem(cmd);
 }
 
 //==================================================================================================================================

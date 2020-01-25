@@ -333,12 +333,18 @@ int convertStringChoiceToInt(char * str, int max){
 }
 
 char * getExtensionOfFile(char * file){
-  file[strcspn(file,"\r\n")] = 0; //Suppression du \n
-  if(strcmp(file,"NA")==0){ return ""; }
-  char * ext = "";
-  ext = (char *)malloc(sizeof(char)*5);
+  char * str = (char*)malloc(sizeof(char)*strlen(file));
+  strcpy(str,file);
+
+  str[strcspn(str,"\r\n")] = 0; //Suppression du \n
+
+  if(strcmp(str,"NA")==0){ return ""; }
+  char * ext = (char *)malloc(sizeof(char)*5);
+
   strcpy(ext, strrchr(file,'.'));
-  //printf("\t\t>%s< >> >%s<\n",file,ext);
+
+  free(str);
+
   return ext;
 }
 

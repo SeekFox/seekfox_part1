@@ -15,7 +15,7 @@
 #include "../include/indexation.h"
 #include "../include/audio.h"
 #include "../include/header_image.h"
-#include "../include/descripteur_txt.h"
+#include "../include/texte.h"
 
 #ifndef __INTERACT__
     #include "../include/interact.h"
@@ -246,6 +246,7 @@ char * getNomFichier (char * nomComplet) {
 
 void empilementDesDescripteurs (PILEDESC * pileDesc, PILEDESC * adrFichiers) {        // Crée la liste de tous les decripteurs et la met dans la piledesc, avec l'adresse à laquelle ils renvoient dans adrFichiers
     DIR * repDocs = NULL;
+
     repDocs = opendir("base_de_documents");       // Ouverture du dossier de la base de documents
 
     if (repDocs==NULL) {       // Cas d'erreur : il n'y a pas de base de documents
@@ -254,56 +255,42 @@ void empilementDesDescripteurs (PILEDESC * pileDesc, PILEDESC * adrFichiers) {  
     }
     
     struct dirent * fichierLu = NULL;
+
+    char * nomDoc = (char*)malloc(sizeof(char)*64);                        
+    char * adrDoc = (char*)malloc(sizeof(char)*64);       
+    char * ext = (char*)malloc(sizeof(char)*4);               
+    char * desc = (char*)malloc(sizeof(char)*200000);
+
+    printf("hi!\n");
     while ((fichierLu=readdir(repDocs))!=NULL) {        // On parcourt tous les fichiers du dossier
-        
-        char * nomDoc = fichierLu->d_name;      // On récupère le nom du fichier i
-        char * adrDoc = malloc((30+strlen(nomDoc))*sizeof(char));
-        sprintf(adrDoc, "base_de_documents/%s", nomDoc);    // Adresse complète du fichier
-        char * ext = getExtensionOfFile(nomDoc);      // On récupère le type du fichier i
-        
-        /*if (strcmp(ext, ".xml")==0) {        // Cas d'un fichier texte
-            // DescripteurTexte dt = creerDescripteurTexte(adrDoc);
-            FILE * f = NULL;
-            f = fopen(adrDoc, "r+");
-            DESCTXT dt = creerDescripteur_txt(f);
-            char * desc = descToString(dt);          
-            //char * desc = "Texte";
-            DESC * strDesc = creerDesc(desc);
-            ajouterDescPile(pileDesc, strDesc);
-            DESC * adr = creerDesc(adrDoc);
-            ajouterDescPile(adrFichiers, adr);
-        }*/
-        if (strcmp(ext, ".bin")==0) {                               // Cas d'un fichier audio
-        //if (strcmp(ext, ".wav")==0 || strcmp(ext, ".bin")==0) {       
-            //printf("C'est du son.\n");
+        strcpy(nomDoc,fichierLu->d_name);                          // On récupère le nom du fichier i
+        adrDoc= (char*)realloc(adrDoc,sizeof(char) * (24+strlen(nomDoc)));
+        sprintf(adrDoc, "base_de_documents/%s", nomDoc);            // Adresse complète du fichier
+        strcpy(ext,getExtensionOfFile(nomDoc));                    // On récupère le type du fichier i
+        printf("\t>%s -> %s\n",nomDoc,adrDoc);
 
+        if (strcmp(ext, ".xml")==0) {                                   // Cas d'un fichier texte
+            DescripteurTexte dt = lireFichierTexte(adrDoc);
+            strcpy(desc,descripteurTexteToString(dt));     
+            
+        }else if (strcmp(ext, ".bin")==0) {                             // Cas d'un fichier audio                    
             DescripteurAudio ds = creerDescripteurAudio(fopen(adrDoc,"r"),getAudioN(),getAudioM(),((strcmp(ext, ".wav")==0)?WAV_FILE:BIN_FILE));
-
-            //char * desc = "Audio";
-            char * desc = descripteurAudioToString(ds);
-
-            DESC * strDesc = creerDesc(desc);
-            ajouterDescPile(pileDesc, strDesc);
-            DESC * adr = creerDesc(adrDoc);
-            ajouterDescPile(adrFichiers, adr);
-        }
-        if (strcmp(ext, ".jpg")==0 || strcmp(ext, ".bmp")==0) {       // Cas d'une image
-            //printf("C'est une image, c'est %s\n", nomDoc);
+            strcpy(desc,descripteurAudioToString(ds));
+        }else if (strcmp(ext, ".jpg")==0 || strcmp(ext, ".bmp")==0) {   // Cas d'une image
             descripteur di;
             int taille_max=0;
             generer_descripteur(&di, "base_de_documents/", nomDoc, &taille_max, getNbBits());
-            char * desc = malloc(1500*sizeof(char));
-            //printf("ça marche avant le tostring\n");
+
+            desc = malloc(1500*sizeof(char));
             descripteur_image_to_string(di, desc, taille_max);
-            //printf("ça marche apres le tostring\n");
-            //descripteur di = creerDescripteurImage(adrDoc);
-            //char * desc = convertionDescripteurImageString(di);
-            DESC * strDesc = creerDesc(desc);
-            ajouterDescPile(pileDesc, strDesc);
-            DESC * adr = creerDesc(adrDoc);
-            ajouterDescPile(adrFichiers, adr);
             
         }
+
+        DESC * strDesc = creerDesc(desc);
+        ajouterDescPile(pileDesc, strDesc);
+        DESC * adr = creerDesc(adrDoc);
+        ajouterDescPile(adrFichiers, adr);
+        printf("\t<<\n");
     }
     
 
@@ -327,6 +314,7 @@ void indexationTotale () {          // Fait l'indexation totale de la base de do
     /* Création de la pile de descripteurs et de la pile d'adresses */
     PILEDESC * pDesc = creerPileDescVide();         // Pile de descripteurs
     PILEDESC * pAdr = creerPileDescVide();          // Pile d'adresses
+
     empilementDesDescripteurs(pDesc, pAdr);
     
     /* Impression des descripteurs dans le fichier de descripteurs */
@@ -382,37 +370,34 @@ void indexationUnique (char * adrDoc) {         // Indexe un unique document à 
 
     /* Création du descripteur associé au fichier puis indexation dans les deux fichiers */
     char * ext = getExtensionOfFile(adrDoc);
-    /*if (strcmp(ext, ".xml")==0) {
-        // DescripteurTexte dt = creerDescripteurTexte(adrDoc);
-        DescripteurTexte dt = creerDescripteurTexte(adrDoc);
-        FILE * f = NULL;
-        f = fopen(adrDoc, "r+");
-        DESCTXT dt = creerDescripteur_txt(f);
-        char * strDt = descToString(dt);
-        //char * strDt = "Texte";
+
+    if (strcmp(ext, ".xml")==0) {
+        DescripteurTexte dt = lireFichierTexte(adrDoc);
+        char * strDt  = "";
+        strcpy(strDt,descripteurTexteToString(dt));
+
         fprintf(indexDesc, "%s\n", strDt);
         fprintf(fichiersIndex, "%s\n", adrDoc);
-    }*/
-    if (strcmp(ext, ".bin")==0) {
-    //if (strcmp(ext, ".wav")==0 || strcmp(ext, ".bin")==0) {
+
+    }else if (strcmp(ext, ".bin")==0) {
         DescripteurAudio ds = creerDescripteurAudio(fopen(adrDoc,"r"),getAudioN(),getAudioM(),((strcmp(ext, ".wav")==0)?WAV_FILE:BIN_FILE));
 
-        //char * strDs = "Audio";
-        char * strDs = descripteurAudioToString(ds);
+        char * strDs = "";
+        strcpy(strDs,descripteurAudioToString(ds));
+
         fprintf(indexDesc, "%s\n", strDs);
         fprintf(fichiersIndex, "%s\n", adrDoc);
-    }
-    if (strcmp(ext, ".jpg")==0 || strcmp(ext, ".bmp")==0) {
-        // DescripteurImage di = creerDescripteurImage(adrDoc);
+
+    }else if (strcmp(ext, ".jpg")==0 || strcmp(ext, ".bmp")==0) {
         descripteur di;
         int taille_max=0;
         char * nomDoc = getNomFichier(adrDoc);
         char * adr = getCheminVersFichier(adrDoc);
+
         generer_descripteur(&di, adr, nomDoc, &taille_max, getNbBits());
         char * strDi = malloc(1500*sizeof(char));
-        //printf("ça marche avant le tostring\n");
         descripteur_image_to_string(di, strDi, taille_max);
-        //char * strDi = "Image";
+
         fprintf(indexDesc, "%s\n", strDi);
         fprintf(fichiersIndex, "%s\n", adrDoc);
     }
@@ -465,6 +450,7 @@ void indexationAutomatique () {
 
     FILE * indexDesc = NULL;
     FILE * fichiersIndex = NULL;
+
     indexDesc = fopen("data/descripteurs/descripteurs.txt", "r+");
     fichiersIndex = fopen("data/descripteurs/fichiersIndexes.txt", "r+");
 
@@ -472,6 +458,7 @@ void indexationAutomatique () {
     if (indexDesc==NULL || fichiersIndex==NULL) {
         /* Cas où les fichiers n'existent pas : on fait une indexation totale */
         indexationTotale();
+
     } else if(fgetc(fichiersIndex)==EOF || fgetc(indexDesc)==EOF) {
         /* Cas où les fichiers sont vides : on fait une indexation totale */
         fclose(indexDesc);
@@ -483,7 +470,6 @@ void indexationAutomatique () {
         fclose(fichiersIndex);
         suppressionOrphelins();
     }
-    //printf("Mise à jour réussie !\n");
 }
 
 void displayDescripteur(char * fichier){

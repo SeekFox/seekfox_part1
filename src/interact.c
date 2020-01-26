@@ -86,7 +86,11 @@ void displayMenu(int *isAdmin, enum FSM * state, char * file){
       break;
 
     case R_KEYWORD:
-      //printTitle("Recherche par MOT CLES\n");
+      printTitle("Recherche par MOT CLES");
+      char * mot = (char*)malloc(sizeof(char)*32);
+      printf("Entrez le mot-cle a rechercher : ");
+      scanf("%31s",mot);
+      afficherResultats(rechercheParMotCle(mot),R_KEYWORD);
       //TODO : Recherche par MOT CLES
       (*state) = TITLE;
       break;
@@ -125,7 +129,8 @@ void displayMenuResearch(char * file, enum FSM * state){
   if(listFile!=NULL){
     //printf("  #/- Recherche par Couleur Dominante\n");
     //printf("  0/- Recherche par mot-clef\n");
-    printf("  0/- Retour\n");
+    printf(" -1/- Retour\n");
+    printf("  0/- Recherche par mot-clef\n");
     //Lecture du fichier
     while (fgets(line, 128, listFile) != NULL){
       i++;
@@ -138,6 +143,7 @@ void displayMenuResearch(char * file, enum FSM * state){
 
     //Recuperation du fichier choisi
     choixNb = convertStringChoiceToInt(choix,i);
+
     if(choixNb > 0){
       rewind(listFile);
       strcpy(line,"");
@@ -151,9 +157,11 @@ void displayMenuResearch(char * file, enum FSM * state){
       (*state) = ( ( strcmp(ext,".bmp")==0 || strcmp(ext,".jpg")==0 ) ? R_IMAGE : (strcmp(ext,".xml")==0 ? R_TEXTE : (strcmp(ext,".wav")==0 || strcmp(ext,".bin")==0 ) ? R_SON : (*state)));
       strcpy(file,line);
     }else if(choixNb == -1){
-        (*state) = R_COLOR;
+        (*state) = TITLE;
+        //(*state) = R_COLOR;
     }else if(choixNb == 0){
       (*state) = R_KEYWORD;
+      //(*state) = RESEARCH;
     }else{
       (*state) = RESEARCH;
     }

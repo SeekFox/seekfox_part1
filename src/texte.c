@@ -17,7 +17,7 @@ typedef struct descripteurTexte{
 }descripteurTexte_s;
 
 DescripteurTexte initDescripteurTexte(){
-    DescripteurTexte dt = (DescripteurTexte)malloc(sizeof(DescripteurTexte));
+    DescripteurTexte dt = (DescripteurTexte)malloc(sizeof(struct descripteurTexte));
     dt->name = (char*)malloc(sizeof(char));
     strcpy(dt->name,"");
     dt->liste=initListeMots();
@@ -50,7 +50,9 @@ ListeMots ajoutMot(ListeMots liste, char * mot){
         //printf("Nouvel element \"%s\"\n",mot);
         lm=(ListeMots)malloc(sizeof(struct listeMots));
         lm->mot=(char*)malloc(sizeof(char)*strlen(mot));
-        strcpy(lm->mot,mot);
+        //lm->mot=mot;
+        strncpy(lm->mot,mot,strlen(mot));
+        //snprintf(lm->mot,strlen(mot),"%s",mot);
         lm->nbOccurence=1;
         lm->next=liste;
     }
@@ -103,7 +105,7 @@ DescripteurTexte lireFichierTexte(char * file){
     ListeMots liste = initListeMots();
     FILE * fichier = NULL;
     char * str = (char*)malloc(sizeof(char)*TAILLEMAXMOT);
-    char c;
+    char c = ' ';
 
 
     fichier = fopen(file, "r");
@@ -291,4 +293,20 @@ ListeMots epurerListe(ListeMots l){
     }
 
     return lm;
+}
+
+int chercherMotCleDansTexte(char * mot, DescripteurTexte descripteur){
+    int nbOccur=0;
+    ListeMots liste = descripteur->liste;
+
+    if(descripteur->nbMots==0) return 0; 
+
+    while(liste!=NULL){
+        if(strcmp(mot, liste->mot)==0){
+            return liste->nbOccurence;
+        }
+        liste=liste->next;
+    }
+
+    return nbOccur;
 }

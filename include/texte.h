@@ -116,3 +116,12 @@ DescripteurTexte StringTodescripteurText(char * descripteur);
  * @return float 
  */
 float comparerDescripteurTexte(DescripteurTexte desc1, DescripteurTexte desc2);
+
+/**
+ * @brief Recherche d'un mot dans le descripteur texte
+ * 
+ * @param mot 
+ * @param descripteur 
+ * @return int 
+ */
+int chercherMotCleDansTexte(char * mot, DescripteurTexte descripteur);

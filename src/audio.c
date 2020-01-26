@@ -99,7 +99,6 @@ int getSubdivisionValue(double val, int nbSubdivisions){	//Les sous-divisions so
 }
 
 DescripteurAudio creerDescripteurAudio(FILE* p_file, int tailleFenetre, int nbSubdivisions, int fileType){	
-
 	DescripteurAudio newDescripteur;
 	
 	double newFenetre[tailleFenetre];					//Nouvelle fenêtre de travail
@@ -110,7 +109,7 @@ DescripteurAudio creerDescripteurAudio(FILE* p_file, int tailleFenetre, int nbSu
 
 	resetFileCursor(p_file, fileType);	
 	Histogramme newHistogram = initHistogramme();
-		
+
 	do{																
 		nbElementsLus = 0;
 		for(int x = 0; x < nbSubdivisions; x++)

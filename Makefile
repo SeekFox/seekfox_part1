@@ -30,7 +30,6 @@ compile :
 	@$(GCC) $(CFLAGS) -I $(INCLUDE) -c $(SRC) $(LIBFLAGS)
 	@$(MOVE) *.o $(LIB)
 	@$(GCC) $(CFLAGS) -o $(EXC) $(LIB)*.o $(LIBFLAGS)
-
 run :
 	@$(ECHO) '\n'------------------RUN------------------'';
 	@$(EXC)

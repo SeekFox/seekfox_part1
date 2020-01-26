@@ -250,7 +250,7 @@ char * getNomFichier (char * nomComplet) {
 
 void empilementDesDescripteurs (PILEDESC * pileDesc, PILEDESC * adrFichiers) {        // Crée la liste de tous les decripteurs et la met dans la piledesc, avec l'adresse à laquelle ils renvoient dans adrFichiers
     DIR * repDocs = NULL;
-
+    
     repDocs = opendir("base_de_documents");       // Ouverture du dossier de la base de documents
 
     if (repDocs==NULL) {       // Cas d'erreur : il n'y a pas de base de documents
@@ -261,20 +261,21 @@ void empilementDesDescripteurs (PILEDESC * pileDesc, PILEDESC * adrFichiers) {  
     struct dirent * fichierLu = NULL;
 
     char * nomDoc = (char*)malloc(sizeof(char)*64);                        
-    char * adrDoc = (char*)malloc(sizeof(char)*24);       
+    char * adrDoc = (char*)malloc(sizeof(char)*256);       
     const char * ext; //= (char*)malloc(sizeof(char)*5);               
     char * desc = (char*)malloc(sizeof(char)*200000);
-
+    
     while ((fichierLu=readdir(repDocs))!=NULL) {        // On parcourt tous les fichiers du dossier
 
         strcpy(nomDoc,fichierLu->d_name);                          // On récupère le nom du fichier i
-        adrDoc= (char*)realloc(adrDoc,sizeof(char) * (24+strlen(nomDoc)));
+        //adrDoc= (char*)realloc(adrDoc,sizeof(char) * (24+strlen(nomDoc)));
         snprintf(adrDoc,(strlen("base_de_documents/")+strlen(nomDoc)+1),"base_de_documents/%s", nomDoc);            // Adresse complète du fichier
         ext = getExtensionOfFile(nomDoc);
         //strcpy(ext,getExtensionOfFile(nomDoc));                    // On récupère le type du fichier i
         //printf("\t>%s %s\n",nomDoc,adrDoc);
-
+        
         if (strcmp(ext, ".xml")==0) {                                   // Cas d'un fichier texte
+
             DescripteurTexte dt = lireFichierTexte(adrDoc);
 
             strcpy(desc,descripteurTexteToString(dt)); 
@@ -283,17 +284,20 @@ void empilementDesDescripteurs (PILEDESC * pileDesc, PILEDESC * adrFichiers) {  
             ajouterDescPile(pileDesc, strDesc);
             DESC * adr = creerDesc(adrDoc);
             ajouterDescPile(adrFichiers, adr);    
-            
+
         }else if (strcmp(ext, ".bin")==0) {                             // Cas d'un fichier audio                    
+
             DescripteurAudio ds = creerDescripteurAudio(fopen(adrDoc,"r"),getAudioN(),getAudioM(),((strcmp(ext, ".wav")==0)?WAV_FILE:BIN_FILE));
+
             strcpy(desc,descripteurAudioToString(ds));
 
             DESC * strDesc = creerDesc(desc);
             ajouterDescPile(pileDesc, strDesc);
             DESC * adr = creerDesc(adrDoc);
             ajouterDescPile(adrFichiers, adr);
-        
+
         }else if (strcmp(ext, ".jpg")==0 || strcmp(ext, ".bmp")==0) {   // Cas d'une image
+
             descripteur di;
             int taille_max=0;
             generer_descripteur(&di, "base_de_documents/", nomDoc, &taille_max, getNbBits());
@@ -304,6 +308,7 @@ void empilementDesDescripteurs (PILEDESC * pileDesc, PILEDESC * adrFichiers) {  
             ajouterDescPile(pileDesc, strDesc);
             DESC * adr = creerDesc(adrDoc);
             ajouterDescPile(adrFichiers, adr);
+
             
         }
     }

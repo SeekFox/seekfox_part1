@@ -32,6 +32,7 @@ void afficherResultats(RECHERCHE *r, int typeRecherche);
 /* FONCTIONS DE RECHERCHE PAR FICHIER */
 // /!\ IMPORTANT : ces fonctions ont besoin de toutes les fonctions de manipulation/création de descripteur pour pouvoir fonctionner
 RECHERCHE * rechercheParFichierTexte (char *);
+RECHERCHE * rechercheParMotCle(char * mot); 
 RECHERCHE * rechercheParFichierImage (char *);
 RECHERCHE * rechercheParFichierSon (char *);
 // Pour chacune de ces fonctions, renvoie la liste triée des fichiers les plus similaires à celui dont l'adresse est passée en paramètre

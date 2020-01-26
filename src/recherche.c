@@ -118,7 +118,16 @@ void afficherResultats(RECHERCHE *r,int typeRecherche){
                     printf("%ds \n", courant->tps[j]);
                 }
             }
-        } else{
+        }else if(typeRecherche == R_KEYWORD){
+            while(courant!=NULL) {
+                if(courant->similarite>0){
+                    printf("\t%d - %s -> %.0f occurence%s\n", i, courant->adresse, courant->similarite,(courant->similarite>1?"s":""));
+                }
+                
+                courant = courant->suivant;
+                i++;
+            }
+        }else{
             while(courant!=NULL) {
                 printf("\t%d - %s -> %.2f", i, courant->adresse, courant->similarite);
                 printf("%c\n",'%');
@@ -144,13 +153,16 @@ void afficherResultats(RECHERCHE *r,int typeRecherche){
             case R_IMAGE:
                 sprintf(cmd,"%s base_de_documents%s",getLogicielOuvertureFichier(),((r->premier)->adresse));
                 break;
+            case R_KEYWORD:
+                sprintf(cmd,"%s base_de_documents%s",getLogicielOuvertureFichier(),((r->premier)->adresse));
+                break;
 
             default:
 
                 break;
         }
 
-        //printf("COMMANDE : %s\n",cmd);
+        printf("COMMANDE : %s\n",cmd);
     } else {
         printf("Aucun résultat trouvé...\n");
     }
@@ -159,6 +171,52 @@ void afficherResultats(RECHERCHE *r,int typeRecherche){
 
 //==================================================================================================================================
 // FONCTIONS DE RECHERCHE 
+
+RECHERCHE * rechercheParMotCle(char * mot) {
+    // Etape 1 : on crée un descripteur du fichier requête après avoir vérifié son existence 
+
+    // Etape 2 : on compare ce descripteur à tous les descripteurs textes indexés 
+    FILE * fichiersIndexes = NULL;
+    FILE * descripteurs = NULL;
+    fichiersIndexes = fopen("data/descripteurs/fichiersIndexes.txt", "r");
+    descripteurs = fopen("data/descripteurs/descripteurs.txt", "r");
+
+    if (fichiersIndexes==NULL || descripteurs==NULL) {      // Vérification de l'ouverture des fichiers
+        // Affichage de l'erreur
+        displayError("Problème d'accès à la base des descripteurs.");
+        return NULL;
+    }
+
+    char * fichCourant = malloc(200*sizeof(char));      // Stockage de l'adresse du fichier courant
+    char * descCourant = malloc(200000*sizeof(char));     // Stockage du descripteur associé
+    
+    RECHERCHE * resultats = creerRechercheVide();     // File qui contiendra les résultats de la recherche
+    
+    while(fgets(fichCourant, 200, fichiersIndexes)!=NULL) {     // On passe chaque ligne du fichier listant les fichiers indexés en revue
+        fgets(descCourant, 200000, descripteurs);     // Pour chacune de ces lignes (donc pour chacun de ces fichiers), on récupère le descripteur associé
+       
+        fichCourant[strcspn(fichCourant,"\r\n")] = 0; //Suppression du \n
+        
+        //printf("-%s-\n",fichCourant);
+
+
+        if(strcmp(getExtensionOfFile(fichCourant), ".xml")==0) {      // Cas où le descripteur récupéré est celui d'un fichier texte (on ne traite que ces cas)
+            descCourant[strcspn(descCourant,"\r\n")] = 0; //Suppression du \n
+            //printf("\t%s\n",descCourant);
+
+            DescripteurTexte desc = StringTodescripteurText(descCourant);     // On convertit le descripteur (jusque là au format string) en structure descripteur
+
+            float sim = chercherMotCleDansTexte(mot, desc);        // On calcule la similarité entre le fichier recherché et le fichier courant
+            
+            FICHIER * fcomp = creerCelluleFichier(fichCourant, sim);
+            ajouterFichierRecherche(resultats, fcomp);      // On ajoute à la liste triée des fichiers compatibles avec la recherche
+        }
+    }
+    fclose(fichiersIndexes);
+    fclose(descripteurs);
+
+    return resultats;
+}
 
 RECHERCHE * rechercheParFichierTexte (char * fichier) {
     // Etape 1 : on crée un descripteur du fichier requête après avoir vérifié son existence 

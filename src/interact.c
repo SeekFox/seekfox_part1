@@ -67,8 +67,7 @@ void displayMenu(int *isAdmin, enum FSM * state, char * file){
     case R_IMAGE:
       printTitle("Recherche par IMAGE");
       rechercheParFichierImage(file);
-      //afficherResultats(rechercheParFichierImage(file),R_IMAGE);
-      //TODO : Recherche par Image
+
       (*state) = TITLE;
       break;
 
@@ -91,7 +90,7 @@ void displayMenu(int *isAdmin, enum FSM * state, char * file){
       printf("Entrez le mot-cle a rechercher : ");
       scanf("%31s",mot);
       afficherResultats(rechercheParMotCle(mot),R_KEYWORD);
-      //TODO : Recherche par MOT CLES
+
       (*state) = TITLE;
       break;
 

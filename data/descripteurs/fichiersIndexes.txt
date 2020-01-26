@@ -1,4 +1,4 @@
-base_de_documents/01-LoremIpsum.xml
+NA
 base_de_documents/01.jpg
 base_de_documents/02.jpg
 base_de_documents/03-Mimer_un_signal_nerveux_pour.xml
@@ -16,3 +16,4 @@ base_de_documents/28-Danse___Robyn_Orlin_et.xml
 base_de_documents/Les-mots-et-tics-de-langage.xml
 base_de_documents/corpus_fi.bin
 base_de_documents/jingle_fi.bin
+base_de_documents/08-Carlos_do_Carmo____Le.xml

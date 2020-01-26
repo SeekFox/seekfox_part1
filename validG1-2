@@ -1,0 +1,226 @@
+Script started on Sun 26 Jan 2020 10:04:11 PM CET
+root@Periclès:~/1A SRI/S5/Projet/Partie I/seekfox_part1# make all
+Loading ...
+dos2unix: converting file bin/readRequete.sh to Unix format ...
+
+------------------RUN------------------
+  ____            _     __
+ / ___|  ___  ___| | __/ _| _____  __
+ \___ \ / _ \/ _ \ |/ / |_ / _ \ \/ /         
+  ___) |  __/  __/   <|  _| (_) >  <
+ |____/ \___|\___|_|\_\_|  \___/_/\_\
+
+
+1\- Recherche
+2\- Administration
+3\- Informations
+4\- Quitter Seekfox
+2
+Veuillez entrer le mot de passe administrateur : 
+**
+
+[ERREUR] mot de passe invalide
+*
+
+
+=== ADMINISTRATION ===       
+1\- Lancer l'indexation      
+2\- Visualiser un descripteur
+3\- Options
+4\- Retour
+3
+
+
+=== CONFIGURATIONS ===
+GENERAL 
+        Logiciel de visualisation de fichier xdg-open
+TEXTE 
+        Taille minimun d'un mot              5
+        Valeur limite de mots                10
+        Seuil limite de taille de mot        3
+        Logiciel de visualisation            gedit
+IMAGE 
+        Nombre de bits de quantification     2
+AUDIO 
+        Taille de la fenetre d'analyse       4096
+        Nombre d'intervalles                 100
+
+1\- Changer le mot de passe
+2\- Modifier la taille minimun d'un mot
+3\- Modifier la valeur limite de mots
+4\- Modifier le seuil limite de taille de mot
+5\- Modifier le nombre de bits de quantification
+6\- Modifier le nombre de fenetres d'analyse
+7\- Modifier le nombre d'intervalles
+8\- Retour
+1
+Entrez le nouveau mot de passe
+******
+Confirmez le mot de passe
+******
+Votre mot de passe a bien ete modifie !
+
+
+=== CONFIGURATIONS ===
+GENERAL 
+        Logiciel de visualisation de fichier xdg-open
+TEXTE 
+        Taille minimun d'un mot              5
+        Valeur limite de mots                10
+        Seuil limite de taille de mot        3
+        Logiciel de visualisation            gedit
+IMAGE 
+        Nombre de bits de quantification     2
+AUDIO 
+        Taille de la fenetre d'analyse       4096
+        Nombre d'intervalles                 100
+
+1\- Changer le mot de passe
+2\- Modifier la taille minimun d'un mot
+3\- Modifier la valeur limite de mots
+4\- Modifier le seuil limite de taille de mot
+5\- Modifier le nombre de bits de quantification
+6\- Modifier le nombre de fenetres d'analyse
+7\- Modifier le nombre d'intervalles
+8\- Retour
+8
+
+1\- Lancer l'indexation
+2\- Visualiser un descripteur
+3\- Options
+4\- Retour
+1
+
+1\- Indexation d'un fichier
+2\- Indexation totale
+3\- Afficher les fichiers indexes
+4\- Retour
+2
+
+Indexation des fichiers en cours...
+L'indexation totale a ete effectuee !
+1\- Lancer l'indexation
+2\- Visualiser un descripteur
+3\- Options
+4\- Retour
+4
+
+
+1\- Recherche
+2\- Administration
+3\- Informations
+4\- Quitter Seekfox
+1
+
+=== RECHERCHE ===
+ -1/- Retour
+  0/- Recherche par mot-clef
+  1/- corpus_fi.bin
+  2/- jingle_fi.bin
+  3/- 42.bmp
+  4/- 51.bmp
+  5/- 01.jpg
+  6/- 01-LoremIpsum.xml
+6
+Choix du fichier "01-LoremIpsum.xml"
+
+
+=== Recherche par TEXTE ===
+        1 - base_de_documents/01-LoremIpsum.xml -> 100.00%
+        2 - base_de_documents/03-Mimer_un_signal_nerveux_pour.xml -> 100.00%
+
+1\- Recherche
+2\- Administration
+3\- Informations
+4\- Quitter Seekfox
+1
+
+=== RECHERCHE ===
+ -1/- Retour
+  0/- Recherche par mot-clef
+  1/- corpus_fi.bin
+  2/- jingle_fi.bin
+  3/- 42.bmp
+  4/- 51.bmp
+  5/- 01.jpg
+  6/- 01-LoremIpsum.xml
+2
+Choix du fichier "jingle_fi.bin"
+
+
+=== Recherche par SON ===
+jingle_fi.bin
+        1 -  corpus_fi -> 1 occurence -> 27s 
+
+1\- Recherche
+2\- Administration
+3\- Informations
+4\- Quitter Seekfox
+1
+
+=== RECHERCHE ===
+ -1/- Retour
+  0/- Recherche par mot-clef
+  1/- corpus_fi.bin
+  2/- jingle_fi.bin
+  3/- 42.bmp
+  4/- 51.bmp
+  5/- 01.jpg
+  6/- 01-LoremIpsum.xml
+0
+
+=== Recherche par MOT CLES ===
+Entrez le mot-cle a rechercher : France
+        1 - base_de_documents/15-_Si_on_veut_aller_trop.xml -> 7 occurences
+
+COMMANDE : xdg-open base_de_documentsbase_de_documents/15-_Si_on_veut_aller_trop.xml
+
+1\- Recherche
+2\- Administration
+3\- Informations
+4\- Quitter Seekfox
+2
+Veuillez entrer le mot de passe administrateur : 
+******
+
+
+=== ADMINISTRATION ===       
+1\- Lancer l'indexation      
+2\- Visualiser un descripteur
+3\- Options
+4\- Retour
+1
+
+1\- Indexation d'un fichier      
+2\- Indexation totale
+3\- Afficher les fichiers indexes
+4\- Retour
+1
+
+Chargement...
+Vous etes dans le repertoire seekfox_part1
+
+Entrez le chemin vers le fichier a indexer
+        >../data/Textes/08-Carlos_do_Carmo____Le.xml
+
+Indexation du fichier en cours...
+L'indexation a ete effectuee !
+
+
+1\- Lancer l'indexation
+2\- Visualiser un descripteur
+3\- Options
+4\- Retour
+4
+
+1\- Recherche
+2\- Administration
+3\- Informations
+4\- Quitter Seekfox
+4
+------------------END------------------
+
+root@Pericles: ~/1A SRI/S5/Projet/Partie I/seekfox_part1# exit
+exit
+
+Script done on Sun 26 Jan 2020 10:08:27 PM CET

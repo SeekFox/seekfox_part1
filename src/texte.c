@@ -73,7 +73,7 @@ void afficheListeMot(ListeMots liste){
         
         lm=lm->next;
     }
-    free(lm);
+
 }
 
 int getNbMotsDescripteurTexte(DescripteurTexte descripteur){
@@ -87,7 +87,7 @@ int getNbMotsDescripteurTexte(DescripteurTexte descripteur){
         nbMots+=lm->nbOccurence;
         lm=lm->next;
     }
-    free(lm);
+    //free(lm);
     return nbMots;
 }
 
@@ -163,7 +163,6 @@ char * descripteurTexteToString(DescripteurTexte descripteur){
 
     str = (char*) realloc(str,sizeof(char)*strlen(str)+strlen("!"));
     sprintf(str,"%s%s",str,"!");
-    free(lm);
     return str;
 }
 
@@ -276,8 +275,7 @@ float comparerDescripteurTexte(DescripteurTexte desc1, DescripteurTexte desc2){
         l1=l1->next;
     }
 
-    free(l1);
-    free(l2);
+    //printf("\n\t>>>Comparaison %d %d %f\n",nbMotsEnCommun,(desc1->nbMots + desc2->nbMots),((float)nbMotsEnCommun)/((float)(desc1->nbMots + desc2->nbMots)) );
     return ((float)nbMotsEnCommun)/((float)(desc1->nbMots + desc2->nbMots))*100;
 }
 
@@ -291,6 +289,6 @@ ListeMots epurerListe(ListeMots l){
         
         l=l->next;
     }
-    free(l);
+
     return lm;
 }

@@ -360,8 +360,7 @@ void indexationUnique (char * adrDoc) {         // Indexe un unique document à 
         displayError("Le fichier n'existe pas.");
         return;
     }
-
-    strcpy(adrDoc,moveFileInBDB(adrDoc));
+    
     /* On vérifie que le fichier n'est pas déjà indexé */
     if(dejaIndexe(adrDoc)==0) {
         displayError("Fichier déjà indexé.");
@@ -389,11 +388,14 @@ void indexationUnique (char * adrDoc) {         // Indexe un unique document à 
 
     if (strcmp(ext, ".xml")==0) {
         DescripteurTexte dt = lireFichierTexte(adrDoc);
-        char * strDt  = "";
-        strcpy(strDt,descripteurTexteToString(dt));
+        char * strDt  = descripteurTexteToString(dt);
 
         fprintf(indexDesc, "%s\n", strDt);
-        fprintf(fichiersIndex, "%s\n", adrDoc);
+        //fprintf(fichiersIndex, "base_de_documents%s\n", adrDoc);
+        fprintf(fichiersIndex, "base_de_documents%s\n", (strrchr(adrDoc,'/')==NULL?adrDoc:strrchr(adrDoc,'/')));
+
+        free(strDt);
+        
 
     }else if (strcmp(ext, ".bin")==0) {
         DescripteurAudio ds = creerDescripteurAudio(fopen(adrDoc,"r"),getAudioN(),getAudioM(),((strcmp(ext, ".wav")==0)?WAV_FILE:BIN_FILE));
@@ -402,7 +404,8 @@ void indexationUnique (char * adrDoc) {         // Indexe un unique document à 
         strcpy(strDs,descripteurAudioToString(ds));
 
         fprintf(indexDesc, "%s\n", strDs);
-        fprintf(fichiersIndex, "%s\n", adrDoc);
+        //fprintf(fichiersIndex, "base_de_documents%s\n", adrDoc);
+        fprintf(fichiersIndex, "base_de_documents%s\n", ((strrchr(adrDoc,'/')==NULL)?adrDoc:strrchr(adrDoc,'/')));
 
     }else if (strcmp(ext, ".jpg")==0 || strcmp(ext, ".bmp")==0) {
         descripteur di;
@@ -415,8 +418,11 @@ void indexationUnique (char * adrDoc) {         // Indexe un unique document à 
         descripteur_image_to_string(di, strDi, taille_max);
 
         fprintf(indexDesc, "%s\n", strDi);
-        fprintf(fichiersIndex, "%s\n", adrDoc);
+        //fprintf(fichiersIndex, "base_de_documents%s\n", adrDoc);
+        fprintf(fichiersIndex, "base_de_documents%s\n", (strrchr(adrDoc,'/')==NULL?adrDoc:strrchr(adrDoc,'/')));
     }
+
+    strcpy(adrDoc,moveFileInBDB(adrDoc));
 
     fclose(indexDesc);
     fclose(fichiersIndex);

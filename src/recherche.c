@@ -197,7 +197,7 @@ RECHERCHE * rechercheParFichierTexte (char * fichier) {
     char * descCourant = malloc(200000*sizeof(char));     // Stockage du descripteur associé
     
     RECHERCHE * resultats = creerRechercheVide();     // File qui contiendra les résultats de la recherche
-    float seuil = getSeuil();       //recupSeuilRecherche();        // WIP : récupérer le seuil de similarité à partir duquel on considère un fichier suffisamment similaire pour être affiché (j'ai mis 70 par défaut)
+    
     while(fgets(fichCourant, 200, fichiersIndexes)!=NULL) {     // On passe chaque ligne du fichier listant les fichiers indexés en revue
         fgets(descCourant, 200000, descripteurs);     // Pour chacune de ces lignes (donc pour chacun de ces fichiers), on récupère le descripteur associé
        
@@ -209,18 +209,17 @@ RECHERCHE * rechercheParFichierTexte (char * fichier) {
         if(strcmp(getExtensionOfFile(fichCourant), ".xml")==0) {      // Cas où le descripteur récupéré est celui d'un fichier texte (on ne traite que ces cas)
             descCourant[strcspn(descCourant,"\r\n")] = 0; //Suppression du \n
             //printf("\t%s\n",descCourant);
+
             DescripteurTexte desc = StringTodescripteurText(descCourant);     // On convertit le descripteur (jusque là au format string) en structure descripteur
 
             float sim = comparerDescripteurTexte(desc, descRequete);        // On calcule la similarité entre le fichier recherché et le fichier courant
             //printf("\t%s %.2f\n",fichCourant,sim);
-            if(sim>=seuil) {        // Cas où le descripteur récupéré a une similarité suffisante avec la recherche
+            if(sim>=70) {        // Cas où le descripteur récupéré a une similarité suffisante avec la recherche
                 FICHIER * fcomp = creerCelluleFichier(fichCourant, sim);
                 ajouterFichierRecherche(resultats, fcomp);      // On ajoute à la liste triée des fichiers compatibles avec la recherche
             }
         }
     }
-
-    free(descCourant);
     fclose(fichiersIndexes);
     fclose(descripteurs);
 

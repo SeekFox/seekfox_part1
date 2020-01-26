@@ -136,7 +136,7 @@ DescripteurTexte lireFichierTexte(char * file){
         fclose(fichier);
     
     }else{
-        printf("Le fichier \"%s\" n'exite pas\n",file);
+        printf("Le fichier \"%s\" n'existe pas\n",file);
         return NULL;
     }
 
@@ -161,8 +161,8 @@ char * descripteurTexteToString(DescripteurTexte descripteur){
         lm=lm->next;
     }
 
-    str = (char*) realloc(str,sizeof(char)*strlen(str));
-    sprintf(str,"%s!",str);
+    str = (char*) realloc(str,sizeof(char)*strlen(str)+strlen("!"));
+    sprintf(str,"%s%s",str,"!");
     free(lm);
     return str;
 }

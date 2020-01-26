@@ -138,7 +138,7 @@ int convertStringChoiceToInt(char * str, int max);
  * @param file 
  * @return char* 
  */
-char * getExtensionOfFile(char * file);
+const char * getExtensionOfFile(const char * file);
 
 /**
  * @brief Get the Name Of File object

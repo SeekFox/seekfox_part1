@@ -32,7 +32,7 @@
 /* FONCTIONS DE MANIPULATION DES STRUCTURES */
 
 DESC * initDesc () {         // Crée une cellule descripteur vide
-    DESC * d = malloc(sizeof(DESC));
+    DESC * d = malloc(sizeof(struct desc));
     d->strDesc = NULL;
     d->suivant = NULL;
     return d;
@@ -40,9 +40,13 @@ DESC * initDesc () {         // Crée une cellule descripteur vide
 
 DESC * creerDesc (char * str) {       // Crée une cellule descripteur à partir d'une chaîne de caractères
     DESC * d = initDesc();
-    d->strDesc = malloc(strlen(str)*sizeof(char));
-    d->strDesc = str;
-    d->suivant = initDesc();
+    (d->strDesc) = (char*)malloc(strlen(str)+1*sizeof(char));
+    //d->strDesc=str;
+    //printf("\t\t- %s\n",str);
+    snprintf(d->strDesc,strlen(str)+1,"%s",str);
+    //strcpy(d->strDesc,str);
+    //printf("\t\t%s\n",d->strDesc);
+    //d->suivant = initDesc();
     d->suivant = NULL;
     return d;
 }
@@ -257,40 +261,54 @@ void empilementDesDescripteurs (PILEDESC * pileDesc, PILEDESC * adrFichiers) {  
     struct dirent * fichierLu = NULL;
 
     char * nomDoc = (char*)malloc(sizeof(char)*64);                        
-    char * adrDoc = (char*)malloc(sizeof(char)*64);       
-    char * ext = (char*)malloc(sizeof(char)*4);               
+    char * adrDoc = (char*)malloc(sizeof(char)*24);       
+    const char * ext; //= (char*)malloc(sizeof(char)*5);               
     char * desc = (char*)malloc(sizeof(char)*200000);
 
-    printf("hi!\n");
     while ((fichierLu=readdir(repDocs))!=NULL) {        // On parcourt tous les fichiers du dossier
+
         strcpy(nomDoc,fichierLu->d_name);                          // On récupère le nom du fichier i
         adrDoc= (char*)realloc(adrDoc,sizeof(char) * (24+strlen(nomDoc)));
-        sprintf(adrDoc, "base_de_documents/%s", nomDoc);            // Adresse complète du fichier
-        strcpy(ext,getExtensionOfFile(nomDoc));                    // On récupère le type du fichier i
-        printf("\t>%s -> %s\n",nomDoc,adrDoc);
+        snprintf(adrDoc,(strlen("base_de_documents/")+strlen(nomDoc)+1),"base_de_documents/%s", nomDoc);            // Adresse complète du fichier
+        ext = getExtensionOfFile(nomDoc);
+        //strcpy(ext,getExtensionOfFile(nomDoc));                    // On récupère le type du fichier i
+        //printf("\t>%s %s\n",nomDoc,adrDoc);
 
         if (strcmp(ext, ".xml")==0) {                                   // Cas d'un fichier texte
             DescripteurTexte dt = lireFichierTexte(adrDoc);
-            strcpy(desc,descripteurTexteToString(dt));     
+
+            strcpy(desc,descripteurTexteToString(dt)); 
+            printf(">>>>%s\n",desc);
+
+            DESC * strDesc = creerDesc(desc);
+            ajouterDescPile(pileDesc, strDesc);
+            DESC * adr = creerDesc(adrDoc);
+            ajouterDescPile(adrFichiers, adr);    
             
         }else if (strcmp(ext, ".bin")==0) {                             // Cas d'un fichier audio                    
             DescripteurAudio ds = creerDescripteurAudio(fopen(adrDoc,"r"),getAudioN(),getAudioM(),((strcmp(ext, ".wav")==0)?WAV_FILE:BIN_FILE));
             strcpy(desc,descripteurAudioToString(ds));
+
+            DESC * strDesc = creerDesc(desc);
+            ajouterDescPile(pileDesc, strDesc);
+            DESC * adr = creerDesc(adrDoc);
+            ajouterDescPile(adrFichiers, adr);
+        
         }else if (strcmp(ext, ".jpg")==0 || strcmp(ext, ".bmp")==0) {   // Cas d'une image
             descripteur di;
             int taille_max=0;
             generer_descripteur(&di, "base_de_documents/", nomDoc, &taille_max, getNbBits());
 
-            desc = malloc(1500*sizeof(char));
             descripteur_image_to_string(di, desc, taille_max);
+
+            DESC * strDesc = creerDesc(desc);
+            ajouterDescPile(pileDesc, strDesc);
+            DESC * adr = creerDesc(adrDoc);
+            ajouterDescPile(adrFichiers, adr);
             
         }
 
-        DESC * strDesc = creerDesc(desc);
-        ajouterDescPile(pileDesc, strDesc);
-        DESC * adr = creerDesc(adrDoc);
-        ajouterDescPile(adrFichiers, adr);
-        printf("\t<<\n");
+        //printf("\t<<\n");
     }
     
 
@@ -320,6 +338,7 @@ void indexationTotale () {          // Fait l'indexation totale de la base de do
     /* Impression des descripteurs dans le fichier de descripteurs */
     DESC * courant = pDesc->premier;
     for (int i=0; i<pDesc->nbDesc; i++) {
+        
         fprintf(indexDesc, "%s\n", courant->strDesc);
         courant=courant->suivant;
     }
@@ -327,6 +346,7 @@ void indexationTotale () {          // Fait l'indexation totale de la base de do
     /* Impression de la liste des fichiers indexés */
     courant = pAdr->premier;
     for (int i=0; i<pAdr->nbDesc; i++) {
+        printf(">>%s\n",courant->strDesc);
         fprintf(fichiersIndex, "%s\n", courant->strDesc);
         courant=courant->suivant;
     }

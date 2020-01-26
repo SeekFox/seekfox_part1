@@ -1,0 +1,9 @@
+base_de_documents/01.jpg
+base_de_documents/02.jpg
+base_de_documents/03.jpg
+base_de_documents/04.bmp
+base_de_documents/04.jpg
+base_de_documents/22_Les_clubs_de_football_anglais.xml
+base_de_documents/Les-mots-et-tics-de-langage.xml
+base_de_documents/corpus_fi.bin
+base_de_documents/jingle_fi.bin

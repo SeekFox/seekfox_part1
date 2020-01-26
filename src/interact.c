@@ -332,21 +332,11 @@ int convertStringChoiceToInt(char * str, int max){
   return val;
 }
 
-char * getExtensionOfFile(char * file){
-  char * str = (char*)malloc(sizeof(char)*strlen(file));
-  strcpy(str,file);
+  const char * getExtensionOfFile(const char * file){
+    if (strlen(file) == 0 || strcmp(file, "NA") == 0) return "";
 
-  str[strcspn(str,"\r\n")] = 0; //Suppression du \n
-
-  if(strcmp(str,"NA")==0){ return ""; }
-  char * ext = (char *)malloc(sizeof(char)*5);
-
-  strcpy(ext, strrchr(file,'.'));
-
-  free(str);
-
-  return ext;
-}
+    return strrchr(file,'.');
+  }
 
 char * getNameOfFile(char * file){
   char * s = NULL;

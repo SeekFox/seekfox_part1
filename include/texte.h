@@ -1,4 +1,4 @@
-#define TAILLEMAXMOT 40
+#define TAILLEMAXMOT 128
 
 /**
  * @brief Structure de la liste des mots
@@ -82,7 +82,7 @@ void afficheListeMot(ListeMots liste);
  * 
  * @param descripteur 
  */
-void afficheDescripteur(DescripteurTexte descripteur);
+void afficheDescripteurTexte(DescripteurTexte descripteur);
 
 /**
  * @brief Get the Nb Mots Descripteur Texte object

@@ -58,7 +58,7 @@ ListeMots ajoutMot(ListeMots liste, char * mot){
     return lm;
 }
 
-void afficheDescripteur(DescripteurTexte descripteur){
+void afficheDescripteurTexte(DescripteurTexte descripteur){
     printf("==AFFICHAGE Descripteur==\n");
     printf("Fichier         : %s\n",descripteur->name);
     printf("Nombre de mots  : %d mots\n",descripteur->nbMots);
@@ -253,7 +253,7 @@ DescripteurTexte StringTodescripteurText(char * str){
     }
 
     descripteur->liste=liste;
-    free(liste);
+
     return descripteur;
 }
 

@@ -18,6 +18,7 @@
 #include "../include/config.h"
 #include "../include/interact.h"
 #include "../include/header_image.h"
+#include "../include/texte.h"
 
 //==================================================================================================================================
 // FONCTIONS DE MANIPULATION DES STRUCTURES 
@@ -54,7 +55,7 @@ FICHIER * creerCelluleFichier (char * nom, float sim) {         // Crée une cel
     FICHIER * f = initCelluleFichier();
     f->adresse = malloc(strlen(nom)*sizeof(char));
     strcpy(f->adresse,nom);
-    (f->adresse)[0] = ' ';
+    //(f->adresse)[0] = ' ';
     f->similarite = sim;
     f->tps = NULL;
     f->precedent = initCelluleFichier();
@@ -112,14 +113,14 @@ void afficherResultats(RECHERCHE *r,int typeRecherche){
     
         if(typeRecherche == R_SON){
             if(courant!=NULL) {
-                printf("\t%d -%-20s -> %.0f occurence%s -> ", i, courant->adresse, courant->similarite,(courant->similarite>1?"s":""));
+                printf("\t%d - %s -> %.0f occurence%s -> ", i, courant->adresse, courant->similarite,(courant->similarite>1?"s":""));
                 for(int j = 0; j < courant->similarite; j++){
                     printf("%ds \n", courant->tps[j]);
                 }
             }
         } else{
             while(courant!=NULL) {
-                printf("\t%d -%-20s -> %.2f", i, courant->adresse, courant->similarite);
+                printf("\t%d - %s -> %.2f", i, courant->adresse, courant->similarite);
                 printf("%c\n",'%');
                 courant = courant->suivant;
                 i++;
@@ -136,7 +137,8 @@ void afficherResultats(RECHERCHE *r,int typeRecherche){
                 break;
 
             case R_TEXTE:
-                sprintf(cmd,"%s base_de_documents%s",getLogicielOuvertureFichier(),((r->premier)->adresse));
+                sprintf(cmd,"%s %s",getLogicielOuvertureFichier(),((r->premier)->adresse));
+                system(cmd);
                 break;
             
             case R_IMAGE:
@@ -148,7 +150,7 @@ void afficherResultats(RECHERCHE *r,int typeRecherche){
                 break;
         }
 
-        printf("COMMANDE : %s\n",cmd);
+        //printf("COMMANDE : %s\n",cmd);
     } else {
         printf("Aucun résultat trouvé...\n");
     }
@@ -157,21 +159,26 @@ void afficherResultats(RECHERCHE *r,int typeRecherche){
 
 //==================================================================================================================================
 // FONCTIONS DE RECHERCHE 
-/*
-RECHERCHE * rechercheParFichierTexte (char * adresse) {
 
+RECHERCHE * rechercheParFichierTexte (char * fichier) {
     // Etape 1 : on crée un descripteur du fichier requête après avoir vérifié son existence 
     FILE * requete = NULL;
+    char adresse[64];
+    sprintf(adresse, "requete/%s", fichier);
+
     requete = fopen(adresse, "r");
-    DESC descRequete;
+    DescripteurTexte descRequete;
+
     if (requete==NULL) {
         // Affichage de l'erreur 
         displayError("Le fichier à rechercher n'existe pas ou n'a pas pu être ouvert.");
         return NULL;
     } else {
         // Création du descripteur 
-        descRequete = creerDescripteur_txt(requete);
         fclose(requete);
+        //printf(">>%s\n",adresse);
+        descRequete = lireFichierTexte(adresse);
+        
     }
 
     // Etape 2 : on compare ce descripteur à tous les descripteurs textes indexés 
@@ -187,23 +194,25 @@ RECHERCHE * rechercheParFichierTexte (char * adresse) {
     }
 
     char * fichCourant = malloc(200*sizeof(char));      // Stockage de l'adresse du fichier courant
-    char * descCourant = malloc(20000*sizeof(char));     // Stockage du descripteur associé
+    char * descCourant = malloc(200000*sizeof(char));     // Stockage du descripteur associé
     
     RECHERCHE * resultats = creerRechercheVide();     // File qui contiendra les résultats de la recherche
-    float seuil = 70;       //recupSeuilRecherche();        // WIP : récupérer le seuil de similarité à partir duquel on considère un fichier suffisamment similaire pour être affiché (j'ai mis 70 par défaut)
-    
+    float seuil = getSeuil();       //recupSeuilRecherche();        // WIP : récupérer le seuil de similarité à partir duquel on considère un fichier suffisamment similaire pour être affiché (j'ai mis 70 par défaut)
     while(fgets(fichCourant, 200, fichiersIndexes)!=NULL) {     // On passe chaque ligne du fichier listant les fichiers indexés en revue
-        fgets(descCourant, 20000, descripteurs);     // Pour chacune de ces lignes (donc pour chacun de ces fichiers), on récupère le descripteur associé
+        fgets(descCourant, 200000, descripteurs);     // Pour chacune de ces lignes (donc pour chacun de ces fichiers), on récupère le descripteur associé
+       
+        fichCourant[strcspn(fichCourant,"\r\n")] = 0; //Suppression du \n
         
+        //printf("-%s-\n",fichCourant);
+
+
         if(strcmp(getExtensionOfFile(fichCourant), ".xml")==0) {      // Cas où le descripteur récupéré est celui d'un fichier texte (on ne traite que ces cas)
-            // Conversion de la chaine de char en FIFO de char (c'est plus fun je suppose)
-            FIFO fifodesc;
-            Init_File(fifodesc);
-            for(int i=0; i<strlen(descCourant); i++) {
-                fifodesc = Enfiler(*fifodesc, descCourant[i]);
-            }    
-            DESC desc = conversionStringDescripteur(fifodesc);     // On convertit le descripteur (jusque là au format string) en structure descripteur
-            float sim = comparerDescripteurs(desc, descRequete);        // On calcule la similarité entre le fichier recherché et le fichier courant
+            descCourant[strcspn(descCourant,"\r\n")] = 0; //Suppression du \n
+            //printf("\t%s\n",descCourant);
+            DescripteurTexte desc = StringTodescripteurText(descCourant);     // On convertit le descripteur (jusque là au format string) en structure descripteur
+
+            float sim = comparerDescripteurTexte(desc, descRequete);        // On calcule la similarité entre le fichier recherché et le fichier courant
+            //printf("\t%s %.2f\n",fichCourant,sim);
             if(sim>=seuil) {        // Cas où le descripteur récupéré a une similarité suffisante avec la recherche
                 FICHIER * fcomp = creerCelluleFichier(fichCourant, sim);
                 ajouterFichierRecherche(resultats, fcomp);      // On ajoute à la liste triée des fichiers compatibles avec la recherche
@@ -217,7 +226,8 @@ RECHERCHE * rechercheParFichierTexte (char * adresse) {
 
     return resultats;
 }
-*/
+
+
 RECHERCHE * rechercheParFichierImage (char * fichier) {
     
     /* Etape 1 : on crée un descripteur du fichier requête après avoir vérifié son existence */

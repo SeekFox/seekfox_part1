@@ -278,7 +278,6 @@ void empilementDesDescripteurs (PILEDESC * pileDesc, PILEDESC * adrFichiers) {  
             DescripteurTexte dt = lireFichierTexte(adrDoc);
 
             strcpy(desc,descripteurTexteToString(dt)); 
-            printf(">>>>%s\n",desc);
 
             DESC * strDesc = creerDesc(desc);
             ajouterDescPile(pileDesc, strDesc);
@@ -307,8 +306,6 @@ void empilementDesDescripteurs (PILEDESC * pileDesc, PILEDESC * adrFichiers) {  
             ajouterDescPile(adrFichiers, adr);
             
         }
-
-        //printf("\t<<\n");
     }
     
 
@@ -346,7 +343,6 @@ void indexationTotale () {          // Fait l'indexation totale de la base de do
     /* Impression de la liste des fichiers indexés */
     courant = pAdr->premier;
     for (int i=0; i<pAdr->nbDesc; i++) {
-        printf(">>%s\n",courant->strDesc);
         fprintf(fichiersIndex, "%s\n", courant->strDesc);
         courant=courant->suivant;
     }
@@ -389,7 +385,7 @@ void indexationUnique (char * adrDoc) {         // Indexe un unique document à 
     fseek(fichiersIndex, 0, SEEK_END);
 
     /* Création du descripteur associé au fichier puis indexation dans les deux fichiers */
-    char * ext = getExtensionOfFile(adrDoc);
+    const char * ext = getExtensionOfFile(adrDoc);
 
     if (strcmp(ext, ".xml")==0) {
         DescripteurTexte dt = lireFichierTexte(adrDoc);

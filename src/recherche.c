@@ -1,7 +1,7 @@
 /**
  * @file recherche.c
  * @author Etienne Combelles
- * @brief 
+ * @brief Fonctions gerant la recherche
  * @version 0.1
  * @date 24/01/2020
  * 

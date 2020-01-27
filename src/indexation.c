@@ -1,7 +1,7 @@
 /**
  * @file indexation.c
  * @author Etienne Combelles
- * @brief 
+ * @brief Fonction gerant l'indexation des descripteurs
  * @version 0.1
  * 
  * @copyright Copyright (c) 2019

@@ -1,7 +1,7 @@
 /**
  * @file config.c
  * @author Clement Truillet (clement.truillet@univ-tlse3.fr)
- * @brief 
+ * @brief Fonctions gerants les parametres de configuration
  * @version 0.2
  * @date 23/12/2019
  * 

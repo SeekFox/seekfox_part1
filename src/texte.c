@@ -1,3 +1,14 @@
+/**
+ * @file texte.c
+ * @author Raphaël Bizet
+ * @brief Fonctions gerant la création d'un descripteur texte
+ * @version 0.1
+ * @date 27/01/2020
+ * 
+ * @copyright Copyright (c) 2020
+ * 
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>

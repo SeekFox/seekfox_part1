@@ -1,7 +1,7 @@
 /**
  * @file audio.c
  * @author Gael Gamba
- * @brief 
+ * @brief Fonctions necessaire au bon fonctionnement du traitement des fichiers audios.
  * @version 0.1
  * 
  * @copyright Copyright (c) 2019

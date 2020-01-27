@@ -1,7 +1,7 @@
 /**
  * @file main.c
  * @author Clement Truillet (clement.truillet@univ-tlse3.fr)
- * @brief 
+ * @brief Fonction Main
  * @version 0.11
  * @date 10/12/2019
  * 
@@ -36,7 +36,7 @@ Config config;
 
 int main(int argc, char * argv[]){
     //Initialisation
-    enum FSM state = TITLE; //Machine a état
+    enum FSM state = TITLE; //Machine a etat
     int isAdmin = 0;
     char file[32] = "";
     system("./bin/readRequete.sh");
@@ -54,6 +54,7 @@ int main(int argc, char * argv[]){
     }
 
     //Menu
+    //Boucle sur la machinea etat
     while(state != END){
         displayMenu(&isAdmin,&state,file);
     }

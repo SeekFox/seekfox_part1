@@ -1,7 +1,7 @@
 /**
  * @file pyle_dynamiqueAudio.c
  * @author Gael Gamba
- * @brief 
+ * @brief Pile dynamique pour gerer les fenetres des fichiers audio
  * @version 0.1
  * 
  * @copyright Copyright (c) 2019

@@ -1,3 +1,12 @@
+/**
+ * @file fcts_test_image.c
+ * @author Oualid El Abdaoui
+ * @brief Fonctions necessaire au bon fonctionnement du traitement des fichiers image.
+ *
+ * @copyright Copyright (c) 2020
+ * 
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>

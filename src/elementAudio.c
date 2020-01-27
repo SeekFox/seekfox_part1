@@ -1,7 +1,7 @@
 /**
  * @file elementAudio.c
  * @author Gael Gamba
- * @brief 
+ * @brief Element constituant la Pile audio
  * @version 0.1
  * 
  * @copyright Copyright (c) 2019

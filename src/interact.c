@@ -1,7 +1,7 @@
 /**
  * @file interact.c
  * @author Clement Truillet (clement.truillet@univ-tlse3.fr)
- * @brief 
+ * @brief Fonctions gerant l'interface entre le programme et l'utilisateur
  * @version 0.1
  * @date 21/11/2019
  * 
@@ -68,20 +68,20 @@ void displayMenu(int *isAdmin, enum FSM * state, char * file){
       printTitle("Recherche par IMAGE");
       rechercheParFichierImage(file);
 
-      (*state) = TITLE;
+      (*state) = END;
       break;
 
     case R_TEXTE:
       printTitle("Recherche par TEXTE");
       afficherResultats(rechercheParFichierTexte(file),R_TEXTE);
-      (*state) = TITLE;
+      (*state) = END;
       break;
 
     case R_SON:
       printTitle("Recherche par SON");
       printf("%s\n",file);
       afficherResultats(rechercheParFichierSon(file),R_SON);
-      (*state) = TITLE;
+      (*state) = END;
       break;
 
     case R_KEYWORD:
@@ -91,13 +91,13 @@ void displayMenu(int *isAdmin, enum FSM * state, char * file){
       scanf("%31s",mot);
       afficherResultats(rechercheParMotCle(mot),R_KEYWORD);
 
-      (*state) = TITLE;
+      (*state) = END;
       break;
 
     case R_COLOR:
       //printTitle("Recherche par COULEUR DOMINANTE\n");
       //TODO : Recherche par COULEUR DOMINANTE
-      (*state) = TITLE;
+      (*state) = END;
       break;
 
     case INFO:

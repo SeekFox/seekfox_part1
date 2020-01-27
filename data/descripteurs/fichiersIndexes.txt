@@ -1,4 +1,4 @@
-NA
+base_de_documents/01-LoremIpsum.xml
 base_de_documents/01.jpg
 base_de_documents/02.jpg
 base_de_documents/03-Mimer_un_signal_nerveux_pour.xml
@@ -6,6 +6,7 @@ base_de_documents/03.jpg
 base_de_documents/04.bmp
 base_de_documents/04.jpg
 base_de_documents/05-Edition___les_mots_et.xml
+base_de_documents/08-Carlos_do_Carmo____Le.xml
 base_de_documents/15-_Si_on_veut_aller_trop.xml
 base_de_documents/18-Ligue_1___Lyon_a.xml
 base_de_documents/22-Danse___quarante_jeunes_de.xml
@@ -16,4 +17,3 @@ base_de_documents/28-Danse___Robyn_Orlin_et.xml
 base_de_documents/Les-mots-et-tics-de-langage.xml
 base_de_documents/corpus_fi.bin
 base_de_documents/jingle_fi.bin
-base_de_documents/08-Carlos_do_Carmo____Le.xml

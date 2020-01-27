@@ -1,3 +1,14 @@
+/**
+ * @file FIFO.c
+ * @author Raphaël Bizet
+ * @brief 
+ * @version 0.1
+ * @date 27/01/2020
+ * 
+ * @copyright Copyright (c) 2020
+ * 
+ */
+
 #include <stdlib.h>
 #include <stdio.h>
 #include "FIFO.h"

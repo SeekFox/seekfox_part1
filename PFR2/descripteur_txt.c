@@ -9,18 +9,34 @@ DESCTXT creerDescripteur_txt(FILE* fichier_txt) {
 
 	////////////////// INITIALISATION / DECLARATION DES VARIABLES /////////////////
 	DESCTXT descripteur;
-	//FIFO_M* FILE_MC = (FIFO_M*)malloc(sizeof(FIFO_M));
+	Dinit(&descripteur);
 	descripteur.fmot_cle = (FIFO_M*)malloc(sizeof(FIFO_M));
-	descripteur.fmot_cle->debut = (Cell_M*)malloc(sizeof(Cell_M));
-	//char* tempo = (char*)malloc(sizeof(char));
+	if (descripteur.fmot_cle == NULL)
+		printf("Erreur d'allocation\n");
+
+	FIFO_M FIFO;
+	MInit_File(&FIFO);
+	FIFO.debut = (Cell_M*)malloc(sizeof(Cell_M));
+	FIFO.fin = (Cell_M*)malloc(sizeof(Cell_M));
+	if (FIFO.debut == NULL || FIFO.fin == NULL)
+		printf("Erreur d'allocation  \n");
+	//*(descripteur.fmot_cle) = FIFO;
+	
+
+	//Cell_M Cell;
+	Cinit(FIFO.debut);
+	//descripteur.fmot_cle->debut = &Cell;
+	//descripteur.fmot_cle->fin->ptr_suiv = (Cell_M*)malloc(sizeof(Cell_M));
+
+	//if (descripteur.fmot_cle->debut->ptr_suiv == NULL|| descripteur.fmot_cle->fin == NULL)
+	//	printf("Erreur d'allocation\n");
+
+	//descripteur.fmot_cle->debut = &Cell;
+
 	int j = 0, i = 0;
 	char chaine[TAILLE_MAX] = "";
 	char tempo[TAILLE_MAX] = "";
-	//	descripteur.fmot_cle = FILE_MC;
-	descripteur.nb_lettres = 0;
-	descripteur.nb_mots = 0;
-	MInit_File(descripteur.fmot_cle);
-
+	
 	//////////////////////////// BOUCLE PRINCIPALE /////////////////////////////////
 	while (fgets(chaine, TAILLE_MAX, fichier_txt) != NULL) {	// Pour chaque ligne
 		//printf("test entree en boucle \n");
@@ -29,17 +45,12 @@ DESCTXT creerDescripteur_txt(FILE* fichier_txt) {
 				//printf("Balise detectee \n");
 				while (chaine[i] != '>') {
 					i++;										//en incrémentant le compteur sans les prendre en compte
-				//	printf("elimination de la balise\n");
-					//printf(" i : %d\n",i);
-				//	printf("car elimine : %c\n", chaine[i]);
 				}
 				i++;
 			}
 			else {
-			//	printf("carac interessant %c\n", chaine[i]);
 				while (chaine[i] != ' ' && chaine[i] != '\0') {	// pour chaque mot
-					tempo[j] = chaine[i];	
-					//printf("dans chaine %c \n", chaine[i]);		// on récupere le mot dans un tableau séparé
+					tempo[j] = chaine[i];			// on récupere le mot dans un tableau séparé
 					descripteur.nb_lettres++;
 					i++;
 					j++;
@@ -51,17 +62,34 @@ DESCTXT creerDescripteur_txt(FILE* fichier_txt) {
 				j = 0;
 				descripteur.nb_mots++;
 				//motExiste(descripteur.fmot_cle, tempo);
-			//	printf(" nb mots%d \n", descripteur.nb_mots);	
-				printf("%d \n", a);
-
+				//printf(" nb mots %d \n", descripteur.nb_mots);	
 			// on exécute motExiste, qui incrémente le nombre d'occurence si le mot est déjà dans la File
-			   	if (!motExiste(descripteur.fmot_cle, tempo)) {
+			   	if (!motExiste((descripteur.fmot_cle), tempo)) {
+					printf("test");
 					MEnfiler(descripteur.fmot_cle, tempo);		// si le mot récupéré n'est pas dans la file, on l'y rajoute
 				}
 			}			
 		}
 	}
 	return(descripteur);
+}
+
+void Minit(MOT *m) {
+	m->mot = malloc(sizeof(char) * TAILLE_MAX);
+	m->occurence = 0;
+}
+
+void Cinit(Cell_M *c) {
+	c->ptr_suiv = NULL;
+	MOT* m = (MOT*)malloc(sizeof(MOT));
+	Minit(m);
+	c->mot_cle = *m;
+}
+
+void Dinit(DESCTXT *descripteur) {
+	descripteur->nb_lettres = 0;
+	descripteur->nb_mots = 0;
+	descripteur->fmot_cle = NULL;
 }
 
 //Comparer les descripteurs en les transformant en premier lieu en file pour
@@ -110,22 +138,24 @@ FIFO descToFIFO(DESCTXT d) {
 
 // Un mot mis en paramètre existe-t-il déjà dans la file de mots, si oui on incrémente le nombre d'occurence de ce mot. 
 int motExiste(FIFO_M *file, char* test) {
-	int motExiste(FIFO_M * file, char* test) {
-		int motexiste = 0;
-		Cell_M* memoire = file->debut;
-		if (!MFile_estVide(file)) {
-			while (memoire != NULL && !motexiste) {
-				motexiste = strcoll((memoire->mot_cle).mot, test);
-				printf("%d\n", motexiste);
-				if (motexiste == 0) {
-					memoire->mot_cle.occurence++;
-				}
-				memoire = memoire->ptr_suiv;
+	printf("mot_existe test ");
+	int motexiste = 0;
+	char convert[TAILLE_MAX]="";
+	Cell_M * memoire = file->debut;
+	printf("%p", memoire->mot_cle);
+	
+	if (!MFile_estVide(file)) {
+		while (memoire != NULL && !motexiste) {
+			motexiste = strcoll((memoire->mot_cle).mot, test);
+			printf("motexiqste %d\n", motexiste);
+			if (motexiste == 0) {
+				memoire->mot_cle.occurence++;
 			}
+			memoire = memoire->ptr_suiv;
 		}
-		return(motexiste);
-
 	}
+	return(motexiste);
+
 }
 
 
@@ -141,7 +171,7 @@ char* descToString(DESCTXT d){
 	sprintf(stock, "%d", d.nb_mots);
 	strcat(tab, stock);
 	strcat(tab, "\n");
-	while (memoire != NULL) {		// Pour tous les mots contenus dans la file de mot
+	while (memoire->mot_cle.mot != "" ) {		// Pour tous les mots contenus dans la file de mot
 	//	if (memoire->mot_cle.occurence >= getTailleMin) {
 			strcat(tab, (memoire->mot_cle).mot);	// On ajoute le mot et son occurence convertie en char*
 			strcat(tab, ":");						// dans le "String" renvoyé. 
@@ -191,7 +221,7 @@ int MFile_estVide(FIFO_M* f) {
 void MEnfiler(FIFO_M* f, char* e) {
 	Cell_M* temp;
 	temp = (Cell_M*)malloc(sizeof(Cell_M));
-	temp->mot_cle.mot = malloc(sizeof(MOT));
+	temp->mot_cle.mot = malloc(sizeof(char) * TAILLE_MAX);
 	strcat((temp->mot_cle).mot, e );
 	temp->mot_cle.occurence = 1;
 	temp->ptr_suiv = f->fin;
@@ -203,7 +233,6 @@ void MEnfiler(FIFO_M* f, char* e) {
 			actuel = actuel->ptr_suiv;
 		actuel->ptr_suiv = temp;
 	}
-	//return(*f);
 }
 
 

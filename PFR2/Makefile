@@ -1,7 +1,7 @@
 test1 : descripteur_txt.c descripteur_txt.h FIFO.h FIFO.c main_test.c
-	gcc -c FIFO.c
-	gcc -c descripteur_txt.c
-	gcc -c main_test.c
+	gcc -g -c FIFO.c
+	gcc -g -c descripteur_txt.c
+	gcc -g -c main_test.c
 	gcc -o test1.out FIFO.o descripteur_txt.o main_test.o
 	./test1.out
 

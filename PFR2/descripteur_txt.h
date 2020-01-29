@@ -20,8 +20,9 @@ typedef struct CellulePourMotCle {
 }Cell_M;
 
 typedef struct FIFOMotCle {
-	Cell_M* debut, * fin;
+	Cell_M *debut, *fin;
 }FIFO_M;
+
 
 typedef struct Descripteur_txt{
 	int nb_mots;
@@ -30,7 +31,9 @@ typedef struct Descripteur_txt{
 }DESCTXT;
 
 
-
+void Minit(MOT *m);
+void Cinit(Cell_M *c);
+void Dinit(DESCTXT *d);
 DESCTXT creerDescripteur_txt(FILE *fichier_txt);
 float comparerDescripteurs(DESCTXT d1, DESCTXT d2);
 char* descToString(DESCTXT d);

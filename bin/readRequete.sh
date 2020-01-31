@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Script bash recuperant les noms des fichiers valides et les stockants dans le fichier index.dat
+
 > data/index.dat #Vider le fichier index
 
 for fich in `ls -1 --sort=extension requete/`

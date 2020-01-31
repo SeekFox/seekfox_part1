@@ -33,11 +33,20 @@
   #include "../include/recherche.h"
 #endif
 
+/**
+ * @brief Affichage du menu
+ * 
+ * @param isAdmin 
+ * @param state 
+ * @param file 
+ */
 void displayMenu(int *isAdmin, enum FSM * state, char * file){
   int nextState = (*state);
 
+  //Machine à état
   switch (*state){
     case TITLE:
+
       printf("\n1\\- Recherche");
       printf("\n2\\- Administration");
       printf("\n3\\- Informations");
@@ -48,22 +57,26 @@ void displayMenu(int *isAdmin, enum FSM * state, char * file){
       (*state) = (nextState==1 ? RESEARCH : (nextState==2 ? CONNECT : (nextState==3 ? INFO : (nextState==4 ? END : TITLE))));
       break;
 
+    //Connexion au mode admin
     case CONNECT:
       connectAdmin(isAdmin);
       (*state)=ADMIN;
       break;
     
+    //affichage du menu admin
     case ADMIN:
       if(*isAdmin==1) displayMenuAdmin(isAdmin);
       (*state)=TITLE;
       (*isAdmin)=0;
       break;
 
+    //Affichage du menu de recherche
     case RESEARCH:
       printTitle("RECHERCHE");
       displayMenuResearch(file,state);
       break;
 
+    //Recherche image du fichier file
     case R_IMAGE:
       printTitle("Recherche par IMAGE");
       rechercheParFichierImage(file);
@@ -71,12 +84,14 @@ void displayMenu(int *isAdmin, enum FSM * state, char * file){
       (*state) = END;
       break;
 
+    //Recherche texte du fichier file
     case R_TEXTE:
       printTitle("Recherche par TEXTE");
       afficherResultats(rechercheParFichierTexte(file),R_TEXTE);
       (*state) = END;
       break;
 
+    //Recherche audio du fichier file
     case R_SON:
       printTitle("Recherche par SON");
       printf("%s\n",file);
@@ -84,9 +99,11 @@ void displayMenu(int *isAdmin, enum FSM * state, char * file){
       (*state) = END;
       break;
 
+    //Recherche par mot clef
     case R_KEYWORD:
       printTitle("Recherche par MOT CLES");
       char * mot = (char*)malloc(sizeof(char)*32);
+      //on recupere le mot a rechercher
       printf("Entrez le mot-cle a rechercher : ");
       scanf("%31s",mot);
       afficherResultats(rechercheParMotCle(mot),R_KEYWORD);
@@ -94,18 +111,21 @@ void displayMenu(int *isAdmin, enum FSM * state, char * file){
       (*state) = END;
       break;
 
+    //Recherche par couleur dominante (non effectuée)
     case R_COLOR:
       //printTitle("Recherche par COULEUR DOMINANTE\n");
       //TODO : Recherche par COULEUR DOMINANTE
       (*state) = END;
       break;
 
+    //affichage des informations du projet
     case INFO:
       displayInformations();  
       CLEAR_STDIN
       (*state) = TITLE;
       break;
 
+    //Etat en cas d'erreur
     default:
       displayError("Twinkie not found.");
       (*state) = TITLE;
@@ -113,6 +133,12 @@ void displayMenu(int *isAdmin, enum FSM * state, char * file){
   }
 }
 
+/**
+ * @brief Affichage du menu de recherche
+ * 
+ * @param file 
+ * @param state 
+ */
 void displayMenuResearch(char * file, enum FSM * state){
   char choix[4] = "";
   char ext[8] = "";
@@ -122,12 +148,12 @@ void displayMenuResearch(char * file, enum FSM * state){
 
   FILE * listFile = NULL;
   listFile = fopen("data/index.dat","r");
+  if(listFile==NULL) return;
   rewind(listFile);
 
   //Si le fichier index.dat existe
   if(listFile!=NULL){
     //printf("  #/- Recherche par Couleur Dominante\n");
-    //printf("  0/- Recherche par mot-clef\n");
     printf(" -1/- Retour\n");
     printf("  0/- Recherche par mot-clef\n");
     //Lecture du fichier
@@ -143,6 +169,7 @@ void displayMenuResearch(char * file, enum FSM * state){
     //Recuperation du fichier choisi
     choixNb = convertStringChoiceToInt(choix,i);
 
+    //si on choisit un fichier 
     if(choixNb > 0){
       rewind(listFile);
       strcpy(line,"");
@@ -153,14 +180,16 @@ void displayMenuResearch(char * file, enum FSM * state){
       printf("Choix du fichier \"%s\"\n\n",line);
       strcpy(ext, strrchr(line,'.'));
 
+      //mise à jour de l'état
       (*state) = ( ( strcmp(ext,".bmp")==0 || strcmp(ext,".jpg")==0 ) ? R_IMAGE : (strcmp(ext,".xml")==0 ? R_TEXTE : (strcmp(ext,".wav")==0 || strcmp(ext,".bin")==0 ) ? R_SON : (*state)));
       strcpy(file,line);
+
+    //Retour
     }else if(choixNb == -1){
         (*state) = TITLE;
-        //(*state) = R_COLOR;
+    //Recherche par mot clef
     }else if(choixNb == 0){
       (*state) = R_KEYWORD;
-      //(*state) = RESEARCH;
     }else{
       (*state) = RESEARCH;
     }
@@ -174,6 +203,11 @@ void displayMenuResearch(char * file, enum FSM * state){
   }
 }
 
+/**
+ * @brief Affichage du menu admin
+ * 
+ * @param isAdmin 
+ */
 void displayMenuAdmin(int *isAdmin){
   printTitle("ADMINISTRATION");
   int choix = -1;
@@ -194,6 +228,7 @@ void displayMenuAdmin(int *isAdmin){
         displayMenuAdminIndexation();
         break;
 
+      //visualisation du descripteur
       case 2:
         system("echo Vous etes dans le repertoire ${PWD##*/}");
         printf("\nEntrez le chemin vers le fichier du descripteur\n\t>");
@@ -204,10 +239,12 @@ void displayMenuAdmin(int *isAdmin){
         displayDescripteur(fichier);
         break;
 
-      case 3: //Options
+      //Options
+      case 3: 
         displayMenuAdminConfig();
         break;
 
+      //On quitte le menu admin
       case 4:
         (*isAdmin)=0;
         break;
@@ -218,6 +255,10 @@ void displayMenuAdmin(int *isAdmin){
   }
 }
 
+/**
+ * @brief Affichage du menu admin -> config
+ * 
+ */
 void displayMenuAdminConfig(){
   int choix = -1;
 
@@ -272,6 +313,10 @@ void displayMenuAdminConfig(){
   }
 }
 
+/**
+ * @brief Affichage du menu admin -> indexation
+ * 
+ */
 void displayMenuAdminIndexation(){
   int choix = -1;
   char fichier[64];
@@ -323,6 +368,13 @@ void displayMenuAdminIndexation(){
   }
 }
 
+/**
+ * @brief Conversion d'un string en int selon son contenu
+ * 
+ * @param str 
+ * @param max 
+ * @return int 
+ */
 int convertStringChoiceToInt(char * str, int max){
   int val;
 
@@ -338,12 +390,24 @@ int convertStringChoiceToInt(char * str, int max){
   return val;
 }
 
-  const char * getExtensionOfFile(const char * file){
-    if (strlen(file) == 0 || strcmp(file, "NA") == 0) return "";
+/**
+ * @brief Get the Extension Of File object
+ * 
+ * @param file 
+ * @return const char* 
+ */
+const char * getExtensionOfFile(const char * file){
+  if (strlen(file) == 0 || strcmp(file, "NA") == 0) return "";
 
-    return strrchr(file,'.');
-  }
+  return strrchr(file,'.');
+}
 
+/**
+ * @brief Get the Name Of File object
+ * 
+ * @param file 
+ * @return char* 
+ */
 char * getNameOfFile(char * file){
   char * s = NULL;
   s = (char *)malloc(( strlen(file)+1) * sizeof(char));
@@ -398,6 +462,11 @@ void printSeekFox(){
   color("0");
 }
 
+/**
+ * @brief Connexion au mode admin
+ * 
+ * @param isAdmin 
+ */
 void connectAdmin(int * isAdmin){
   (*isAdmin) = 1;
   char ch;
@@ -445,6 +514,12 @@ void connectAdmin(int * isAdmin){
 
 
 /**-------------------------------------------------------------------------------**/
+
+/**
+ * @brief Lecture d'un caractere sur le terminal sans l'afficher
+ * 
+ * 
+ */
 int getch(){
     struct termios oldtc, newtc;
     int ch;

@@ -138,6 +138,11 @@ void setLogicielOuvertureFichier(Config *c, char * str){
     strcpy((*c)->logicielOuvertureFichier,str);
 }
 
+/**
+ * @brief Recuperation des informations dans le fichier user.config
+ * 
+ * @return Config 
+ */
 Config loadConfig(){
     Config c = (Config)malloc(sizeof(struct config_s));
     FILE * fichier = NULL;
@@ -201,6 +206,10 @@ Config loadConfig(){
     return c;
 }
 
+/**
+ * @brief Affichage des parametres de configuration
+ * 
+ */
 void displayConfig(){
     printTitle("CONFIGURATIONS");
 
@@ -246,6 +255,10 @@ void displayConfig(){
     printf("\n");
 }   
 
+/**
+ * @brief Changer le mot de passe admin
+ * 
+ */
 void changePassword(){
     char pwd[32] = "";
     char confirm_pwd[32] = "";
@@ -395,7 +408,10 @@ void changeAudioM(){
     }
 }
 
-
+/**
+ * @brief Mise à jour du fichier user.config
+ * 
+ */
 void majConfigFile(){
     FILE * fichier = NULL;
 

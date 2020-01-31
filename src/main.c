@@ -39,8 +39,11 @@ int main(int argc, char * argv[]){
     enum FSM state = TITLE; //Machine a etat
     int isAdmin = 0;
     char file[32] = "";
+
+    //Recuperation des fichiers présents dans le dossier requete
     system("./bin/readRequete.sh");
 
+    //recuperation des parametres de config
     config = loadConfig();
 
     indexationAutomatique();
@@ -54,7 +57,7 @@ int main(int argc, char * argv[]){
     }
 
     //Menu
-    //Boucle sur la machinea etat
+    //Boucle sur la machine a etat
     while(state != END){
         displayMenu(&isAdmin,&state,file);
     }
